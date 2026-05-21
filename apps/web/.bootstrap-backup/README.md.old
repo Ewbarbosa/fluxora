@@ -1,0 +1,15 @@
+# @fluxora/web
+
+Frontend do Fluxora.
+
+## Direção
+
+Aplicação Next.js responsável por:
+- onboarding futuro
+- área autenticada
+- financeiro operacional
+- dashboards e experiência de uso
+
+## Próximo passo imediato
+
+Trazer como base o `lawmanager-frontend`, começando pela área de financeiro e removendo dependências visuais e conceituais que pertençam só ao Lawmanager.

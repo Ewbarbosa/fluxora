@@ -1,0 +1,13 @@
+{
+  "name": "@fluxora/web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "echo 'TODO: bootstrap Next.js app'",
+    "build": "echo 'TODO: build web'",
+    "lint": "echo 'TODO: lint web'",
+    "test": "echo 'TODO: test web'",
+    "typecheck": "echo 'TODO: typecheck web'",
+    "format": "echo 'TODO: format web'"
+  }
+}

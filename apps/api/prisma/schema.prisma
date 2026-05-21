@@ -1,0 +1,333 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ===== ENUMS =====
+
+enum AuditAction {
+  CREATE
+  UPDATE
+  DELETE
+  RESTORE
+}
+
+enum FinancialTransactionType {
+  INCOME
+  EXPENSE
+}
+
+enum FinancialTransactionStatus {
+  PENDING
+  PAID
+  OVERDUE
+  CANCELLED
+}
+
+enum FinancialRecurrenceFrequency {
+  WEEKLY
+  MONTHLY
+  YEARLY
+}
+
+enum WorkspaceAccessTier {
+  STANDARD
+  TRIAL
+  FREE
+}
+
+enum ExternalIdentityProvider {
+  GOOGLE
+}
+
+// ===== MODELS =====
+
+model Tenant {
+  id                Int     @id @default(autoincrement())
+  name              String
+  legalName         String?
+  cnpj              String? @unique
+  email             String?
+  phone             String?
+  website           String?
+  logoUrl           String?
+  addressStreet     String?
+  addressDistrict   String?
+  addressCity       String?
+  addressState      String?
+  addressPostalCode String?
+  notes             String?
+  accessTier        WorkspaceAccessTier @default(STANDARD)
+  trialStartsAt     DateTime?
+  trialEndsAt       DateTime?
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  users        User[]
+  profiles     Profile[]
+  auditLogs    AuditLog[]
+  loginLogs    LoginLog[]
+  limits       TenantLimits?
+  financialCategories        FinancialCategory[]
+  financialTransactions      FinancialTransaction[]
+
+  @@map("tenants")
+}
+
+model User {
+  id        Int       @id @default(autoincrement())
+  name      String
+  email     String
+  password  String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  profileId Int
+  profile   Profile @relation(fields: [profileId, tenantId], references: [id, tenantId])
+
+  tenantId Int
+  tenant   Tenant @relation(fields: [tenantId], references: [id])
+
+  auditLogs AuditLog[]
+  loginLogs LoginLog[]
+  isEmailVerified         Boolean                    @default(false)
+  emailVerifiedAt         DateTime?
+  verificationTokens      EmailVerificationToken[]
+  passwordResetTokens     PasswordResetToken[]
+  externalIdentities      ExternalIdentity[]
+
+  twoFactorEnabled          Boolean                  @default(false)
+  twoFactorEncryptedSecret  String?
+  twoFactorConfirmedAt      DateTime?
+  twoFactorRecoveryCodes    TwoFactorRecoveryCode[]
+
+  acceptedTermsAt      DateTime?
+  acceptedTermsVersion String?
+
+  @@unique([email, tenantId])
+  @@index([tenantId, deletedAt])
+  @@index([tenantId, createdAt])
+  @@map("users")
+}
+
+model EmailVerificationToken {
+  id        Int      @id @default(autoincrement())
+  token     String   @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime @default(now())
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([token])
+  @@map("email_verification_tokens")
+}
+
+model PasswordResetToken {
+  id        Int      @id @default(autoincrement())
+  tokenHash String   @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime @default(now())
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([tokenHash])
+  @@map("password_reset_tokens")
+}
+
+model TwoFactorRecoveryCode {
+  id        Int       @id @default(autoincrement())
+  codeHash  String
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("two_factor_recovery_codes")
+}
+
+model ExternalIdentity {
+  id             Int                      @id @default(autoincrement())
+  provider       ExternalIdentityProvider
+  providerUserId String
+  email          String?
+  createdAt      DateTime                 @default(now())
+  updatedAt      DateTime                 @updatedAt
+  lastLoginAt    DateTime?
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerUserId])
+  @@index([userId])
+  @@index([email])
+  @@map("external_identities")
+}
+
+model SsoAuthorizationSession {
+  id           Int                      @id @default(autoincrement())
+  provider     ExternalIdentityProvider
+  state        String                   @unique
+  codeVerifier String
+  nonce        String
+  redirectUri  String
+  expiresAt    DateTime
+  createdAt    DateTime                 @default(now())
+
+  @@index([expiresAt])
+  @@map("sso_authorization_sessions")
+}
+
+model Profile {
+  id          Int       @id @default(autoincrement())
+  name        String
+  description String?
+  permissions Json?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  tenantId Int
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  users User[]
+
+  @@unique([name, tenantId])
+  @@unique([id, tenantId])
+  @@index([tenantId, deletedAt])
+  @@map("profiles")
+}
+
+model AuditLog {
+  id            Int         @id @default(autoincrement())
+  tableName     String
+  recordId      Int
+  action        AuditAction
+  changes       Json?
+  performedById Int?
+  performedBy   User?       @relation(fields: [performedById], references: [id])
+  tenantId      Int
+  tenant        Tenant      @relation(fields: [tenantId], references: [id])
+  createdAt     DateTime    @default(now())
+
+  @@index([tenantId, createdAt])
+  @@index([tenantId, tableName])
+  @@index([tableName, recordId])
+  @@map("audit_logs")
+}
+
+model LoginLog {
+  id        Int      @id @default(autoincrement())
+  userId    Int?
+  user      User?    @relation(fields: [userId], references: [id])
+  tenantId  Int?
+  tenant    Tenant?  @relation(fields: [tenantId], references: [id])
+  ipAddress String?
+  userAgent String?
+  success   Boolean
+  createdAt DateTime @default(now())
+
+  @@index([tenantId, createdAt])
+  @@index([tenantId, success])
+  @@index([userId])
+  @@map("login_logs")
+}
+
+// ===== LIMITES POR TENANT =====
+
+model TenantLimits {
+  id       Int    @id @default(autoincrement())
+  tenantId Int    @unique
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  // Limites máximos
+  maxUsers               Int     @default(10)
+  maxStorageMB           Int     @default(1024) // 1GB
+  maxFinancialCategories Int     @default(-1)
+  maxMonthlyTransactions Int     @default(-1)
+  allowAdvancedReports   Boolean @default(true)
+
+  // Contadores atuais
+  currentUsers     Int @default(0)
+  currentStorageMB Int @default(0)
+
+  // Metadados
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([tenantId])
+  @@map("tenant_limits")
+}
+
+model FinancialCategory {
+  id          Int                    @id @default(autoincrement())
+  name        String
+  type        FinancialTransactionType
+  createdAt   DateTime               @default(now())
+  updatedAt   DateTime               @updatedAt
+  deletedAt   DateTime?
+
+  tenantId    Int
+  tenant      Tenant                 @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  transactions FinancialTransaction[]
+
+  @@unique([tenantId, name, type])
+  @@index([tenantId, deletedAt])
+  @@map("financial_categories")
+}
+
+model FinancialTransaction {
+  id                 Int                          @id @default(autoincrement())
+  type               FinancialTransactionType
+  status             FinancialTransactionStatus   @default(PENDING)
+  description        String
+  amount             Decimal                      @db.Decimal(12, 2)
+  competenceDate     DateTime?
+  dueDate            DateTime?
+  paymentDate        DateTime?
+  notes              String?
+  isRecurring        Boolean                      @default(false)
+  recurrenceFrequency FinancialRecurrenceFrequency?
+  recurrenceInterval Int?
+  recurrenceCount    Int?
+  recurrenceGroupId  String?
+  recurrenceIndex    Int?
+  installmentGroupId String?
+  installmentNumber  Int?
+  installmentCount   Int?
+  createdAt          DateTime                     @default(now())
+  updatedAt          DateTime                     @updatedAt
+  deletedAt          DateTime?
+
+  tenantId           Int
+  tenant             Tenant                       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  categoryId         Int
+  category           FinancialCategory            @relation(fields: [categoryId], references: [id])
+
+  @@index([tenantId, deletedAt])
+  @@index([tenantId, type, status])
+  @@index([tenantId, dueDate])
+  @@index([categoryId])
+
+  @@index([recurrenceGroupId])
+  @@index([installmentGroupId])
+  @@map("financial_transactions")
+}
+
+

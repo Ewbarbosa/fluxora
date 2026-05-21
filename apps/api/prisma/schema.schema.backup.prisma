@@ -1,0 +1,798 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ===== ENUMS =====
+enum Gender {
+  MASCULINO
+  FEMININO
+  OUTRO
+}
+
+enum MaritalStatus {
+  SOLTEIRO
+  CASADO
+  DIVORCIADO
+  VIUVO
+  SEPARADO
+  UNIAO_ESTAVEL
+  OUTRO
+}
+
+enum ContactRole {
+  AUTOR
+  REU
+  TESTEMUNHA
+  ADVOGADO
+  TERCEIRO
+}
+
+enum AddressType {
+  RESIDENCIAL
+  COMERCIAL
+  COBRANCA
+  ENTREGA
+  OUTRO
+}
+
+enum BankAccountType {
+  CONTA_CORRENTE
+  CONTA_POUPANCA
+  CONTA_SALARIO
+  CONTA_PAGAMENTO
+}
+
+enum AuditAction {
+  CREATE
+  UPDATE
+  DELETE
+  RESTORE
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  TRIAL
+  CANCELLED
+  EXPIRED
+  SUSPENDED
+  PENDING
+}
+
+enum FinancialTransactionType {
+  INCOME
+  EXPENSE
+}
+
+enum FinancialTransactionStatus {
+  PENDING
+  PAID
+  OVERDUE
+  CANCELLED
+}
+
+enum FinancialRecurrenceFrequency {
+  WEEKLY
+  MONTHLY
+  YEARLY
+}
+
+enum EventType {
+  AUDIENCIA
+  REUNIAO
+  PRAZO
+  TAREFA
+  DILIGENCIA
+  PERICIA
+  ACORDO
+  OUTRO
+}
+
+enum ScheduleStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+  POSTPONED
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum ReminderType {
+  EMAIL
+  NOTIFICATION
+  SMS
+  WHATSAPP
+}
+
+enum ParticipantRole {
+  ORGANIZER
+  PARTICIPANT
+  OPTIONAL
+}
+
+enum ParticipantStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+  TENTATIVE
+}
+
+// ===== MODELS =====
+
+model Tenant {
+  id                Int     @id @default(autoincrement())
+  name              String
+  legalName         String?
+  cnpj              String? @unique
+  email             String?
+  phone             String?
+  website           String?
+  logoUrl           String?
+  addressStreet     String?
+  addressDistrict   String?
+  addressCity       String?
+  addressState      String?
+  addressPostalCode String?
+  notes             String?
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  users        User[]
+  profiles     Profile[]
+  contacts     Contact[]
+  processes    Process[]
+  auditLogs    AuditLog[]
+  loginLogs    LoginLog[]
+  subscription Subscription?
+  limits       TenantLimits?
+  schedules    Schedule[]
+  googleCalendarConnections GoogleCalendarConnection[]
+  financialCategories        FinancialCategory[]
+  financialTransactions      FinancialTransaction[]
+
+  @@map("tenants")
+}
+
+model User {
+  id        Int       @id @default(autoincrement())
+  name      String
+  email     String
+  password  String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  profileId Int
+  profile   Profile @relation(fields: [profileId, tenantId], references: [id, tenantId])
+
+  tenantId Int
+  tenant   Tenant @relation(fields: [tenantId], references: [id])
+
+  auditLogs AuditLog[]
+  loginLogs LoginLog[]
+  schedules Schedule[]
+  scheduleParticipants ScheduleParticipant[]
+  schedulesAsGoogleCalendarCredential Schedule[] @relation("ScheduleGoogleCalendarSyncCredential")
+  googleCalendarConnection GoogleCalendarConnection?
+  isEmailVerified         Boolean                    @default(false)
+  emailVerifiedAt         DateTime?
+  verificationTokens      EmailVerificationToken[]
+  passwordResetTokens     PasswordResetToken[]
+
+  twoFactorEnabled          Boolean                  @default(false)
+  twoFactorEncryptedSecret  String?
+  twoFactorConfirmedAt      DateTime?
+  twoFactorRecoveryCodes    TwoFactorRecoveryCode[]
+
+  acceptedTermsAt      DateTime?
+  acceptedTermsVersion String?
+
+  @@unique([email, tenantId])
+  @@index([tenantId, deletedAt])
+  @@index([tenantId, createdAt])
+  @@map("users")
+}
+
+
+model EmailVerificationToken {
+  id        Int      @id @default(autoincrement())
+  token     String   @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime @default(now())
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([token])
+  @@map("email_verification_tokens")
+}
+
+model PasswordResetToken {
+  id        Int      @id @default(autoincrement())
+  tokenHash String   @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime @default(now())
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([tokenHash])
+  @@map("password_reset_tokens")
+}
+
+model TwoFactorRecoveryCode {
+  id        Int       @id @default(autoincrement())
+  codeHash  String
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("two_factor_recovery_codes")
+}
+
+model Profile {
+  id          Int       @id @default(autoincrement())
+  name        String
+  description String?
+  permissions Json?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime?
+
+  tenantId Int
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  users User[]
+
+  @@unique([name, tenantId])
+  @@unique([id, tenantId])
+  @@index([tenantId, deletedAt])
+  @@map("profiles")
+}
+
+model Contact {
+  id        Int     @id @default(autoincrement())
+  cpfCnpj   String
+  isCompany Boolean @default(false)
+
+  // Pessoa física
+  fullName      String?
+  rg            String?
+  dateOfBirth   DateTime?
+  gender        Gender?
+  nationality   String?
+  maritalStatus MaritalStatus?
+  phone         String?
+  email         String?
+  occupation    String?
+  workCard      String?
+  pisNumber     String?
+  fatherName    String?
+  motherName    String?
+
+  // Pessoa jurídica
+  companyName           String?
+  tradeName             String?
+  stateRegistration     String?
+  municipalRegistration String?
+  responsiblePerson     String?
+  responsibleCpf        String?
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  tenantId Int
+  tenant   Tenant @relation(fields: [tenantId], references: [id])
+
+  Address        Address[]
+  ContactProcess ContactProcess[]
+  BankAccount    BankAccount[]
+  scheduleContacts ScheduleContact[]
+  financialTransactions FinancialTransaction[]
+
+  @@unique([cpfCnpj, tenantId])
+  @@index([cpfCnpj], name: "cpf_index")
+  @@index([tenantId, deletedAt])
+  @@index([tenantId, createdAt])
+  @@map("contacts")
+}
+
+model Process {
+  id            Int       @id @default(autoincrement())
+  forum         String?
+  processNumber String
+  courtDivision String?
+  action        String?
+  distributedAt DateTime?
+  causeValue    Float?
+  status        String?
+  observation   String?
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  tenantId Int
+  tenant   Tenant @relation(fields: [tenantId], references: [id])
+
+  ContactProcess ContactProcess[]
+  schedules      Schedule[]
+  financialTransactions FinancialTransaction[]
+
+  @@unique([processNumber, tenantId])
+  @@index([tenantId, deletedAt])
+  @@index([tenantId, createdAt])
+  @@map("processes")
+}
+
+model ContactProcess {
+  contact   Contact @relation(fields: [contactId], references: [id], onDelete: Cascade)
+  contactId Int
+
+  process   Process @relation(fields: [processId], references: [id], onDelete: Cascade)
+  processId Int
+
+  role      ContactRole
+  createdAt DateTime    @default(now())
+
+  @@id([contactId, processId])
+  @@map("contact_process")
+}
+
+model Address {
+  id         Int         @id @default(autoincrement())
+  type       AddressType
+  street     String
+  number     String
+  complement String?
+  postalCode String
+  district   String
+  city       String
+  state      String
+
+  contactId Int
+  contact   Contact @relation(fields: [contactId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  @@index([contactId])
+  @@map("addresses")
+}
+
+model Bank {
+  id   Int    @id @default(autoincrement())
+  name String
+  code Int    @unique
+
+  bankAccount BankAccount[]
+
+  @@map("banks")
+}
+
+model BankAccount {
+  id      Int              @id @default(autoincrement())
+  agency  String
+  account String
+  type    BankAccountType?
+
+  bankId Int
+  bank   Bank @relation(fields: [bankId], references: [id])
+
+  contactId Int
+  contact   Contact @relation(fields: [contactId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  @@index([contactId])
+  @@map("bank_accounts")
+}
+
+model AuditLog {
+  id            Int         @id @default(autoincrement())
+  tableName     String
+  recordId      Int
+  action        AuditAction
+  changes       Json?
+  performedById Int?
+  performedBy   User?       @relation(fields: [performedById], references: [id])
+  tenantId      Int
+  tenant        Tenant      @relation(fields: [tenantId], references: [id])
+  createdAt     DateTime    @default(now())
+
+  @@index([tenantId, createdAt])
+  @@index([tenantId, tableName])
+  @@index([tableName, recordId])
+  @@map("audit_logs")
+}
+
+model LoginLog {
+  id        Int      @id @default(autoincrement())
+  userId    Int?
+  user      User?    @relation(fields: [userId], references: [id])
+  tenantId  Int?
+  tenant    Tenant?  @relation(fields: [tenantId], references: [id])
+  ipAddress String?
+  userAgent String?
+  success   Boolean
+  createdAt DateTime @default(now())
+
+  @@index([tenantId, createdAt])
+  @@index([tenantId, success])
+  @@index([userId])
+  @@map("login_logs")
+}
+
+// ===== PLANOS E ASSINATURAS =====
+
+model Plan {
+  id           Int     @id @default(autoincrement())
+  name         String  @unique
+  description  String?
+  price        Float
+  billingCycle String  @default("monthly") // monthly, yearly
+  stripePriceIdMonthly String?
+
+  // Limites do plano (em JSON para flexibilidade)
+  limits Json // { maxUsers: 10, maxContacts: 100, maxProcesses: 50, maxStorageMB: 1024 }
+
+  // Features do plano (em JSON)
+  features Json // { customFields: true, apiAccess: false, prioritySupport: false }
+
+  // Status
+  isActive  Boolean @default(true)
+  isVisible Boolean @default(true) // Aparece no catálogo?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  subscriptions Subscription[]
+
+  @@map("plans")
+}
+
+model Subscription {
+  id       Int    @id @default(autoincrement())
+  tenantId Int    @unique
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  planId Int
+  plan   Plan @relation(fields: [planId], references: [id])
+
+  // Status da assinatura
+  status SubscriptionStatus @default(ACTIVE)
+
+  // Datas
+  startDate    DateTime  @default(now())
+  endDate      DateTime? // null = sem data de término
+  trialEndDate DateTime? // Data de fim do trial
+
+  // Informações de pagamento
+  paymentMethod String? // "credit_card", "pix", "boleto"
+  externalId    String? // ID no gateway de pagamento (Stripe, Asaas, etc)
+  stripeCustomerId        String?
+  stripeSubscriptionId    String?
+  stripeCheckoutSessionId String?
+
+  // Metadados
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  cancelledAt DateTime?
+
+  // Histórico de mudanças
+  history SubscriptionHistory[]
+
+  @@index([tenantId])
+  @@index([status])
+  @@index([planId])
+  @@index([stripeCustomerId])
+  @@index([stripeSubscriptionId])
+  @@map("subscriptions")
+}
+
+model StripeWebhookEvent {
+  id          Int      @id @default(autoincrement())
+  eventId     String   @unique
+  eventType   String
+  processedAt DateTime @default(now())
+  payload     Json?
+
+  @@index([eventType, processedAt])
+  @@map("stripe_webhook_events")
+}
+
+model SubscriptionHistory {
+  id             Int          @id @default(autoincrement())
+  subscriptionId Int
+  subscription   Subscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+
+  oldPlanId  Int?
+  newPlanId  Int
+  changeType String // "upgrade", "downgrade", "renewal", "cancellation"
+  changeDate DateTime @default(now())
+  reason     String?
+
+  @@index([subscriptionId])
+  @@index([changeDate])
+  @@map("subscription_history")
+}
+
+// ===== LIMITES POR TENANT =====
+
+model TenantLimits {
+  id       Int    @id @default(autoincrement())
+  tenantId Int    @unique
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  // Limites máximos
+  maxUsers        Int @default(10)
+  maxContacts     Int @default(100)
+  maxProcesses    Int @default(50)
+  maxStorageMB    Int @default(1024) // 1GB
+  maxCustomFields Int @default(5)
+
+  // Contadores atuais
+  currentUsers     Int @default(0)
+  currentContacts  Int @default(0)
+  currentProcesses Int @default(0)
+  currentStorageMB Int @default(0)
+
+  // Metadados
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([tenantId])
+  @@map("tenant_limits")
+}
+
+model FinancialCategory {
+  id          Int                    @id @default(autoincrement())
+  name        String
+  type        FinancialTransactionType
+  createdAt   DateTime               @default(now())
+  updatedAt   DateTime               @updatedAt
+  deletedAt   DateTime?
+
+  tenantId    Int
+  tenant      Tenant                 @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  transactions FinancialTransaction[]
+
+  @@unique([tenantId, name, type])
+  @@index([tenantId, deletedAt])
+  @@map("financial_categories")
+}
+
+model FinancialTransaction {
+  id                 Int                          @id @default(autoincrement())
+  type               FinancialTransactionType
+  status             FinancialTransactionStatus   @default(PENDING)
+  description        String
+  amount             Decimal                      @db.Decimal(12, 2)
+  competenceDate     DateTime?
+  dueDate            DateTime?
+  paymentDate        DateTime?
+  notes              String?
+  isRecurring        Boolean                      @default(false)
+  recurrenceFrequency FinancialRecurrenceFrequency?
+  recurrenceInterval Int?
+  recurrenceCount    Int?
+  recurrenceGroupId  String?
+  recurrenceIndex    Int?
+  installmentGroupId String?
+  installmentNumber  Int?
+  installmentCount   Int?
+  createdAt          DateTime                     @default(now())
+  updatedAt          DateTime                     @updatedAt
+  deletedAt          DateTime?
+
+  tenantId           Int
+  tenant             Tenant                       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  categoryId         Int
+  category           FinancialCategory            @relation(fields: [categoryId], references: [id])
+
+  contactId          Int?
+  contact            Contact?                     @relation(fields: [contactId], references: [id], onDelete: SetNull)
+
+  processId          Int?
+  process            Process?                     @relation(fields: [processId], references: [id], onDelete: SetNull)
+
+  @@index([tenantId, deletedAt])
+  @@index([tenantId, type, status])
+  @@index([tenantId, dueDate])
+  @@index([categoryId])
+  @@index([contactId])
+  @@index([processId])
+  @@index([recurrenceGroupId])
+  @@index([installmentGroupId])
+  @@map("financial_transactions")
+}
+
+// ===== AGENDA =====
+
+model Schedule {
+  id                Int      @id @default(autoincrement())
+  
+  // Informações básicas
+  title             String   @db.VarChar(255)
+  description       String?  @db.Text
+  
+  // Data e horário
+  startDate         DateTime @map("start_date")
+  endDate           DateTime @map("end_date")
+  allDay            Boolean  @default(false) @map("all_day")
+  
+  // Classificação
+  eventType         EventType @map("event_type")
+  status            ScheduleStatus @default(PENDING)
+  priority          Priority @default(MEDIUM)
+  
+  // Localização
+  location          String?  @db.VarChar(255)
+  isOnline          Boolean  @default(false) @map("is_online")
+  meetingLink       String?  @db.VarChar(500) @map("meeting_link")
+  
+  // Recorrência
+  isRecurring       Boolean  @default(false) @map("is_recurring")
+  recurrenceRule    String?  @db.Text @map("recurrence_rule")
+  recurrenceEndDate DateTime? @map("recurrence_end_date")
+  parentScheduleId  Int?     @map("parent_schedule_id")
+  parentSchedule    Schedule? @relation("ScheduleRecurrence", fields: [parentScheduleId], references: [id], onDelete: Cascade)
+  childSchedules    Schedule[] @relation("ScheduleRecurrence")
+  
+  // Integração Google Calendar
+  googleCalendarEventId String? @db.VarChar(255) @map("google_calendar_event_id")
+  /// Usuário cuja conexão OAuth foi usada para criar/atualizar o evento no Google (dono ou fallback do tenant)
+  googleSyncedByUserId Int? @map("google_synced_by_user_id")
+  googleSyncedByUser   User? @relation("ScheduleGoogleCalendarSyncCredential", fields: [googleSyncedByUserId], references: [id], onDelete: SetNull)
+  
+  // Relacionamentos
+  userId            Int      @map("user_id")
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  tenantId          Int      @map("tenant_id")
+  tenant            Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  
+  processId         Int?     @map("process_id")
+  process           Process? @relation(fields: [processId], references: [id], onDelete: SetNull)
+  
+  contacts          ScheduleContact[]
+  participants      ScheduleParticipant[]
+  reminders         ScheduleReminder[]
+  
+  // Auditoria
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+  deletedAt         DateTime? @map("deleted_at")
+  
+  @@map("schedules")
+  @@index([userId])
+  @@index([tenantId])
+  @@index([processId])
+  @@index([startDate])
+  @@index([endDate])
+  @@index([startDate, endDate])
+  @@index([status])
+  @@index([eventType])
+  @@index([deletedAt])
+  @@index([parentScheduleId])
+  @@index([tenantId, userId, startDate, endDate])
+  @@index([googleCalendarEventId])
+  @@index([googleSyncedByUserId])
+}
+
+model ScheduleContact {
+  id         Int      @id @default(autoincrement())
+  scheduleId Int      @map("schedule_id")
+  schedule   Schedule @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
+  
+  contactId  Int      @map("contact_id")
+  contact    Contact  @relation(fields: [contactId], references: [id], onDelete: Cascade)
+  
+  createdAt  DateTime @default(now()) @map("created_at")
+  
+  @@unique([scheduleId, contactId])
+  @@map("schedule_contacts")
+  @@index([scheduleId])
+  @@index([contactId])
+}
+
+model ScheduleParticipant {
+  id             Int               @id @default(autoincrement())
+  scheduleId     Int               @map("schedule_id")
+  schedule       Schedule          @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
+  
+  userId         Int               @map("user_id")
+  user           User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  role           ParticipantRole   @default(PARTICIPANT)
+  status         ParticipantStatus @default(PENDING)
+  notifyOnChange Boolean           @default(true) @map("notify_on_change")
+  
+  createdAt      DateTime          @default(now()) @map("created_at")
+  updatedAt      DateTime          @updatedAt @map("updated_at")
+  
+  @@unique([scheduleId, userId])
+  @@map("schedule_participants")
+  @@index([scheduleId])
+  @@index([userId])
+  @@index([status])
+}
+
+model ScheduleReminder {
+  id            Int          @id @default(autoincrement())
+  scheduleId    Int          @map("schedule_id")
+  schedule      Schedule     @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
+  
+  reminderTime  DateTime     @map("reminder_time")
+  reminderType  ReminderType @map("reminder_type")
+  minutesBefore Int          @map("minutes_before")
+  
+  wasSent       Boolean      @default(false) @map("was_sent")
+  sentAt        DateTime?    @map("sent_at")
+  errorMessage  String?      @db.Text @map("error_message")
+  retryCount    Int          @default(0) @map("retry_count")
+  
+  createdAt     DateTime     @default(now()) @map("created_at")
+  
+  @@map("schedule_reminders")
+  @@index([scheduleId])
+  @@index([wasSent])
+  @@index([reminderTime])
+  @@index([reminderTime, wasSent])
+}
+
+// ===== GOOGLE CALENDAR INTEGRATION =====
+
+model GoogleCalendarConnection {
+  id            Int      @id @default(autoincrement())
+  
+  userId        Int      @unique @map("user_id")
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  tenantId      Int      @map("tenant_id")
+  tenant        Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  
+  // Tokens OAuth (criptografados)
+  accessToken   String   @db.Text @map("access_token")
+  refreshToken  String   @db.Text @map("refresh_token")
+  tokenExpiry   DateTime? @map("token_expiry")
+  
+  // Configurações do calendário
+  calendarId    String?  @db.VarChar(255) @map("calendar_id") // ID do calendário do Google (padrão: primary)
+  syncEnabled   Boolean  @default(true) @map("sync_enabled")
+  
+  // Metadados
+  lastSyncAt    DateTime? @map("last_sync_at")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+  
+  @@map("google_calendar_connections")
+  @@index([userId])
+  @@index([tenantId])
+  @@index([syncEnabled])
+}
