@@ -71,6 +71,7 @@ type TransactionType = "INCOME" | "EXPENSE"
 type TransactionStatus = "PENDING" | "PAID" | "OVERDUE" | "CANCELLED"
 type RecurrenceFrequency = (typeof recurrenceOptions)[number]["value"]
 type EntryMode = "SINGLE" | "RECURRING" | "INSTALLMENTS"
+type UpdateScope = "SINGLE" | "ALL"
 
 type Category = {
   id: number
@@ -155,6 +156,7 @@ type FormState = {
   recurrenceInterval: string
   recurrenceCount: string
   installmentCount: string
+  updateScope: UpdateScope
 }
 
 type SettlementFormState = {
@@ -180,6 +182,7 @@ const initialFormState: FormState = {
   recurrenceInterval: "1",
   recurrenceCount: "2",
   installmentCount: "2",
+  updateScope: "SINGLE",
 }
 
 const initialSettlementState: SettlementFormState = {
@@ -499,6 +502,7 @@ export function TransactionsWorkspace() {
       recurrenceInterval: "1",
       recurrenceCount: String(item.recurrenceCount ?? 2),
       installmentCount: String(item.installmentCount ?? 2),
+      updateScope: "SINGLE",
     })
     setModalOpen(true)
   }
@@ -590,7 +594,7 @@ export function TransactionsWorkspace() {
 
     if (modalMode === "edit") {
       payload.status = formState.status
-      payload.updateScope = "SINGLE"
+      payload.updateScope = formState.updateScope
     }
 
     if (modalMode === "create" && formState.entryMode === "RECURRING") {
@@ -620,15 +624,24 @@ export function TransactionsWorkspace() {
         body: JSON.stringify(payload),
       })
 
+      const json = (await response.json().catch(() => null)) as
+        | { message?: string | string[]; updatedCount?: number; scope?: UpdateScope }
+        | null
+
       if (!response.ok) {
-        const json = (await response.json().catch(() => null)) as { message?: string | string[] } | null
         const message = Array.isArray(json?.message) ? json.message.join(" ") : json?.message
         throw new Error(message || "Não foi possível salvar o lançamento.")
       }
 
       setModalOpen(false)
       setFormState(initialFormState)
-      toast.success(modalMode === "create" ? "Lançamento criado." : "Lançamento atualizado.")
+      if (modalMode === "create") {
+        toast.success("Lançamento criado.")
+      } else if (json?.scope === "ALL" && json.updatedCount && json.updatedCount > 1) {
+        toast.success(`${json.updatedCount} lançamentos atualizados.`)
+      } else {
+        toast.success("Lançamento atualizado.")
+      }
       await loadData()
     } catch (submitError) {
       toast.error(submitError instanceof Error ? submitError.message : "Falha ao salvar lançamento.")
@@ -993,10 +1006,27 @@ export function TransactionsWorkspace() {
                     <option value="RECURRING">Recorrência</option>
                     <option value="INSTALLMENTS">Parcelamento</option>
                   </SelectField>
-                  {modalMode === "edit" ? (
-                    <FieldDescription>Escopo de edição mantido como item único por enquanto, para evitar estrago em série.</FieldDescription>
+                  {modalMode === "edit" && formState.entryMode === "SINGLE" ? (
+                    <FieldDescription>Esse lançamento é individual, então a edição afeta só este item.</FieldDescription>
                   ) : null}
                 </Field>
+
+                {modalMode === "edit" && formState.entryMode !== "SINGLE" ? (
+                  <Field>
+                    <FieldLabel htmlFor="update-scope">Aplicar alterações em</FieldLabel>
+                    <SelectField
+                      id="update-scope"
+                      value={formState.updateScope}
+                      onChange={(event) => setFormState((current) => ({ ...current, updateScope: event.target.value as UpdateScope }))}
+                    >
+                      <option value="SINGLE">Somente este lançamento</option>
+                      <option value="ALL">Todos desta série</option>
+                    </SelectField>
+                    <FieldDescription>
+                      Use item único para ajustar uma parcela/ocorrência isolada ou a série inteira para replicar a edição.
+                    </FieldDescription>
+                  </Field>
+                ) : null}
 
                 <Field className="md:col-span-2">
                   <FieldLabel htmlFor="description">Descrição</FieldLabel>

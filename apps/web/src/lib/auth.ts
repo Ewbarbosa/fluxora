@@ -23,6 +23,21 @@ export type TenantRecord = {
 
 export const TOKEN_KEY = "fluxora.access_token"
 export const TENANT_KEY = "fluxora.tenant_id"
+export const TOKEN_COOKIE = "fluxora_access_token"
+export const TENANT_COOKIE = "fluxora_tenant_id"
+const COOKIE_MAX_AGE = 60 * 60 * 24 * 7
+
+function writeCookie(name: string, value: string, maxAge = COOKIE_MAX_AGE) {
+  if (typeof document === "undefined") return
+
+  const secure = window.location.protocol === "https:" ? "; secure" : ""
+  document.cookie = `${name}=${encodeURIComponent(value)}; path=/; max-age=${maxAge}; samesite=lax${secure}`
+}
+
+function clearCookie(name: string) {
+  if (typeof document === "undefined") return
+  document.cookie = `${name}=; path=/; max-age=0; samesite=lax`
+}
 
 function decodeBase64Url(value: string) {
   const normalized = value.replace(/-/g, "+").replace(/_/g, "/")
@@ -58,8 +73,10 @@ export function getStoredTenantId() {
 export function storeSession(token: string, tenantId?: string | number | null) {
   if (typeof window === "undefined") return
   localStorage.setItem(TOKEN_KEY, token)
+  writeCookie(TOKEN_COOKIE, token)
   if (tenantId) {
     localStorage.setItem(TENANT_KEY, String(tenantId))
+    writeCookie(TENANT_COOKIE, String(tenantId))
   }
 }
 
@@ -67,6 +84,8 @@ export function clearSession() {
   if (typeof window === "undefined") return
   localStorage.removeItem(TOKEN_KEY)
   localStorage.removeItem(TENANT_KEY)
+  clearCookie(TOKEN_COOKIE)
+  clearCookie(TENANT_COOKIE)
 }
 
 export function isTokenExpired(payload: AuthTokenPayload | null) {
