@@ -264,8 +264,15 @@ export class FinanceService {
 
     const finalStatus: FinancialTransactionStatus =
       data.status ?? existing.status;
+    const finalDueDate = data.dueDate ?? existing.dueDate?.toISOString();
     const finalPaymentDate =
       data.paymentDate ?? existing.paymentDate?.toISOString();
+
+    if (!finalDueDate) {
+      throw new BadRequestException(
+        'Informe a data de vencimento do lançamento.',
+      );
+    }
 
     if (finalStatus === FinancialTransactionStatus.PAID && !finalPaymentDate) {
       throw new BadRequestException(
@@ -352,7 +359,9 @@ export class FinanceService {
       where: { id },
       data: {
         status: FinancialTransactionStatus.PAID,
-        paymentDate: payload.paymentDate ? new Date(payload.paymentDate) : new Date(),
+        paymentDate: payload.paymentDate
+          ? new Date(payload.paymentDate)
+          : new Date(),
         amount: new Prisma.Decimal(adjustedAmount),
         notes: adjustmentNotes
           ? existing.notes
@@ -743,6 +752,12 @@ export class FinanceService {
   }
 
   private validatePhaseOneCreationMode(data: CreateFinancialTransactionDto) {
+    if (!data.dueDate) {
+      throw new BadRequestException(
+        'Informe a data de vencimento do lançamento.',
+      );
+    }
+
     if (data.recurrenceFrequency && data.installmentCount) {
       throw new BadRequestException(
         'Use recorrência ou parcelamento na criação inicial, não os dois ao mesmo tempo.',

@@ -5,9 +5,11 @@ import {
   BellRingIcon,
   CalendarDaysIcon,
   CheckCircle2Icon,
+  EllipsisVerticalIcon,
   PencilIcon,
   PlusIcon,
   SearchIcon,
+  Trash2Icon,
 } from "lucide-react"
 
 import { getStoredToken } from "@/lib/auth"
@@ -29,6 +31,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { Skeleton } from "@/components/ui/skeleton"
 import { toast } from "sonner"
 
@@ -165,6 +174,12 @@ type SettlementFormState = {
   interestAmount: string
   discountAmount: string
   notes: string
+}
+
+type DeleteTarget = {
+  id: number
+  description: string
+  entryMode: EntryMode
 }
 
 const initialFormState: FormState = {
@@ -369,6 +384,10 @@ export function TransactionsWorkspace() {
   const [payModalOpen, setPayModalOpen] = useState(false)
   const [payTarget, setPayTarget] = useState<Transaction | null>(null)
   const [payFormState, setPayFormState] = useState<SettlementFormState>(initialSettlementState)
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false)
+  const [deleteTarget, setDeleteTarget] = useState<DeleteTarget | null>(null)
+  const [deleteScope, setDeleteScope] = useState<UpdateScope>("SINGLE")
+  const [deleting, setDeleting] = useState(false)
 
   const token = useMemo(() => getStoredToken(), [])
 
@@ -516,6 +535,22 @@ export function TransactionsWorkspace() {
     setPayModalOpen(true)
   }
 
+  function openDeleteModal(item: Transaction) {
+    const entryMode: EntryMode = item.installmentCount && item.installmentCount > 1
+      ? "INSTALLMENTS"
+      : item.isRecurring
+        ? "RECURRING"
+        : "SINGLE"
+
+    setDeleteTarget({
+      id: item.id,
+      description: item.description,
+      entryMode,
+    })
+    setDeleteScope("SINGLE")
+    setDeleteModalOpen(true)
+  }
+
   async function confirmPayment() {
     if (!token || !payTarget) return
     setRowActionId(payTarget.id)
@@ -553,6 +588,49 @@ export function TransactionsWorkspace() {
     }
   }
 
+  async function confirmDelete() {
+    if (!token || !deleteTarget) return
+
+    setDeleting(true)
+    setRowActionId(deleteTarget.id)
+
+    try {
+      const params = new URLSearchParams()
+      params.set("deleteScope", deleteScope)
+
+      const response = await fetch(`${apiBaseUrl}/finance/transactions/${deleteTarget.id}?${params.toString()}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      const json = (await response.json().catch(() => null)) as
+        | { message?: string | string[]; deletedCount?: number; scope?: UpdateScope }
+        | null
+
+      if (!response.ok) {
+        const message = Array.isArray(json?.message) ? json.message.join(" ") : json?.message
+        throw new Error(message || "Não foi possível excluir o lançamento.")
+      }
+
+      setDeleteModalOpen(false)
+      setDeleteTarget(null)
+      setDeleteScope("SINGLE")
+      if (json?.scope === "ALL" && json.deletedCount && json.deletedCount > 1) {
+        toast.success(`${json.deletedCount} lançamentos excluídos.`)
+      } else {
+        toast.success("Lançamento excluído.")
+      }
+      await loadData()
+    } catch (deleteError) {
+      toast.error(deleteError instanceof Error ? deleteError.message : "Falha ao excluir lançamento.")
+    } finally {
+      setDeleting(false)
+      setRowActionId(null)
+    }
+  }
+
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
@@ -576,8 +654,8 @@ export function TransactionsWorkspace() {
       return
     }
 
-    if (formState.entryMode !== "SINGLE" && !formState.dueDate) {
-      toast.warning("Informe a data inicial de vencimento.")
+    if (!formState.dueDate) {
+      toast.warning("Informe a data de vencimento.")
       return
     }
 
@@ -913,21 +991,28 @@ export function TransactionsWorkspace() {
                               <div>
                                 <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground lg:hidden">Ações</div>
                                 <div className="flex flex-wrap items-center justify-start gap-2 lg:justify-end">
-                                  {(item.status === "PENDING" || item.status === "OVERDUE") ? (
-                                    <Button
-                                      size="sm"
-                                      variant="outline"
-                                      onClick={() => openPayModal(item)}
-                                      disabled={rowActionId === item.id}
-                                    >
-                                      <CheckCircle2Icon className="size-4" />
-                                      {rowActionId === item.id ? "Baixando..." : "Baixar"}
-                                    </Button>
-                                  ) : null}
-                                  <Button size="sm" variant="outline" onClick={() => openEditModal(item)}>
-                                    <PencilIcon className="size-4" />
-                                    Editar
-                                  </Button>
+                                  <DropdownMenu>
+                                    <DropdownMenuTrigger render={<Button size="icon-sm" variant="outline" aria-label="Abrir ações do lançamento" />}>
+                                      <EllipsisVerticalIcon className="size-4" />
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent align="end" className="min-w-48">
+                                      {(item.status === "PENDING" || item.status === "OVERDUE") ? (
+                                        <DropdownMenuItem onClick={() => openPayModal(item)}>
+                                          <CheckCircle2Icon className="size-4" />
+                                          Baixar lançamento
+                                        </DropdownMenuItem>
+                                      ) : null}
+                                      <DropdownMenuItem onClick={() => openEditModal(item)}>
+                                        <PencilIcon className="size-4" />
+                                        Editar lançamento
+                                      </DropdownMenuItem>
+                                      <DropdownMenuSeparator />
+                                      <DropdownMenuItem variant="destructive" onClick={() => openDeleteModal(item)}>
+                                        <Trash2Icon className="size-4" />
+                                        Excluir lançamento
+                                      </DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                  </DropdownMenu>
                                 </div>
                               </div>
                             </div>
@@ -1056,6 +1141,7 @@ export function TransactionsWorkspace() {
                 <Field>
                   <FieldLabel htmlFor="dueDate">Vencimento</FieldLabel>
                   <Input id="dueDate" type="date" value={formState.dueDate} onChange={(event) => setFormState((current) => ({ ...current, dueDate: event.target.value }))} />
+                  <FieldDescription>Obrigatório para qualquer lançamento.</FieldDescription>
                 </Field>
 
                 {modalMode === "edit" ? (
@@ -1219,6 +1305,51 @@ export function TransactionsWorkspace() {
               </Button>
               <Button type="button" onClick={() => void confirmPayment()} disabled={rowActionId !== null}>
                 {rowActionId !== null ? "Confirmando..." : "Confirmar baixa"}
+              </Button>
+            </DialogFooter>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={deleteModalOpen} onOpenChange={setDeleteModalOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Excluir lançamento</DialogTitle>
+            <DialogDescription>
+              {deleteTarget
+                ? `Confirme a exclusão de “${deleteTarget.description}”.`
+                : "Confirme a exclusão do lançamento selecionado."}
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4 px-4 pb-4">
+            {deleteTarget?.entryMode !== "SINGLE" ? (
+              <Field>
+                <FieldLabel htmlFor="delete-scope">Excluir</FieldLabel>
+                <SelectField
+                  id="delete-scope"
+                  value={deleteScope}
+                  onChange={(event) => setDeleteScope(event.target.value as UpdateScope)}
+                >
+                  <option value="SINGLE">Somente este lançamento</option>
+                  <option value="ALL">Todos desta série</option>
+                </SelectField>
+                <FieldDescription>
+                  Para parcelados e recorrentes, escolha se a exclusão vale só para este item ou para a série inteira.
+                </FieldDescription>
+              </Field>
+            ) : (
+              <div className="rounded-lg border bg-muted/30 p-3 text-sm text-muted-foreground">
+                Esse lançamento é individual. A exclusão afeta apenas este item.
+              </div>
+            )}
+
+            <DialogFooter className="px-0 pb-0">
+              <Button type="button" variant="outline" onClick={() => setDeleteModalOpen(false)} disabled={deleting}>
+                Cancelar
+              </Button>
+              <Button type="button" variant="destructive" onClick={confirmDelete} disabled={deleting || rowActionId === deleteTarget?.id}>
+                {deleting ? "Excluindo..." : "Excluir lançamento"}
               </Button>
             </DialogFooter>
           </div>

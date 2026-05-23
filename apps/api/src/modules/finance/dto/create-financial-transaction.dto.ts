@@ -37,10 +37,9 @@ export class CreateFinancialTransactionDto {
   @IsDateString()
   competenceDate?: string;
 
-  @ApiPropertyOptional({ example: '2026-05-05T00:00:00.000Z' })
-  @IsOptional()
+  @ApiProperty({ example: '2026-05-05T00:00:00.000Z' })
   @IsDateString()
-  dueDate?: string;
+  dueDate: string;
 
   @ApiPropertyOptional({ example: '2026-05-05T10:30:00.000Z' })
   @IsOptional()
