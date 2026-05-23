@@ -6,6 +6,7 @@ import {
   CalendarDaysIcon,
   CheckCircle2Icon,
   EllipsisVerticalIcon,
+  EyeIcon,
   PencilIcon,
   PlusIcon,
   SearchIcon,
@@ -345,6 +346,12 @@ function seriesLabel(item: Transaction) {
   return null
 }
 
+function entryModeForTransaction(item: Transaction): EntryMode {
+  if (item.installmentCount && item.installmentCount > 1) return "INSTALLMENTS"
+  if (item.isRecurring) return "RECURRING"
+  return "SINGLE"
+}
+
 function SelectField(props: React.ComponentProps<"select">) {
   return (
     <select
@@ -377,6 +384,7 @@ export function TransactionsWorkspace() {
   const [notifications, setNotifications] = useState<Notifications | null>(null)
   const [loading, setLoading] = useState(true)
   const [rowActionId, setRowActionId] = useState<number | null>(null)
+  const [viewingTransaction, setViewingTransaction] = useState<Transaction | null>(null)
   const [modalOpen, setModalOpen] = useState(false)
   const [modalMode, setModalMode] = useState<"create" | "edit">("create")
   const [formState, setFormState] = useState<FormState>(initialFormState)
@@ -498,12 +506,6 @@ export function TransactionsWorkspace() {
   }
 
   function openEditModal(item: Transaction) {
-    const entryMode: EntryMode = item.installmentCount && item.installmentCount > 1
-      ? "INSTALLMENTS"
-      : item.isRecurring
-        ? "RECURRING"
-        : "SINGLE"
-
     setModalMode("edit")
     setFormState({
       id: item.id,
@@ -516,7 +518,7 @@ export function TransactionsWorkspace() {
       paymentDate: formatDateInput(item.paymentDate),
       notes: item.notes ?? "",
       status: item.status === "OVERDUE" ? "PENDING" : item.status,
-      entryMode,
+      entryMode: entryModeForTransaction(item),
       recurrenceFrequency: item.recurrenceFrequency ?? "MONTHLY",
       recurrenceInterval: "1",
       recurrenceCount: String(item.recurrenceCount ?? 2),
@@ -536,16 +538,10 @@ export function TransactionsWorkspace() {
   }
 
   function openDeleteModal(item: Transaction) {
-    const entryMode: EntryMode = item.installmentCount && item.installmentCount > 1
-      ? "INSTALLMENTS"
-      : item.isRecurring
-        ? "RECURRING"
-        : "SINGLE"
-
     setDeleteTarget({
       id: item.id,
       description: item.description,
-      entryMode,
+      entryMode: entryModeForTransaction(item),
     })
     setDeleteScope("SINGLE")
     setDeleteModalOpen(true)
@@ -939,86 +935,94 @@ export function TransactionsWorkspace() {
                       </div>
                     </div>
 
-                    <div className="divide-y">
-                      <div className="hidden bg-muted/20 px-4 py-3 lg:grid lg:grid-cols-[minmax(0,2fr)_160px_140px_140px_160px_220px] lg:items-center lg:gap-3">
-                        <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Lançamento</div>
-                        <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Categoria</div>
-                        <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Vencimento</div>
-                        <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Status</div>
-                        <div className="text-right text-xs font-semibold uppercase tracking-wide text-muted-foreground">Valor</div>
-                        <div className="text-right text-xs font-semibold uppercase tracking-wide text-muted-foreground">Ações</div>
-                      </div>
+                    <div className="overflow-x-auto">
+                      <table className="min-w-[760px] w-full border-separate border-spacing-0">
+                        <thead>
+                          <tr className="bg-muted/20">
+                            <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-muted-foreground">Lançamento</th>
+                            <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-muted-foreground">Categoria</th>
+                            <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-muted-foreground">Vencimento</th>
+                            <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-muted-foreground">Status</th>
+                            <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-muted-foreground">Valor</th>
+                            <th className="sticky right-0 z-10 border-l bg-muted/20 px-4 py-3 text-center text-xs font-semibold uppercase tracking-wide text-muted-foreground">Ações</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {group.items.map((item) => {
+                            const itemSeries = seriesLabel(item)
 
-                      {group.items.map((item) => {
-                        const itemSeries = seriesLabel(item)
-                        return (
-                          <div key={item.id} className="px-4 py-3">
-                            <div className="grid gap-3 lg:grid-cols-[minmax(0,2fr)_160px_140px_140px_160px_220px] lg:items-center">
-                              <div className="min-w-0 space-y-2">
-                                <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground lg:hidden">Lançamento</div>
-                                <div className="flex flex-wrap items-center gap-2">
-                                  <span className="font-medium">{item.description}</span>
-                                  <span className="inline-flex items-center rounded-full bg-muted px-2.5 py-1 text-xs text-muted-foreground ring-1 ring-inset ring-border">
-                                    {item.type === "INCOME" ? "Receita" : "Despesa"}
+                            return (
+                              <tr key={item.id} className="border-t">
+                                <td className="border-t px-4 py-3 align-top">
+                                  <div className="space-y-2">
+                                    <div className="flex flex-wrap items-center gap-2">
+                                      <span className="font-medium">{item.description}</span>
+                                      <span className="inline-flex items-center rounded-full bg-muted px-2.5 py-1 text-xs text-muted-foreground ring-1 ring-inset ring-border">
+                                        {item.type === "INCOME" ? "Receita" : "Despesa"}
+                                      </span>
+                                    </div>
+                                    {itemSeries ? (
+                                      <div className="flex flex-wrap gap-2">
+                                        <span className="inline-flex items-center rounded-full bg-secondary px-2.5 py-1 text-xs text-secondary-foreground ring-1 ring-inset ring-border">
+                                          {itemSeries}
+                                        </span>
+                                      </div>
+                                    ) : null}
+                                  </div>
+                                </td>
+                                <td className="border-t px-4 py-3 align-top text-sm">
+                                  {item.category?.name ?? "Sem categoria"}
+                                </td>
+                                <td className="border-t px-4 py-3 align-top text-sm">
+                                  {formatDate(item.dueDate)}
+                                </td>
+                                <td className="border-t px-4 py-3 align-top">
+                                  <span className={cn("inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ring-1 ring-inset", statusClassName(item.status))}>
+                                    {statusLabel(item.status)}
                                   </span>
-                                  {itemSeries ? (
-                                    <span className="inline-flex items-center rounded-full bg-secondary px-2.5 py-1 text-xs text-secondary-foreground ring-1 ring-inset ring-border">
-                                      {itemSeries}
-                                    </span>
-                                  ) : null}
-                                </div>
-                              </div>
-                              <div className="min-w-0">
-                                <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground lg:hidden">Categoria</div>
-                                <div className="truncate text-sm">{item.category?.name ?? "Sem categoria"}</div>
-                              </div>
-                              <div>
-                                <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground lg:hidden">Vencimento</div>
-                                <div className="text-sm">{formatDate(item.dueDate)}</div>
-                              </div>
-                              <div>
-                                <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground lg:hidden">Status</div>
-                                <span className={cn("inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ring-1 ring-inset", statusClassName(item.status))}>
-                                  {statusLabel(item.status)}
-                                </span>
-                              </div>
-                              <div>
-                                <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground lg:hidden">Valor</div>
-                                <div className={cn("text-sm font-semibold lg:text-right", item.type === "INCOME" ? "text-emerald-600 dark:text-emerald-300" : "text-foreground")}>
+                                </td>
+                                <td className={cn("border-t px-4 py-3 text-right align-top text-sm font-semibold", item.type === "INCOME" ? "text-emerald-600 dark:text-emerald-300" : "text-foreground")}>
                                   {formatMoney(item.amount)}
-                                </div>
-                              </div>
-                              <div>
-                                <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground lg:hidden">Ações</div>
-                                <div className="flex flex-wrap items-center justify-start gap-2 lg:justify-end">
-                                  <DropdownMenu>
-                                    <DropdownMenuTrigger render={<Button size="icon-sm" variant="outline" aria-label="Abrir ações do lançamento" />}>
-                                      <EllipsisVerticalIcon className="size-4" />
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent align="end" className="min-w-48">
-                                      {(item.status === "PENDING" || item.status === "OVERDUE") ? (
-                                        <DropdownMenuItem onClick={() => openPayModal(item)}>
-                                          <CheckCircle2Icon className="size-4" />
-                                          Baixar lançamento
+                                </td>
+                                <td className="sticky right-0 z-10 border-t border-l bg-background px-4 py-3 align-top">
+                                  <div className="flex items-center justify-center gap-1">
+                                    <Button
+                                      size="icon-sm"
+                                      variant="ghost"
+                                      aria-label="Visualizar detalhes do lançamento"
+                                      onClick={() => setViewingTransaction(item)}
+                                    >
+                                      <EyeIcon className="size-4" />
+                                    </Button>
+                                    <DropdownMenu>
+                                      <DropdownMenuTrigger render={<Button size="icon-sm" variant="ghost" aria-label="Abrir ações do lançamento" />}>
+                                        <EllipsisVerticalIcon className="size-4" />
+                                      </DropdownMenuTrigger>
+                                      <DropdownMenuContent align="end" className="min-w-48">
+                                        {(item.status === "PENDING" || item.status === "OVERDUE") ? (
+                                          <DropdownMenuItem onClick={() => openPayModal(item)}>
+                                            <CheckCircle2Icon className="size-4" />
+                                            Baixar lançamento
+                                          </DropdownMenuItem>
+                                        ) : null}
+                                        <DropdownMenuItem onClick={() => openEditModal(item)}>
+                                          <PencilIcon className="size-4" />
+                                          Editar lançamento
                                         </DropdownMenuItem>
-                                      ) : null}
-                                      <DropdownMenuItem onClick={() => openEditModal(item)}>
-                                        <PencilIcon className="size-4" />
-                                        Editar lançamento
-                                      </DropdownMenuItem>
-                                      <DropdownMenuSeparator />
-                                      <DropdownMenuItem variant="destructive" onClick={() => openDeleteModal(item)}>
-                                        <Trash2Icon className="size-4" />
-                                        Excluir lançamento
-                                      </DropdownMenuItem>
-                                    </DropdownMenuContent>
-                                  </DropdownMenu>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        )
-                      })}
+                                        <DropdownMenuSeparator />
+                                        <DropdownMenuItem variant="destructive" onClick={() => openDeleteModal(item)}>
+                                          <Trash2Icon className="size-4" />
+                                          Excluir lançamento
+                                        </DropdownMenuItem>
+                                      </DropdownMenuContent>
+                                    </DropdownMenu>
+                                  </div>
+                                </td>
+                              </tr>
+                            )
+                          })}
+                        </tbody>
+                      </table>
                     </div>
                   </div>
                 ))
@@ -1202,6 +1206,99 @@ export function TransactionsWorkspace() {
               <Button type="submit" disabled={submitting}>{submitting ? "Salvando..." : modalMode === "create" ? "Criar lançamento" : "Salvar alterações"}</Button>
             </DialogFooter>
           </form>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog
+        open={Boolean(viewingTransaction)}
+        onOpenChange={(open) => {
+          if (!open) setViewingTransaction(null)
+        }}
+      >
+        <DialogContent className="max-w-3xl">
+          <DialogHeader>
+            <DialogTitle>Detalhes do lançamento</DialogTitle>
+            <DialogDescription>
+              Visualização resumida do item selecionado. Menos ruído, mais contexto.
+            </DialogDescription>
+          </DialogHeader>
+
+          {viewingTransaction ? (
+            <div className="space-y-6 px-4 pb-4">
+              <div className="rounded-lg border p-4">
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div>
+                    <div className="text-lg font-semibold">{viewingTransaction.description}</div>
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      <span className="inline-flex items-center rounded-full bg-muted px-2.5 py-1 text-xs text-muted-foreground ring-1 ring-inset ring-border">
+                        {viewingTransaction.type === "INCOME" ? "Receita" : "Despesa"}
+                      </span>
+                      <span className={cn("inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ring-1 ring-inset", statusClassName(viewingTransaction.status))}>
+                        {statusLabel(viewingTransaction.status)}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className={cn("text-2xl font-semibold", viewingTransaction.type === "INCOME" ? "text-emerald-600 dark:text-emerald-300" : "text-foreground")}>
+                      {formatMoney(viewingTransaction.amount)}
+                    </div>
+                    <div className="text-sm text-muted-foreground">Valor do lançamento</div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="space-y-2 rounded-lg border p-4">
+                  <div className="text-sm font-medium text-muted-foreground">Categoria</div>
+                  <div>{viewingTransaction.category?.name ?? "Sem categoria"}</div>
+                </div>
+                <div className="space-y-2 rounded-lg border p-4">
+                  <div className="text-sm font-medium text-muted-foreground">Vencimento</div>
+                  <div>{formatDate(viewingTransaction.dueDate)}</div>
+                </div>
+                <div className="space-y-2 rounded-lg border p-4">
+                  <div className="text-sm font-medium text-muted-foreground">Pagamento</div>
+                  <div>{viewingTransaction.paymentDate ? formatDate(viewingTransaction.paymentDate) : "Ainda não pago"}</div>
+                </div>
+                <div className="space-y-2 rounded-lg border p-4">
+                  <div className="text-sm font-medium text-muted-foreground">Série ou parcelamento</div>
+                  <div>
+                    {viewingTransaction.isRecurring
+                      ? seriesLabel(viewingTransaction) ?? "Recorrente"
+                      : viewingTransaction.installmentCount
+                        ? seriesLabel(viewingTransaction)
+                        : "Lançamento avulso"}
+                  </div>
+                </div>
+                <div className="space-y-2 rounded-lg border p-4 md:col-span-2">
+                  <div className="text-sm font-medium text-muted-foreground">Observações</div>
+                  <div>{viewingTransaction.notes?.trim() ? viewingTransaction.notes : "Sem observações."}</div>
+                </div>
+              </div>
+
+              <DialogFooter className="px-0 pb-0">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => {
+                    if (viewingTransaction) openDeleteModal(viewingTransaction)
+                    setViewingTransaction(null)
+                  }}
+                >
+                  Excluir
+                </Button>
+                <Button
+                  type="button"
+                  onClick={() => {
+                    if (viewingTransaction) openEditModal(viewingTransaction)
+                    setViewingTransaction(null)
+                  }}
+                >
+                  Editar
+                </Button>
+              </DialogFooter>
+            </div>
+          ) : null}
         </DialogContent>
       </Dialog>
 
