@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { storeSession } from "@/lib/auth"
+import { resolveTenantIdFromToken, storeSession } from "@/lib/auth"
 
 function readCallbackParams() {
   if (typeof window === "undefined") return new URLSearchParams()
@@ -28,7 +28,7 @@ export default function LoginCallbackPage() {
   useEffect(() => {
     const params = readCallbackParams()
     const accessToken = params.get("access_token")
-    const tenantId = params.get("tenantId")
+    const tenantId = params.get("tenantId") ?? (accessToken ? resolveTenantIdFromToken(accessToken) : null)
 
     if (!accessToken) {
       const timer = window.setTimeout(() => setState("error"), 0)

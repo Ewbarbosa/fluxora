@@ -60,6 +60,11 @@ export function decodeAccessToken(token: string): AuthTokenPayload | null {
   }
 }
 
+export function resolveTenantIdFromToken(token: string) {
+  const payload = decodeAccessToken(token)
+  return payload?.tenantId ? String(payload.tenantId) : null
+}
+
 export function getStoredToken() {
   if (typeof window === "undefined") return null
   return localStorage.getItem(TOKEN_KEY)
@@ -74,10 +79,10 @@ export function storeSession(token: string, tenantId?: string | number | null) {
   if (typeof window === "undefined") return
   localStorage.setItem(TOKEN_KEY, token)
   writeCookie(TOKEN_COOKIE, token)
-  if (tenantId) {
-    localStorage.setItem(TENANT_KEY, String(tenantId))
-    writeCookie(TENANT_COOKIE, String(tenantId))
-  }
+  const resolvedTenantId = tenantId ? String(tenantId) : resolveTenantIdFromToken(token)
+  if (!resolvedTenantId) return
+  localStorage.setItem(TENANT_KEY, resolvedTenantId)
+  writeCookie(TENANT_COOKIE, resolvedTenantId)
 }
 
 export function clearSession() {
