@@ -944,7 +944,7 @@ export function TransactionsWorkspace() {
                             <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-muted-foreground">Vencimento</th>
                             <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-muted-foreground">Status</th>
                             <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-muted-foreground">Valor</th>
-                            <th className="sticky right-0 z-10 border-l bg-muted/20 px-4 py-3 text-center text-xs font-semibold uppercase tracking-wide text-muted-foreground">Ações</th>
+                            <th className="sticky -right-px z-10 w-24 min-w-24 max-w-24 border-l bg-muted px-4 py-3 text-center text-xs font-semibold uppercase tracking-wide text-muted-foreground whitespace-nowrap">Ações</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -984,7 +984,7 @@ export function TransactionsWorkspace() {
                                 <td className={cn("border-t px-4 py-3 text-right align-top text-sm font-semibold", item.type === "INCOME" ? "text-emerald-600 dark:text-emerald-300" : "text-foreground")}>
                                   {formatMoney(item.amount)}
                                 </td>
-                                <td className="sticky right-0 z-10 border-t border-l bg-background px-4 py-3 align-top">
+                                <td className="sticky -right-px z-10 w-24 min-w-24 max-w-24 border-t border-l bg-background px-4 py-3 align-top whitespace-nowrap">
                                   <div className="flex items-center justify-center gap-1">
                                     <Button
                                       size="icon-sm"
