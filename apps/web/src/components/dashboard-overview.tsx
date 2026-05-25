@@ -141,7 +141,7 @@ export function DashboardOverview() {
 
   return (
     <div className="flex flex-1 flex-col gap-4 p-1 pt-0 md:p-4 md:pt-0">
-      <section className="overflow-hidden rounded-[1.5rem] border text-white shadow-[0_22px_56px_rgba(0,60,37,0.24)] [border-color:var(--app-hero-border)] [background-color:var(--app-hero-bg)]">
+      <section className="overflow-hidden rounded-[1.5rem] border shadow-[0_18px_40px_rgba(15,23,32,0.08)] [border-color:var(--app-hero-border)] [background-color:var(--app-hero-bg)] [color:var(--app-hero-foreground)]">
         <div className="flex flex-col gap-5 px-5 py-5 md:px-6 md:py-6">
           <div className="flex items-start justify-between gap-3">
             <div className="space-y-2">
@@ -158,7 +158,7 @@ export function DashboardOverview() {
             </div>
             <Button
               variant="secondary"
-              className="rounded-2xl border-0 text-white [background-color:var(--app-hero-button)] hover:[background-color:var(--app-hero-chip)]"
+              className="rounded-2xl border-0 [background-color:var(--app-hero-button)] [color:var(--primary-foreground)] hover:opacity-90 dark:[color:var(--primary-foreground)]"
               onClick={() => void loadData()}
               disabled={state.loading}
             >
@@ -179,7 +179,7 @@ export function DashboardOverview() {
                     <ArrowUpRightIcon className="size-4" />
                     Receitas
                   </div>
-                  <p className="mt-2 font-semibold text-emerald-100">
+                  <p className="mt-2 font-semibold text-emerald-600 dark:text-emerald-300">
                     {state.summary ? formatMoney(state.summary.totalIncome) : "—"}
                   </p>
                 </div>
@@ -188,7 +188,7 @@ export function DashboardOverview() {
                     <ArrowDownRightIcon className="size-4" />
                     Despesas
                   </div>
-                  <p className="mt-2 font-semibold text-rose-100">
+                  <p className="mt-2 font-semibold text-rose-600 dark:text-rose-300">
                     {state.summary ? formatMoney(state.summary.totalExpense) : "—"}
                   </p>
                 </div>

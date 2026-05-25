@@ -729,7 +729,7 @@ export function TransactionsWorkspace() {
   return (
     <>
       <div className="space-y-6 p-1 pt-0 md:p-4 md:pt-0">
-        <section className="overflow-hidden rounded-[1.45rem] border text-white shadow-[0_20px_48px_rgba(0,60,37,0.24)] [border-color:var(--app-hero-border)] [background-color:var(--app-hero-bg)]">
+        <section className="overflow-hidden rounded-[1.45rem] border shadow-[0_18px_40px_rgba(15,23,32,0.08)] [border-color:var(--app-hero-border)] [background-color:var(--app-hero-bg)] [color:var(--app-hero-foreground)]">
           <div className="flex flex-col gap-5 px-5 py-5 md:px-6 md:py-6">
             <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
               <div className="space-y-2">
@@ -744,7 +744,7 @@ export function TransactionsWorkspace() {
                   </p>
                 </div>
               </div>
-              <Button onClick={openCreateModal} className="rounded-xl border-0 bg-[color:var(--brand-1)] text-[color:var(--brand-4)] hover:[background-color:rgba(144,215,187,0.9)]">
+              <Button onClick={openCreateModal} className="rounded-xl border-0 bg-[color:var(--app-hero-button)] text-[color:var(--primary-foreground)] hover:opacity-90 dark:text-[color:var(--primary-foreground)]">
                 <PlusIcon className="size-4" />
                 Novo lançamento
               </Button>
@@ -762,11 +762,11 @@ export function TransactionsWorkspace() {
                 <>
                   <div className="rounded-[1rem] border p-4 backdrop-blur [border-color:var(--app-hero-border)] [background-color:var(--app-hero-panel)]">
                     <p className="text-sm [color:var(--app-hero-muted)]">Receitas</p>
-                    <p className="mt-2 text-2xl font-semibold text-emerald-100">{formatMoney(summary?.totalIncome ?? 0)}</p>
+                    <p className="mt-2 text-2xl font-semibold text-emerald-600 dark:text-emerald-300">{formatMoney(summary?.totalIncome ?? 0)}</p>
                   </div>
                   <div className="rounded-[1rem] border p-4 backdrop-blur [border-color:var(--app-hero-border)] [background-color:var(--app-hero-panel)]">
                     <p className="text-sm [color:var(--app-hero-muted)]">Despesas</p>
-                    <p className="mt-2 text-2xl font-semibold text-rose-100">{formatMoney(summary?.totalExpense ?? 0)}</p>
+                    <p className="mt-2 text-2xl font-semibold text-rose-600 dark:text-rose-300">{formatMoney(summary?.totalExpense ?? 0)}</p>
                   </div>
                   <div className="rounded-[1rem] border p-4 backdrop-blur [border-color:var(--app-hero-border)] [background-color:var(--app-hero-panel)]">
                     <p className="text-sm [color:var(--app-hero-muted)]">Saldo</p>
