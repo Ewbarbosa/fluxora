@@ -694,6 +694,243 @@ export class FinanceService {
     };
   }
 
+  async getDashboardOverview(req: CustomRequest) {
+    await this.tenantLimitsService.ensureAdvancedReportsAllowed(req.tenantId);
+
+    const now = new Date();
+    const currentMonthStart = this.getStartOfMonth(now);
+    const currentMonthEnd = this.getEndOfMonth(now);
+    const previousMonthStart = this.getStartOfMonth(
+      this.shiftMonths(currentMonthStart, -1),
+    );
+    const previousMonthEnd = this.getEndOfMonth(previousMonthStart);
+    const trendStart = this.getStartOfMonth(
+      this.shiftMonths(currentMonthStart, -5),
+    );
+    const startOfToday = this.getStartOfDayFromDate(now);
+
+    const activeWhere: Prisma.FinancialTransactionWhereInput = {
+      tenantId: req.tenantId,
+      deletedAt: null,
+      status: {
+        not: FinancialTransactionStatus.CANCELLED,
+      },
+    };
+
+    const [
+      currentMonthRows,
+      previousMonthRows,
+      trendRows,
+      upcomingRows,
+      recentRows,
+      notifications,
+    ] = await Promise.all([
+      this.prisma.financialTransaction.findMany({
+        where: {
+          ...activeWhere,
+          dueDate: {
+            gte: currentMonthStart,
+            lte: currentMonthEnd,
+          },
+        },
+        include: this.defaultIncludes(),
+        orderBy: [{ dueDate: 'asc' }, { createdAt: 'asc' }],
+      }),
+      this.prisma.financialTransaction.findMany({
+        where: {
+          ...activeWhere,
+          dueDate: {
+            gte: previousMonthStart,
+            lte: previousMonthEnd,
+          },
+        },
+        include: this.defaultIncludes(),
+        orderBy: [{ dueDate: 'asc' }, { createdAt: 'asc' }],
+      }),
+      this.prisma.financialTransaction.findMany({
+        where: {
+          ...activeWhere,
+          dueDate: {
+            gte: trendStart,
+            lte: currentMonthEnd,
+          },
+        },
+        select: {
+          amount: true,
+          type: true,
+          dueDate: true,
+        },
+      }),
+      this.prisma.financialTransaction.findMany({
+        where: {
+          tenantId: req.tenantId,
+          deletedAt: null,
+          status: FinancialTransactionStatus.PENDING,
+          dueDate: {
+            gte: startOfToday,
+          },
+        },
+        include: this.defaultIncludes(),
+        orderBy: [{ dueDate: 'asc' }, { createdAt: 'asc' }],
+        take: 5,
+      }),
+      this.prisma.financialTransaction.findMany({
+        where: activeWhere,
+        include: this.defaultIncludes(),
+        orderBy: [{ createdAt: 'desc' }],
+        take: 6,
+      }),
+      this.getNotifications(req),
+    ]);
+
+    const currentMonthItems = currentMonthRows.map((row) =>
+      this.mapTransaction(row),
+    );
+    const previousMonthItems = previousMonthRows.map((row) =>
+      this.mapTransaction(row),
+    );
+    const currentSummary = this.buildDashboardSummary(currentMonthItems);
+    const previousSummary = this.buildDashboardSummary(previousMonthItems);
+
+    const months = Array.from({ length: 6 }, (_, index) =>
+      this.shiftMonths(currentMonthStart, index - 5),
+    );
+    const monthBuckets = new Map(
+      months.map((monthDate) => [
+        this.toMonthKey(monthDate),
+        {
+          label: monthDate.toLocaleDateString('pt-BR', { month: 'short' }),
+          income: 0,
+          expense: 0,
+          balance: 0,
+        },
+      ]),
+    );
+
+    for (const row of trendRows) {
+      if (!row.dueDate) continue;
+      const bucket = monthBuckets.get(this.toMonthKey(row.dueDate));
+      if (!bucket) continue;
+
+      const amount = Number(row.amount);
+      if (row.type === FinancialTransactionType.INCOME) {
+        bucket.income += amount;
+      } else {
+        bucket.expense += amount;
+      }
+      bucket.balance = bucket.income - bucket.expense;
+    }
+
+    const expenseCategoriesMap = new Map<
+      string,
+      { name: string; amount: number; count: number }
+    >();
+
+    for (const item of currentMonthItems) {
+      if (item.type !== FinancialTransactionType.EXPENSE) continue;
+      const key = item.category?.name ?? 'Sem categoria';
+      const bucket = expenseCategoriesMap.get(key) ?? {
+        name: key,
+        amount: 0,
+        count: 0,
+      };
+      bucket.amount += Number(item.amount);
+      bucket.count += 1;
+      expenseCategoriesMap.set(key, bucket);
+    }
+
+    const totalExpense = currentSummary.totalExpense || 0;
+    const expenseByCategory = Array.from(expenseCategoriesMap.values())
+      .sort((a, b) => b.amount - a.amount)
+      .slice(0, 6)
+      .map((item) => ({
+        ...item,
+        percentage:
+          totalExpense > 0
+            ? Number(((item.amount / totalExpense) * 100).toFixed(1))
+            : 0,
+      }));
+
+    const statusMap = new Map<
+      'PAID' | 'PENDING' | 'OVERDUE',
+      { status: 'PAID' | 'PENDING' | 'OVERDUE'; label: string; count: number }
+    >([
+      ['PAID', { status: 'PAID', label: 'Pagos', count: 0 }],
+      ['PENDING', { status: 'PENDING', label: 'Pendentes', count: 0 }],
+      ['OVERDUE', { status: 'OVERDUE', label: 'Em atraso', count: 0 }],
+    ]);
+
+    for (const item of currentMonthItems) {
+      const normalizedStatus =
+        item.status === FinancialTransactionStatus.OVERDUE
+          ? 'OVERDUE'
+          : item.status === FinancialTransactionStatus.PAID
+            ? 'PAID'
+            : 'PENDING';
+
+      const bucket = statusMap.get(normalizedStatus);
+      if (bucket) bucket.count += 1;
+    }
+
+    return {
+      period: {
+        currentMonth: currentMonthStart.toISOString(),
+        previousMonth: previousMonthStart.toISOString(),
+      },
+      summary: {
+        current: currentSummary,
+        previous: previousSummary,
+        changes: {
+          income: this.buildChange(
+            currentSummary.totalIncome,
+            previousSummary.totalIncome,
+          ),
+          expense: this.buildChange(
+            currentSummary.totalExpense,
+            previousSummary.totalExpense,
+          ),
+          balance: this.buildChange(
+            currentSummary.balance,
+            previousSummary.balance,
+          ),
+          overdueCount: this.buildChange(
+            currentSummary.overdueCount,
+            previousSummary.overdueCount,
+          ),
+        },
+      },
+      charts: {
+        monthlyFlow: Array.from(monthBuckets.values()),
+        expenseByCategory,
+        statusBreakdown: Array.from(statusMap.values()),
+      },
+      alerts: notifications,
+      upcoming: upcomingRows.map((row) => {
+        const item = this.mapTransaction(row);
+        return {
+          id: item.id,
+          description: item.description,
+          amount: item.amount,
+          dueDate: item.dueDate,
+          category: item.category?.name ?? 'Sem categoria',
+          status: item.status,
+        };
+      }),
+      recentTransactions: recentRows.map((row) => {
+        const item = this.mapTransaction(row);
+        return {
+          id: item.id,
+          description: item.description,
+          amount: item.amount,
+          type: item.type,
+          status: item.status,
+          dueDate: item.dueDate,
+          category: item.category?.name ?? 'Sem categoria',
+        };
+      }),
+    };
+  }
+
   private async findTransactionOrThrow(id: number, tenantId: number) {
     const transaction = await this.prisma.financialTransaction.findFirst({
       where: { id, tenantId, deletedAt: null },
@@ -1035,6 +1272,84 @@ export class FinanceService {
       status: isOverdue
         ? FinancialTransactionStatus.OVERDUE
         : transaction.status,
+    };
+  }
+
+  private getStartOfDayFromDate(value: Date) {
+    const date = new Date(value);
+    date.setHours(0, 0, 0, 0);
+    return date;
+  }
+
+  private getStartOfMonth(value: Date) {
+    const date = new Date(value);
+    date.setDate(1);
+    date.setHours(0, 0, 0, 0);
+    return date;
+  }
+
+  private getEndOfMonth(value: Date) {
+    const date = this.getStartOfMonth(value);
+    date.setMonth(date.getMonth() + 1);
+    date.setMilliseconds(-1);
+    return date;
+  }
+
+  private shiftMonths(value: Date, months: number) {
+    const date = new Date(value);
+    date.setMonth(date.getMonth() + months);
+    return date;
+  }
+
+  private toMonthKey(value: Date) {
+    const year = value.getFullYear();
+    const month = String(value.getMonth() + 1).padStart(2, '0');
+    return `${year}-${month}`;
+  }
+
+  private buildDashboardSummary(
+    rows: Array<{
+      amount: number;
+      type: FinancialTransactionType;
+      status: FinancialTransactionStatus;
+    }>,
+  ) {
+    const totals = rows.reduce(
+      (acc, row) => {
+        if (row.type === FinancialTransactionType.INCOME) {
+          acc.totalIncome += Number(row.amount);
+        } else {
+          acc.totalExpense += Number(row.amount);
+        }
+
+        if (row.status === FinancialTransactionStatus.OVERDUE) {
+          acc.overdueCount += 1;
+        }
+
+        return acc;
+      },
+      { totalIncome: 0, totalExpense: 0, overdueCount: 0 },
+    );
+
+    return {
+      ...totals,
+      balance: totals.totalIncome - totals.totalExpense,
+    };
+  }
+
+  private buildChange(current: number, previous: number) {
+    const delta = current - previous;
+
+    if (previous === 0) {
+      return {
+        delta,
+        percent: current === 0 ? 0 : 100,
+      };
+    }
+
+    return {
+      delta,
+      percent: Number(((delta / previous) * 100).toFixed(1)),
     };
   }
 }

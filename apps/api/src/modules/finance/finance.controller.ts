@@ -145,4 +145,10 @@ export class FinanceController {
   async getNotifications(@Req() req: CustomRequest) {
     return this.financeService.getNotifications(req);
   }
+
+  @Get('dashboard/overview')
+  @ApiOperation({ summary: 'Visão consolidada do dashboard financeiro' })
+  async getDashboardOverview(@Req() req: CustomRequest) {
+    return this.financeService.getDashboardOverview(req);
+  }
 }
