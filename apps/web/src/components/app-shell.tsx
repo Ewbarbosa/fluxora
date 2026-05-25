@@ -1,6 +1,8 @@
 import { ReactNode } from "react"
 
 import { AppSidebar } from "@/components/app-sidebar"
+import { MobileBottomNav } from "@/components/mobile-bottom-nav"
+import { PwaInstallPrompt } from "@/components/pwa-install-prompt"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -26,9 +28,9 @@ export function AppShell({ title, section = "Fluxora", children }: AppShellProps
   return (
     <SidebarProvider>
       <AppSidebar />
-      <SidebarInset>
-        <header className="flex h-16 shrink-0 items-center gap-2">
-          <div className="flex items-center gap-2 px-4">
+      <SidebarInset className="min-h-svh bg-transparent">
+        <header className="sticky top-0 z-30 flex h-[4.5rem] shrink-0 items-center gap-2 border-b border-white/60 bg-[color:var(--app-panel)]/80 backdrop-blur-xl">
+          <div className="flex w-full items-center gap-2 px-4 pb-2 pt-[max(0.75rem,var(--safe-area-top))] md:pt-4">
             <SidebarTrigger className="-ml-1" />
             <Separator
               orientation="vertical"
@@ -45,9 +47,19 @@ export function AppShell({ title, section = "Fluxora", children }: AppShellProps
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>
+            <div className="ml-auto hidden text-right md:block">
+              <p className="text-xs font-medium uppercase tracking-[0.22em] text-muted-foreground">
+                Fluxora
+              </p>
+              <p className="text-sm text-foreground/80">Web app financeiro</p>
+            </div>
           </div>
         </header>
-        {children}
+        <div className="px-3 pb-[calc(6.75rem+var(--safe-area-bottom))] pt-3 md:px-0 md:pb-0">
+          <PwaInstallPrompt />
+          {children}
+        </div>
+        <MobileBottomNav />
       </SidebarInset>
     </SidebarProvider>
   )

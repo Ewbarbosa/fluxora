@@ -5,8 +5,8 @@ import Link from "next/link"
 import {
   LayoutDashboardIcon,
   LandmarkIcon,
+  OrbitIcon,
   Settings2Icon,
-  TerminalIcon,
 } from "lucide-react"
 
 import { decodeAccessToken, getStoredToken } from "@/lib/auth"
@@ -90,12 +90,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" render={<Link href="/dashboard" />}>
-              <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                <TerminalIcon className="size-4" />
+              <div className="flex aspect-square size-8 items-center justify-center rounded-2xl bg-sidebar-primary text-sidebar-primary-foreground shadow-[0_14px_32px_rgba(48,180,124,0.24)]">
+                <OrbitIcon className="size-4" />
               </div>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-medium">Fluxora</span>
-                <span className="truncate text-xs">Operação financeira</span>
+                <span className="truncate text-xs">SaaS financeiro mobile-first</span>
               </div>
             </SidebarMenuButton>
           </SidebarMenuItem>

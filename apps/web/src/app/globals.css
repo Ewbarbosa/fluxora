@@ -81,6 +81,14 @@
   --sidebar-accent-foreground: oklch(0.96 0.005 95);
   --sidebar-border: oklch(0.32 0.01 255);
   --sidebar-ring: oklch(0.56 0.12 165);
+  --app-ink: #0f1720;
+  --app-panel: rgba(255, 251, 245, 0.76);
+  --app-panel-strong: rgba(255, 255, 255, 0.92);
+  --app-grid: rgba(15, 23, 32, 0.06);
+  --safe-area-top: env(safe-area-inset-top, 0px);
+  --safe-area-right: env(safe-area-inset-right, 0px);
+  --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-area-left: env(safe-area-inset-left, 0px);
 }
 
 .dark {
@@ -115,16 +123,37 @@
   --sidebar-accent-foreground: oklch(0.96 0.005 95);
   --sidebar-border: oklch(0.3 0.01 255);
   --sidebar-ring: oklch(0.66 0.11 165);
+  --app-ink: #081018;
+  --app-panel: rgba(18, 28, 39, 0.8);
+  --app-panel-strong: rgba(22, 34, 48, 0.92);
+  --app-grid: rgba(255, 255, 255, 0.05);
 }
 
 @layer base {
+  html {
+    @apply font-sans;
+    background:
+      radial-gradient(circle at top, rgba(48, 180, 124, 0.16), transparent 28rem),
+      linear-gradient(180deg, rgba(247, 245, 239, 0.96), rgba(237, 243, 239, 0.96));
+    background-color: var(--background);
+  }
   * {
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply text-foreground;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.52), rgba(255, 255, 255, 0.08)),
+      linear-gradient(90deg, transparent 0, transparent calc(100% - 1px), var(--app-grid) calc(100% - 1px)),
+      linear-gradient(180deg, transparent 0, transparent calc(100% - 1px), var(--app-grid) calc(100% - 1px));
+    background-size: auto, 24px 24px, 24px 24px;
+    background-attachment: fixed;
+    min-height: 100dvh;
   }
-  html {
-    @apply font-sans;
+
+  @media (display-mode: standalone) {
+    body {
+      overscroll-behavior-y: contain;
+    }
   }
 }
