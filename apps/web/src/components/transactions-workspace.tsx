@@ -729,7 +729,7 @@ export function TransactionsWorkspace() {
   return (
     <>
       <div className="space-y-6 p-1 pt-0 md:p-4 md:pt-0">
-        <section className="overflow-hidden rounded-[1.75rem] border border-white/70 bg-[linear-gradient(145deg,rgba(15,23,32,0.97),rgba(22,58,72,0.94)_42%,rgba(71,148,129,0.9))] text-white shadow-[0_24px_60px_rgba(15,23,32,0.14)]">
+        <section className="overflow-hidden rounded-[1.45rem] border border-white/50 bg-[linear-gradient(145deg,var(--app-hero-start),rgba(22,58,72,0.92)_42%,var(--app-hero-end))] text-white shadow-[0_20px_48px_rgba(15,23,32,0.13)]">
           <div className="flex flex-col gap-5 px-5 py-5 md:px-6 md:py-6">
             <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
               <div className="space-y-2">
@@ -744,7 +744,7 @@ export function TransactionsWorkspace() {
                   </p>
                 </div>
               </div>
-              <Button onClick={openCreateModal} className="rounded-2xl border-0 bg-white text-[color:var(--app-ink)] hover:bg-white/90">
+              <Button onClick={openCreateModal} className="rounded-xl border-0 bg-[color:var(--app-surface-strong)] text-[color:var(--app-ink)] hover:bg-white/90">
                 <PlusIcon className="size-4" />
                 Novo lançamento
               </Button>
@@ -753,26 +753,26 @@ export function TransactionsWorkspace() {
             <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
               {loading ? (
                 Array.from({ length: 4 }).map((_, index) => (
-                  <div key={index} className="rounded-[1.35rem] bg-white/10 p-4">
+                  <div key={index} className="rounded-[1rem] bg-white/10 p-4">
                     <Skeleton className="h-4 w-20 bg-white/20" />
                     <Skeleton className="mt-3 h-8 w-28 bg-white/20" />
                   </div>
                 ))
               ) : (
                 <>
-                  <div className="rounded-[1.35rem] border border-white/12 bg-white/8 p-4 backdrop-blur">
+                  <div className="rounded-[1rem] border border-white/10 bg-white/7 p-4 backdrop-blur">
                     <p className="text-sm text-white/70">Receitas</p>
                     <p className="mt-2 text-2xl font-semibold text-emerald-100">{formatMoney(summary?.totalIncome ?? 0)}</p>
                   </div>
-                  <div className="rounded-[1.35rem] border border-white/12 bg-white/8 p-4 backdrop-blur">
+                  <div className="rounded-[1rem] border border-white/10 bg-white/7 p-4 backdrop-blur">
                     <p className="text-sm text-white/70">Despesas</p>
                     <p className="mt-2 text-2xl font-semibold text-rose-100">{formatMoney(summary?.totalExpense ?? 0)}</p>
                   </div>
-                  <div className="rounded-[1.35rem] border border-white/12 bg-white/8 p-4 backdrop-blur">
+                  <div className="rounded-[1rem] border border-white/10 bg-white/7 p-4 backdrop-blur">
                     <p className="text-sm text-white/70">Saldo</p>
                     <p className="mt-2 text-2xl font-semibold">{formatMoney(summary?.balance ?? 0)}</p>
                   </div>
-                  <div className="rounded-[1.35rem] border border-white/12 bg-white/8 p-4 backdrop-blur">
+                  <div className="rounded-[1rem] border border-white/10 bg-white/7 p-4 backdrop-blur">
                     <p className="text-sm text-white/70">Vencidos</p>
                     <p className="mt-2 text-2xl font-semibold">{summary?.overdueCount ?? 0}</p>
                   </div>
@@ -785,26 +785,26 @@ export function TransactionsWorkspace() {
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {loading ? (
             Array.from({ length: 4 }).map((_, index) => (
-              <Card key={index} className="rounded-[1.35rem] border-white/70 bg-[color:var(--app-surface-strong)] shadow-[0_18px_42px_rgba(15,23,32,0.07)]">
+              <Card key={index} className="rounded-[1.1rem] border-black/6 bg-[color:var(--app-surface-strong)] shadow-[0_16px_34px_rgba(15,23,32,0.06)]">
                 <CardHeader className="pb-2"><Skeleton className="h-4 w-20" /></CardHeader>
                 <CardContent><Skeleton className="h-8 w-28" /></CardContent>
               </Card>
             ))
           ) : (
             <>
-              <Card className="rounded-[1.35rem] border-white/70 bg-[color:var(--app-surface-strong)] shadow-[0_18px_42px_rgba(15,23,32,0.07)]">
+              <Card className="rounded-[1.1rem] border-black/6 bg-[color:var(--app-surface-strong)] shadow-[0_16px_34px_rgba(15,23,32,0.06)]">
                 <CardHeader className="pb-2"><CardTitle className="text-sm">Receitas</CardTitle></CardHeader>
                 <CardContent className="text-2xl font-semibold">{formatMoney(summary?.totalIncome ?? 0)}</CardContent>
               </Card>
-              <Card className="rounded-[1.35rem] border-white/70 bg-[color:var(--app-surface-strong)] shadow-[0_18px_42px_rgba(15,23,32,0.07)]">
+              <Card className="rounded-[1.1rem] border-black/6 bg-[color:var(--app-surface-strong)] shadow-[0_16px_34px_rgba(15,23,32,0.06)]">
                 <CardHeader className="pb-2"><CardTitle className="text-sm">Despesas</CardTitle></CardHeader>
                 <CardContent className="text-2xl font-semibold">{formatMoney(summary?.totalExpense ?? 0)}</CardContent>
               </Card>
-              <Card className="rounded-[1.35rem] border-white/70 bg-[color:var(--app-surface-strong)] shadow-[0_18px_42px_rgba(15,23,32,0.07)]">
+              <Card className="rounded-[1.1rem] border-black/6 bg-[color:var(--app-surface-strong)] shadow-[0_16px_34px_rgba(15,23,32,0.06)]">
                 <CardHeader className="pb-2"><CardTitle className="text-sm">Saldo</CardTitle></CardHeader>
                 <CardContent className="text-2xl font-semibold">{formatMoney(summary?.balance ?? 0)}</CardContent>
               </Card>
-              <Card className="rounded-[1.35rem] border-white/70 bg-[color:var(--app-surface-strong)] shadow-[0_18px_42px_rgba(15,23,32,0.07)]">
+              <Card className="rounded-[1.1rem] border-black/6 bg-[color:var(--app-surface-strong)] shadow-[0_16px_34px_rgba(15,23,32,0.06)]">
                 <CardHeader className="pb-2"><CardTitle className="text-sm">Vencidos</CardTitle></CardHeader>
                 <CardContent className="text-2xl font-semibold">{summary?.overdueCount ?? 0}</CardContent>
               </Card>
@@ -812,7 +812,7 @@ export function TransactionsWorkspace() {
           )}
         </div>
 
-        <Card className="rounded-[1.5rem] border-white/70 bg-[color:var(--app-surface-strong)] shadow-[0_18px_42px_rgba(15,23,32,0.07)]">
+        <Card className="rounded-[1.2rem] border-black/6 bg-[color:var(--app-surface-strong)] shadow-[0_16px_34px_rgba(15,23,32,0.06)]">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <BellRingIcon className="h-4 w-4" /> Alertas de atraso
@@ -820,19 +820,19 @@ export function TransactionsWorkspace() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid gap-3 md:grid-cols-4">
-              <div className="rounded-[1.15rem] border border-black/6 bg-[color:var(--app-surface)] p-3">
+              <div className="rounded-[1rem] border border-black/6 bg-[color:var(--app-surface)] p-3">
                 <p className="text-sm text-muted-foreground">Vencem hoje</p>
                 <p className="text-2xl font-semibold">{notifications?.dueTodayCount ?? 0}</p>
               </div>
-              <div className="rounded-[1.15rem] border border-black/6 bg-[color:var(--app-surface)] p-3">
+              <div className="rounded-[1rem] border border-black/6 bg-[color:var(--app-surface)] p-3">
                 <p className="text-sm text-muted-foreground">Atrasados 1+ dia</p>
                 <p className="text-2xl font-semibold">{notifications?.overdueCounts.oneDay ?? 0}</p>
               </div>
-              <div className="rounded-[1.15rem] border border-black/6 bg-[color:var(--app-surface)] p-3">
+              <div className="rounded-[1rem] border border-black/6 bg-[color:var(--app-surface)] p-3">
                 <p className="text-sm text-muted-foreground">Atrasados 3+ dias</p>
                 <p className="text-2xl font-semibold">{notifications?.overdueCounts.threeDays ?? 0}</p>
               </div>
-              <div className="rounded-[1.15rem] border border-black/6 bg-[color:var(--app-surface)] p-3">
+              <div className="rounded-[1rem] border border-black/6 bg-[color:var(--app-surface)] p-3">
                 <p className="text-sm text-muted-foreground">Atrasados 7+ dias</p>
                 <p className="text-2xl font-semibold">{notifications?.overdueCounts.sevenDays ?? 0}</p>
               </div>
@@ -840,7 +840,7 @@ export function TransactionsWorkspace() {
 
             <div className="space-y-2">
               {(notifications?.items ?? []).slice(0, 5).map((item) => (
-                <div key={item.id} className="flex items-center justify-between rounded-[1.15rem] border border-black/6 bg-[color:var(--app-surface)] p-3 text-sm">
+                <div key={item.id} className="flex items-center justify-between rounded-[1rem] border border-black/6 bg-[color:var(--app-surface)] p-3 text-sm">
                   <div>
                     <div className="font-medium">{item.description}</div>
                     <div className="text-muted-foreground">
@@ -861,7 +861,7 @@ export function TransactionsWorkspace() {
           </CardContent>
         </Card>
 
-        <Card className="rounded-[1.5rem] border-white/70 bg-[color:var(--app-surface-strong)] shadow-[0_18px_42px_rgba(15,23,32,0.07)]">
+        <Card className="rounded-[1.2rem] border-black/6 bg-[color:var(--app-surface-strong)] shadow-[0_16px_34px_rgba(15,23,32,0.06)]">
           <CardHeader className="flex flex-row items-center justify-between gap-3">
             <div>
               <CardTitle>Fluxo e filtros</CardTitle>
@@ -871,7 +871,7 @@ export function TransactionsWorkspace() {
             </div>
           </CardHeader>
           <CardContent className="space-y-6">
-            <div className="space-y-4 rounded-[1.35rem] border border-black/6 bg-[color:var(--app-surface)] p-4">
+            <div className="space-y-4 rounded-[1.1rem] border border-black/6 bg-[color:var(--app-surface)] p-4">
               <div className="flex gap-2 overflow-x-auto pb-1">
                 {(Object.keys(periodPresetLabels) as PeriodPreset[]).map((preset) => (
                   <Button
@@ -892,7 +892,7 @@ export function TransactionsWorkspace() {
                     value={search}
                     onChange={(event) => setSearch(event.target.value)}
                     placeholder="Buscar por descrição..."
-                    className="rounded-xl bg-white"
+                    className="rounded-xl border-black/6 bg-[color:var(--app-surface-strong)]"
                   />
                   <Button onClick={onSearch} className="rounded-xl">
                     <SearchIcon className="mr-2 h-4 w-4" /> Buscar
@@ -901,7 +901,7 @@ export function TransactionsWorkspace() {
 
                 <SelectField
                   value={filters.type}
-                  className="rounded-xl bg-white"
+                  className="rounded-xl border-black/6 bg-[color:var(--app-surface-strong)]"
                   onChange={(event) => {
                     setFilters((current) => ({ ...current, type: event.target.value as FilterType }))
                     setPage(1)
@@ -914,7 +914,7 @@ export function TransactionsWorkspace() {
 
                 <SelectField
                   value={filters.status}
-                  className="rounded-xl bg-white"
+                  className="rounded-xl border-black/6 bg-[color:var(--app-surface-strong)]"
                   onChange={(event) => {
                     setFilters((current) => ({ ...current, status: event.target.value as FilterStatus }))
                     setPage(1)
@@ -936,7 +936,7 @@ export function TransactionsWorkspace() {
                   <Input
                     type="date"
                     value={filters.startDate}
-                    className="rounded-xl bg-white"
+                    className="rounded-xl border-black/6 bg-[color:var(--app-surface-strong)]"
                     onChange={(event) => setFilters((current) => ({ ...current, startDate: event.target.value }))}
                   />
                 </div>
@@ -945,12 +945,12 @@ export function TransactionsWorkspace() {
                   <Input
                     type="date"
                     value={filters.endDate}
-                    className="rounded-xl bg-white"
+                    className="rounded-xl border-black/6 bg-[color:var(--app-surface-strong)]"
                     onChange={(event) => setFilters((current) => ({ ...current, endDate: event.target.value }))}
                   />
                 </div>
                 <div className="flex items-end gap-2">
-                  <Button variant="outline" className="w-full rounded-xl bg-white" onClick={applyCustomRange}>
+                  <Button variant="outline" className="w-full rounded-xl border-black/6 bg-[color:var(--app-surface-strong)]" onClick={applyCustomRange}>
                     Aplicar período personalizado
                   </Button>
                 </div>
@@ -960,14 +960,14 @@ export function TransactionsWorkspace() {
             <div className="space-y-5">
               {loading ? (
                 Array.from({ length: 3 }).map((_, index) => (
-                  <div key={index} className="overflow-hidden rounded-[1.35rem] border border-white/70 bg-[color:var(--app-surface-strong)] shadow-[0_18px_42px_rgba(15,23,32,0.07)]">
+                  <div key={index} className="overflow-hidden rounded-[1.1rem] border border-black/6 bg-[color:var(--app-surface-strong)] shadow-[0_16px_34px_rgba(15,23,32,0.06)]">
                     <div className="border-b px-4 py-4"><Skeleton className="h-10 w-full" /></div>
                     <div className="p-4"><Skeleton className="h-32 w-full" /></div>
                   </div>
                 ))
               ) : groupedTransactions.length ? (
                 groupedTransactions.map((group) => (
-                  <div key={group.label} className="overflow-hidden rounded-[1.35rem] border border-white/70 bg-[color:var(--app-surface-strong)] shadow-[0_18px_42px_rgba(15,23,32,0.07)]">
+                  <div key={group.label} className="overflow-hidden rounded-[1.1rem] border border-black/6 bg-[color:var(--app-surface-strong)] shadow-[0_16px_34px_rgba(15,23,32,0.06)]">
                     <div className="border-b bg-muted/30 px-4 py-4">
                       <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
                         <div>
@@ -975,15 +975,15 @@ export function TransactionsWorkspace() {
                           <p className="text-sm text-muted-foreground">{group.items.length} lançamento(s) neste período</p>
                         </div>
                         <div className="grid gap-2 sm:grid-cols-3">
-                          <div className="rounded-xl border bg-white px-3 py-2 text-sm">
+                          <div className="rounded-xl border border-black/6 bg-[color:var(--app-surface)] px-3 py-2 text-sm">
                             <div className="text-muted-foreground">Receitas</div>
                             <div className="font-semibold text-emerald-600 dark:text-emerald-300">{formatMoney(group.income)}</div>
                           </div>
-                          <div className="rounded-xl border bg-white px-3 py-2 text-sm">
+                          <div className="rounded-xl border border-black/6 bg-[color:var(--app-surface)] px-3 py-2 text-sm">
                             <div className="text-muted-foreground">Despesas</div>
                             <div className="font-semibold text-rose-600 dark:text-rose-300">{formatMoney(group.expense)}</div>
                           </div>
-                          <div className="rounded-xl border bg-white px-3 py-2 text-sm">
+                          <div className="rounded-xl border border-black/6 bg-[color:var(--app-surface)] px-3 py-2 text-sm">
                             <div className="text-muted-foreground">Saldo</div>
                             <div className={cn("font-semibold", group.income - group.expense >= 0 ? "text-emerald-600 dark:text-emerald-300" : "text-rose-600 dark:text-rose-300")}>
                               {formatMoney(group.income - group.expense)}
@@ -998,7 +998,7 @@ export function TransactionsWorkspace() {
                         const itemSeries = seriesLabel(item)
 
                         return (
-                          <div key={item.id} className="rounded-[1.25rem] border border-black/6 bg-white p-4 shadow-sm">
+                          <div key={item.id} className="rounded-[1rem] border border-black/6 bg-[color:var(--app-surface-strong)] p-4 shadow-sm">
                             <div className="flex items-start justify-between gap-3">
                               <div className="min-w-0">
                                 <div className="flex flex-wrap items-center gap-2">

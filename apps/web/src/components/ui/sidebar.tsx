@@ -242,7 +242,7 @@ function Sidebar({
         <div
           data-sidebar="sidebar"
           data-slot="sidebar-inner"
-          className="flex size-full flex-col bg-sidebar group-data-[variant=floating]:rounded-[1.5rem] group-data-[variant=floating]:shadow-[0_20px_48px_rgba(8,16,24,0.24)] group-data-[variant=floating]:ring-1 group-data-[variant=floating]:ring-white/8 group-data-[variant=inset]:rounded-[1.75rem] group-data-[variant=inset]:shadow-[0_20px_48px_rgba(8,16,24,0.24)] group-data-[variant=inset]:ring-1 group-data-[variant=inset]:ring-white/8"
+          className="flex size-full flex-col bg-sidebar group-data-[variant=floating]:rounded-[1.2rem] group-data-[variant=floating]:shadow-[0_18px_40px_rgba(8,16,24,0.22)] group-data-[variant=floating]:ring-1 group-data-[variant=floating]:ring-white/8 group-data-[variant=inset]:rounded-[1.4rem] group-data-[variant=inset]:shadow-[0_18px_40px_rgba(8,16,24,0.22)] group-data-[variant=inset]:ring-1 group-data-[variant=inset]:ring-white/8"
         >
           {children}
         </div>
@@ -307,7 +307,7 @@ function SidebarInset({ className, ...props }: React.ComponentProps<"main">) {
     <main
       data-slot="sidebar-inset"
       className={cn(
-        "relative flex w-full flex-1 flex-col bg-background md:peer-data-[variant=inset]:m-3 md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:rounded-[2rem] md:peer-data-[variant=inset]:shadow-[0_24px_72px_rgba(15,23,32,0.12)] md:peer-data-[variant=inset]:peer-data-[state=collapsed]:ml-3",
+        "relative flex w-full flex-1 flex-col bg-background md:peer-data-[variant=inset]:m-3 md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:rounded-[1.5rem] md:peer-data-[variant=inset]:shadow-[0_20px_56px_rgba(15,23,32,0.1)] md:peer-data-[variant=inset]:peer-data-[state=collapsed]:ml-3",
         className
       )}
       {...props}

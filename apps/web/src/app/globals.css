@@ -72,7 +72,7 @@
   --chart-3: oklch(0.72 0.05 95);
   --chart-4: oklch(0.48 0.03 255);
   --chart-5: oklch(0.36 0.02 255);
-  --radius: 0.875rem;
+  --radius: 0.75rem;
   --sidebar: oklch(0.24 0.01 255);
   --sidebar-foreground: oklch(0.96 0.005 95);
   --sidebar-primary: oklch(0.56 0.12 165);
@@ -82,19 +82,22 @@
   --sidebar-border: oklch(0.32 0.01 255);
   --sidebar-ring: oklch(0.56 0.12 165);
   --app-ink: #0f1720;
-  --app-panel: rgba(255, 251, 245, 0.76);
-  --app-panel-strong: rgba(255, 255, 255, 0.92);
-  --app-surface: rgba(255, 255, 255, 0.82);
-  --app-surface-strong: rgba(255, 255, 255, 0.94);
+  --app-panel: rgba(249, 245, 239, 0.8);
+  --app-panel-strong: rgba(255, 252, 248, 0.9);
+  --app-surface: rgba(255, 252, 248, 0.78);
+  --app-surface-strong: rgba(255, 253, 250, 0.92);
   --app-grid: rgba(15, 23, 32, 0.06);
+  --app-hero-start: rgba(15, 23, 32, 0.97);
+  --app-hero-mid: rgba(24, 64, 72, 0.93);
+  --app-hero-end: rgba(93, 145, 125, 0.88);
   --safe-area-top: env(safe-area-inset-top, 0px);
   --safe-area-right: env(safe-area-inset-right, 0px);
   --safe-area-bottom: env(safe-area-inset-bottom, 0px);
   --safe-area-left: env(safe-area-inset-left, 0px);
   --mobile-nav-offset: calc(var(--safe-area-bottom) + 0.75rem);
   --mobile-nav-space: calc(7rem + var(--mobile-nav-offset));
-  --app-page-top: rgba(48, 180, 124, 0.1);
-  --app-page-bottom: rgba(240, 242, 237, 0.98);
+  --app-page-top: rgba(48, 180, 124, 0.08);
+  --app-page-bottom: rgba(243, 240, 233, 0.98);
 }
 
 html[data-display-mode="standalone"] {
@@ -140,6 +143,9 @@ html[data-display-mode="standalone"] {
   --app-surface: rgba(24, 36, 50, 0.78);
   --app-surface-strong: rgba(26, 40, 56, 0.92);
   --app-grid: rgba(255, 255, 255, 0.05);
+  --app-hero-start: rgba(9, 17, 24, 0.98);
+  --app-hero-mid: rgba(18, 49, 56, 0.94);
+  --app-hero-end: rgba(55, 126, 108, 0.9);
   --app-page-top: rgba(52, 211, 153, 0.18);
   --app-page-bottom: rgba(8, 16, 24, 0.98);
 }
@@ -156,7 +162,7 @@ html[data-display-mode="standalone"] {
     @apply text-foreground;
     background:
       radial-gradient(circle at top, var(--app-page-top), transparent 24rem),
-      linear-gradient(180deg, rgba(255, 255, 255, 0.44), rgba(255, 255, 255, 0.12)),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0.1)),
       linear-gradient(180deg, var(--background), var(--app-page-bottom));
     background-repeat: no-repeat;
     background-color: var(--background);
@@ -166,7 +172,7 @@ html[data-display-mode="standalone"] {
   @media (max-width: 767px) {
     body {
       background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.72)),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0.66)),
         linear-gradient(180deg, var(--background), var(--app-page-bottom));
       background-repeat: no-repeat;
       background-color: var(--background);
