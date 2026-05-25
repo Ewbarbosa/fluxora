@@ -10,6 +10,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import {
@@ -18,9 +19,10 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
-import { ChevronsUpDownIcon, LogOutIcon } from "lucide-react"
+import { CheckIcon, ChevronsUpDownIcon, LogOutIcon, MoonStarIcon, SunMediumIcon } from "lucide-react"
 
 import { clearSession } from "@/lib/auth"
+import { useTheme } from "@/components/theme-provider"
 
 function getInitials(name: string) {
   return name
@@ -42,6 +44,7 @@ export function NavUser({
 }) {
   const router = useRouter()
   const { isMobile } = useSidebar()
+  const { theme, setTheme } = useTheme()
   const initials = getInitials(user.name)
 
   function handleLogout() {
@@ -78,6 +81,17 @@ export function NavUser({
             align="end"
             sideOffset={4}
           >
+            <DropdownMenuItem onClick={() => setTheme("dark")}>
+              <MoonStarIcon className="size-4" />
+              Tema escuro
+              {theme === "dark" ? <CheckIcon className="ml-auto size-4" /> : null}
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setTheme("light")}>
+              <SunMediumIcon className="size-4" />
+              Tema claro
+              {theme === "light" ? <CheckIcon className="ml-auto size-4" /> : null}
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleLogout}>
               <LogOutIcon className="size-4" />
               Sair

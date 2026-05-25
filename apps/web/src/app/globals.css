@@ -90,6 +90,10 @@
   --app-hero-start: rgba(15, 23, 32, 0.97);
   --app-hero-mid: rgba(24, 64, 72, 0.93);
   --app-hero-end: rgba(93, 145, 125, 0.88);
+  --app-page-overlay-start: rgba(255, 250, 244, 0.22);
+  --app-page-overlay-end: rgba(255, 250, 244, 0.08);
+  --app-page-mobile-start: rgba(249, 244, 237, 0.9);
+  --app-page-mobile-end: rgba(243, 237, 229, 0.72);
   --safe-area-top: env(safe-area-inset-top, 0px);
   --safe-area-right: env(safe-area-inset-right, 0px);
   --safe-area-bottom: env(safe-area-inset-bottom, 0px);
@@ -146,6 +150,10 @@ html[data-display-mode="standalone"] {
   --app-hero-start: rgba(9, 17, 24, 0.98);
   --app-hero-mid: rgba(18, 49, 56, 0.94);
   --app-hero-end: rgba(55, 126, 108, 0.9);
+  --app-page-overlay-start: rgba(8, 16, 24, 0.16);
+  --app-page-overlay-end: rgba(8, 16, 24, 0.04);
+  --app-page-mobile-start: rgba(11, 19, 28, 0.92);
+  --app-page-mobile-end: rgba(8, 16, 24, 0.76);
   --app-page-top: rgba(52, 211, 153, 0.18);
   --app-page-bottom: rgba(8, 16, 24, 0.98);
 }
@@ -155,6 +163,15 @@ html[data-display-mode="standalone"] {
     @apply font-sans;
     background-color: var(--background);
   }
+
+  html.dark {
+    color-scheme: dark;
+  }
+
+  html.light {
+    color-scheme: light;
+  }
+
   * {
     @apply border-border outline-ring/50;
   }
@@ -162,7 +179,7 @@ html[data-display-mode="standalone"] {
     @apply text-foreground;
     background:
       radial-gradient(circle at top, var(--app-page-top), transparent 24rem),
-      linear-gradient(180deg, rgba(255, 250, 244, 0.22), rgba(255, 250, 244, 0.08)),
+      linear-gradient(180deg, var(--app-page-overlay-start), var(--app-page-overlay-end)),
       linear-gradient(180deg, var(--background), var(--app-page-bottom));
     background-repeat: no-repeat;
     background-color: var(--background);
@@ -172,7 +189,7 @@ html[data-display-mode="standalone"] {
   @media (max-width: 767px) {
     body {
       background:
-        linear-gradient(180deg, rgba(249, 244, 237, 0.9), rgba(243, 237, 229, 0.72)),
+        linear-gradient(180deg, var(--app-page-mobile-start), var(--app-page-mobile-end)),
         linear-gradient(180deg, var(--background), var(--app-page-bottom));
       background-repeat: no-repeat;
       background-color: var(--background);
