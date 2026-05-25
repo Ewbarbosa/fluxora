@@ -3,6 +3,7 @@
 import { FormEvent, useCallback, useEffect, useMemo, useState } from "react"
 import {
   BellRingIcon,
+  ChevronRightIcon,
   CalendarDaysIcon,
   CheckCircle2Icon,
   EllipsisVerticalIcon,
@@ -10,6 +11,7 @@ import {
   PencilIcon,
   PlusIcon,
   SearchIcon,
+  SlidersHorizontalIcon,
   Trash2Icon,
 } from "lucide-react"
 
@@ -726,30 +728,83 @@ export function TransactionsWorkspace() {
 
   return (
     <>
-      <div className="space-y-6 p-4 pt-0">
+      <div className="space-y-6 p-1 pt-0 md:p-4 md:pt-0">
+        <section className="overflow-hidden rounded-[1.75rem] border border-white/70 bg-[linear-gradient(135deg,rgba(15,23,32,0.96),rgba(18,28,39,0.92)_35%,rgba(48,180,124,0.86))] text-white shadow-[0_24px_60px_rgba(15,23,32,0.18)]">
+          <div className="flex flex-col gap-5 px-5 py-5 md:px-6 md:py-6">
+            <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+              <div className="space-y-2">
+                <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-[0.7rem] font-medium uppercase tracking-[0.22em] text-white/80">
+                  <CalendarDaysIcon className="size-3.5" />
+                  Financeiro operacional
+                </div>
+                <div>
+                  <h1 className="text-2xl font-semibold tracking-tight">Lançamentos por período</h1>
+                  <p className="max-w-2xl text-sm text-white/72">
+                    Controle de caixa, atraso e recorrência com leitura rápida no celular e ação direta na mesma tela.
+                  </p>
+                </div>
+              </div>
+              <Button onClick={openCreateModal} className="rounded-2xl border-0 bg-white text-[color:var(--app-ink)] hover:bg-white/90">
+                <PlusIcon className="size-4" />
+                Novo lançamento
+              </Button>
+            </div>
+
+            <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+              {loading ? (
+                Array.from({ length: 4 }).map((_, index) => (
+                  <div key={index} className="rounded-[1.35rem] bg-white/10 p-4">
+                    <Skeleton className="h-4 w-20 bg-white/20" />
+                    <Skeleton className="mt-3 h-8 w-28 bg-white/20" />
+                  </div>
+                ))
+              ) : (
+                <>
+                  <div className="rounded-[1.35rem] border border-white/12 bg-white/10 p-4 backdrop-blur">
+                    <p className="text-sm text-white/70">Receitas</p>
+                    <p className="mt-2 text-2xl font-semibold text-emerald-100">{formatMoney(summary?.totalIncome ?? 0)}</p>
+                  </div>
+                  <div className="rounded-[1.35rem] border border-white/12 bg-white/10 p-4 backdrop-blur">
+                    <p className="text-sm text-white/70">Despesas</p>
+                    <p className="mt-2 text-2xl font-semibold text-rose-100">{formatMoney(summary?.totalExpense ?? 0)}</p>
+                  </div>
+                  <div className="rounded-[1.35rem] border border-white/12 bg-white/10 p-4 backdrop-blur">
+                    <p className="text-sm text-white/70">Saldo</p>
+                    <p className="mt-2 text-2xl font-semibold">{formatMoney(summary?.balance ?? 0)}</p>
+                  </div>
+                  <div className="rounded-[1.35rem] border border-white/12 bg-white/10 p-4 backdrop-blur">
+                    <p className="text-sm text-white/70">Vencidos</p>
+                    <p className="mt-2 text-2xl font-semibold">{summary?.overdueCount ?? 0}</p>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        </section>
+
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {loading ? (
             Array.from({ length: 4 }).map((_, index) => (
-              <Card key={index}>
+              <Card key={index} className="rounded-[1.35rem] border-white/70 bg-[color:var(--app-panel-strong)]/90 shadow-[0_18px_42px_rgba(15,23,32,0.08)]">
                 <CardHeader className="pb-2"><Skeleton className="h-4 w-20" /></CardHeader>
                 <CardContent><Skeleton className="h-8 w-28" /></CardContent>
               </Card>
             ))
           ) : (
             <>
-              <Card>
+              <Card className="rounded-[1.35rem] border-white/70 bg-[color:var(--app-panel-strong)]/90 shadow-[0_18px_42px_rgba(15,23,32,0.08)]">
                 <CardHeader className="pb-2"><CardTitle className="text-sm">Receitas</CardTitle></CardHeader>
                 <CardContent className="text-2xl font-semibold">{formatMoney(summary?.totalIncome ?? 0)}</CardContent>
               </Card>
-              <Card>
+              <Card className="rounded-[1.35rem] border-white/70 bg-[color:var(--app-panel-strong)]/90 shadow-[0_18px_42px_rgba(15,23,32,0.08)]">
                 <CardHeader className="pb-2"><CardTitle className="text-sm">Despesas</CardTitle></CardHeader>
                 <CardContent className="text-2xl font-semibold">{formatMoney(summary?.totalExpense ?? 0)}</CardContent>
               </Card>
-              <Card>
+              <Card className="rounded-[1.35rem] border-white/70 bg-[color:var(--app-panel-strong)]/90 shadow-[0_18px_42px_rgba(15,23,32,0.08)]">
                 <CardHeader className="pb-2"><CardTitle className="text-sm">Saldo</CardTitle></CardHeader>
                 <CardContent className="text-2xl font-semibold">{formatMoney(summary?.balance ?? 0)}</CardContent>
               </Card>
-              <Card>
+              <Card className="rounded-[1.35rem] border-white/70 bg-[color:var(--app-panel-strong)]/90 shadow-[0_18px_42px_rgba(15,23,32,0.08)]">
                 <CardHeader className="pb-2"><CardTitle className="text-sm">Vencidos</CardTitle></CardHeader>
                 <CardContent className="text-2xl font-semibold">{summary?.overdueCount ?? 0}</CardContent>
               </Card>
@@ -757,7 +812,7 @@ export function TransactionsWorkspace() {
           )}
         </div>
 
-        <Card>
+        <Card className="rounded-[1.5rem] border-white/70 bg-[color:var(--app-panel-strong)]/90 shadow-[0_18px_42px_rgba(15,23,32,0.08)]">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <BellRingIcon className="h-4 w-4" /> Alertas de atraso
@@ -765,19 +820,19 @@ export function TransactionsWorkspace() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid gap-3 md:grid-cols-4">
-              <div className="rounded-lg border p-3">
+              <div className="rounded-[1.15rem] border border-black/6 bg-white/80 p-3">
                 <p className="text-sm text-muted-foreground">Vencem hoje</p>
                 <p className="text-2xl font-semibold">{notifications?.dueTodayCount ?? 0}</p>
               </div>
-              <div className="rounded-lg border p-3">
+              <div className="rounded-[1.15rem] border border-black/6 bg-white/80 p-3">
                 <p className="text-sm text-muted-foreground">Atrasados 1+ dia</p>
                 <p className="text-2xl font-semibold">{notifications?.overdueCounts.oneDay ?? 0}</p>
               </div>
-              <div className="rounded-lg border p-3">
+              <div className="rounded-[1.15rem] border border-black/6 bg-white/80 p-3">
                 <p className="text-sm text-muted-foreground">Atrasados 3+ dias</p>
                 <p className="text-2xl font-semibold">{notifications?.overdueCounts.threeDays ?? 0}</p>
               </div>
-              <div className="rounded-lg border p-3">
+              <div className="rounded-[1.15rem] border border-black/6 bg-white/80 p-3">
                 <p className="text-sm text-muted-foreground">Atrasados 7+ dias</p>
                 <p className="text-2xl font-semibold">{notifications?.overdueCounts.sevenDays ?? 0}</p>
               </div>
@@ -785,7 +840,7 @@ export function TransactionsWorkspace() {
 
             <div className="space-y-2">
               {(notifications?.items ?? []).slice(0, 5).map((item) => (
-                <div key={item.id} className="flex items-center justify-between rounded-lg border p-3 text-sm">
+                <div key={item.id} className="flex items-center justify-between rounded-[1.15rem] border border-black/6 bg-white/80 p-3 text-sm">
                   <div>
                     <div className="font-medium">{item.description}</div>
                     <div className="text-muted-foreground">
@@ -806,26 +861,24 @@ export function TransactionsWorkspace() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="rounded-[1.5rem] border-white/70 bg-[color:var(--app-panel-strong)]/90 shadow-[0_18px_42px_rgba(15,23,32,0.08)]">
           <CardHeader className="flex flex-row items-center justify-between gap-3">
             <div>
-              <CardTitle>Lançamentos por período</CardTitle>
+              <CardTitle>Fluxo e filtros</CardTitle>
               <p className="mt-1 text-sm text-muted-foreground">
                 {getPeriodLabel(filters.startDate || undefined, filters.endDate || undefined)}
               </p>
             </div>
-            <Button onClick={openCreateModal}>
-              <PlusIcon className="mr-2 h-4 w-4" /> Novo lançamento
-            </Button>
           </CardHeader>
           <CardContent className="space-y-6">
-            <div className="space-y-4 rounded-lg border p-4">
-              <div className="flex flex-wrap gap-2">
+            <div className="space-y-4 rounded-[1.35rem] border border-black/6 bg-white/75 p-4">
+              <div className="flex gap-2 overflow-x-auto pb-1">
                 {(Object.keys(periodPresetLabels) as PeriodPreset[]).map((preset) => (
                   <Button
                     key={preset}
                     variant={periodPreset === preset ? "default" : "outline"}
                     size="sm"
+                    className="shrink-0 rounded-xl"
                     onClick={() => applyPreset(preset)}
                   >
                     {periodPresetLabels[preset]}
@@ -834,19 +887,21 @@ export function TransactionsWorkspace() {
               </div>
 
               <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_170px_190px_190px]">
-                <div className="flex gap-2">
+                <div className="flex flex-col gap-2 sm:flex-row">
                   <Input
                     value={search}
                     onChange={(event) => setSearch(event.target.value)}
                     placeholder="Buscar por descrição..."
+                    className="rounded-xl bg-white"
                   />
-                  <Button onClick={onSearch}>
+                  <Button onClick={onSearch} className="rounded-xl">
                     <SearchIcon className="mr-2 h-4 w-4" /> Buscar
                   </Button>
                 </div>
 
                 <SelectField
                   value={filters.type}
+                  className="rounded-xl bg-white"
                   onChange={(event) => {
                     setFilters((current) => ({ ...current, type: event.target.value as FilterType }))
                     setPage(1)
@@ -859,6 +914,7 @@ export function TransactionsWorkspace() {
 
                 <SelectField
                   value={filters.status}
+                  className="rounded-xl bg-white"
                   onChange={(event) => {
                     setFilters((current) => ({ ...current, status: event.target.value as FilterStatus }))
                     setPage(1)
@@ -869,8 +925,8 @@ export function TransactionsWorkspace() {
                   ))}
                 </SelectField>
 
-                <div className="flex items-center gap-2 rounded-md border px-3 text-sm text-muted-foreground">
-                  <CalendarDaysIcon className="h-4 w-4" /> Agrupado por mês
+                <div className="flex items-center gap-2 rounded-xl border border-dashed bg-white/70 px-3 text-sm text-muted-foreground">
+                  <SlidersHorizontalIcon className="h-4 w-4" /> Agrupado por mês
                 </div>
               </div>
 
@@ -880,6 +936,7 @@ export function TransactionsWorkspace() {
                   <Input
                     type="date"
                     value={filters.startDate}
+                    className="rounded-xl bg-white"
                     onChange={(event) => setFilters((current) => ({ ...current, startDate: event.target.value }))}
                   />
                 </div>
@@ -888,11 +945,12 @@ export function TransactionsWorkspace() {
                   <Input
                     type="date"
                     value={filters.endDate}
+                    className="rounded-xl bg-white"
                     onChange={(event) => setFilters((current) => ({ ...current, endDate: event.target.value }))}
                   />
                 </div>
                 <div className="flex items-end gap-2">
-                  <Button variant="outline" className="w-full" onClick={applyCustomRange}>
+                  <Button variant="outline" className="w-full rounded-xl bg-white" onClick={applyCustomRange}>
                     Aplicar período personalizado
                   </Button>
                 </div>
@@ -902,30 +960,30 @@ export function TransactionsWorkspace() {
             <div className="space-y-5">
               {loading ? (
                 Array.from({ length: 3 }).map((_, index) => (
-                  <div key={index} className="overflow-hidden rounded-xl border bg-background shadow-sm">
+                  <div key={index} className="overflow-hidden rounded-[1.35rem] border border-white/70 bg-[color:var(--app-panel-strong)]/90 shadow-[0_18px_42px_rgba(15,23,32,0.08)]">
                     <div className="border-b px-4 py-4"><Skeleton className="h-10 w-full" /></div>
                     <div className="p-4"><Skeleton className="h-32 w-full" /></div>
                   </div>
                 ))
               ) : groupedTransactions.length ? (
                 groupedTransactions.map((group) => (
-                  <div key={group.label} className="overflow-hidden rounded-xl border bg-background shadow-sm">
-                    <div className="border-b bg-muted/40 px-4 py-4">
+                  <div key={group.label} className="overflow-hidden rounded-[1.35rem] border border-white/70 bg-[color:var(--app-panel-strong)]/90 shadow-[0_18px_42px_rgba(15,23,32,0.08)]">
+                    <div className="border-b bg-muted/30 px-4 py-4">
                       <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
                         <div>
                           <h3 className="text-lg font-semibold capitalize tracking-tight">{group.label}</h3>
                           <p className="text-sm text-muted-foreground">{group.items.length} lançamento(s) neste período</p>
                         </div>
                         <div className="grid gap-2 sm:grid-cols-3">
-                          <div className="rounded-lg border bg-background px-3 py-2 text-sm">
+                          <div className="rounded-xl border bg-white px-3 py-2 text-sm">
                             <div className="text-muted-foreground">Receitas</div>
                             <div className="font-semibold text-emerald-600 dark:text-emerald-300">{formatMoney(group.income)}</div>
                           </div>
-                          <div className="rounded-lg border bg-background px-3 py-2 text-sm">
+                          <div className="rounded-xl border bg-white px-3 py-2 text-sm">
                             <div className="text-muted-foreground">Despesas</div>
                             <div className="font-semibold text-rose-600 dark:text-rose-300">{formatMoney(group.expense)}</div>
                           </div>
-                          <div className="rounded-lg border bg-background px-3 py-2 text-sm">
+                          <div className="rounded-xl border bg-white px-3 py-2 text-sm">
                             <div className="text-muted-foreground">Saldo</div>
                             <div className={cn("font-semibold", group.income - group.expense >= 0 ? "text-emerald-600 dark:text-emerald-300" : "text-rose-600 dark:text-rose-300")}>
                               {formatMoney(group.income - group.expense)}
@@ -935,7 +993,88 @@ export function TransactionsWorkspace() {
                       </div>
                     </div>
 
-                    <div className="overflow-x-auto">
+                    <div className="space-y-3 p-3 md:hidden">
+                      {group.items.map((item) => {
+                        const itemSeries = seriesLabel(item)
+
+                        return (
+                          <div key={item.id} className="rounded-[1.25rem] border border-black/6 bg-white p-4 shadow-sm">
+                            <div className="flex items-start justify-between gap-3">
+                              <div className="min-w-0">
+                                <div className="flex flex-wrap items-center gap-2">
+                                  <p className="font-medium">{item.description}</p>
+                                  <span className="inline-flex items-center rounded-full bg-muted px-2.5 py-1 text-[11px] text-muted-foreground ring-1 ring-inset ring-border">
+                                    {item.type === "INCOME" ? "Receita" : "Despesa"}
+                                  </span>
+                                </div>
+                                <div className="mt-2 flex flex-wrap gap-2">
+                                  <span className={cn("inline-flex items-center rounded-full px-2.5 py-1 text-[11px] font-medium ring-1 ring-inset", statusClassName(item.status))}>
+                                    {statusLabel(item.status)}
+                                  </span>
+                                  {itemSeries ? (
+                                    <span className="inline-flex items-center rounded-full bg-secondary px-2.5 py-1 text-[11px] text-secondary-foreground ring-1 ring-inset ring-border">
+                                      {itemSeries}
+                                    </span>
+                                  ) : null}
+                                </div>
+                              </div>
+                              <DropdownMenu>
+                                <DropdownMenuTrigger render={<Button size="icon-sm" variant="ghost" aria-label="Abrir ações do lançamento" />}>
+                                  <EllipsisVerticalIcon className="size-4" />
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end" className="min-w-48">
+                                  <DropdownMenuItem onClick={() => setViewingTransaction(item)}>
+                                    <EyeIcon className="size-4" />
+                                    Ver detalhes
+                                  </DropdownMenuItem>
+                                  {(item.status === "PENDING" || item.status === "OVERDUE") ? (
+                                    <DropdownMenuItem onClick={() => openPayModal(item)}>
+                                      <CheckCircle2Icon className="size-4" />
+                                      Baixar lançamento
+                                    </DropdownMenuItem>
+                                  ) : null}
+                                  <DropdownMenuItem onClick={() => openEditModal(item)}>
+                                    <PencilIcon className="size-4" />
+                                    Editar lançamento
+                                  </DropdownMenuItem>
+                                  <DropdownMenuSeparator />
+                                  <DropdownMenuItem variant="destructive" onClick={() => openDeleteModal(item)}>
+                                    <Trash2Icon className="size-4" />
+                                    Excluir lançamento
+                                  </DropdownMenuItem>
+                                </DropdownMenuContent>
+                              </DropdownMenu>
+                            </div>
+
+                            <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
+                              <div className="rounded-xl bg-muted/50 p-3">
+                                <p className="text-muted-foreground">Categoria</p>
+                                <p className="mt-1 font-medium">{item.category?.name ?? "Sem categoria"}</p>
+                              </div>
+                              <div className="rounded-xl bg-muted/50 p-3">
+                                <p className="text-muted-foreground">Vencimento</p>
+                                <p className="mt-1 font-medium">{formatDate(item.dueDate)}</p>
+                              </div>
+                            </div>
+
+                            <div className="mt-4 flex items-center justify-between rounded-xl bg-[color:var(--app-panel)] px-3 py-3">
+                              <div>
+                                <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Valor</p>
+                                <p className={cn("mt-1 text-lg font-semibold", item.type === "INCOME" ? "text-emerald-600 dark:text-emerald-300" : "text-foreground")}>
+                                  {formatMoney(item.amount)}
+                                </p>
+                              </div>
+                              <Button variant="outline" size="sm" className="rounded-xl" onClick={() => setViewingTransaction(item)}>
+                                Ver
+                                <ChevronRightIcon className="size-4" />
+                              </Button>
+                            </div>
+                          </div>
+                        )
+                      })}
+                    </div>
+
+                    <div className="hidden overflow-x-auto md:block">
                       <table className="min-w-[760px] w-full border-separate border-spacing-0">
                         <thead>
                           <tr className="bg-muted/20">
