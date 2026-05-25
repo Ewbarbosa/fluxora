@@ -91,27 +91,20 @@
   --app-surface: rgba(144, 215, 187, 0.12);
   --app-surface-strong: rgba(144, 215, 187, 0.18);
   --app-grid: rgba(0, 60, 37, 0.08);
-  --app-hero-start: #003c25;
-  --app-hero-mid: #00704f;
-  --app-hero-end: #008a67;
+  --app-hero-bg: #003c25;
   --app-hero-border: rgba(144, 215, 187, 0.32);
   --app-hero-muted: rgba(144, 215, 187, 0.74);
   --app-hero-panel: rgba(0, 60, 37, 0.22);
   --app-hero-panel-strong: rgba(0, 60, 37, 0.28);
   --app-hero-chip: rgba(144, 215, 187, 0.14);
   --app-hero-button: rgba(144, 215, 187, 0.2);
-  --app-page-overlay-start: rgba(144, 215, 187, 0.12);
-  --app-page-overlay-end: rgba(144, 215, 187, 0.04);
-  --app-page-mobile-start: rgba(144, 215, 187, 0.2);
-  --app-page-mobile-end: rgba(144, 215, 187, 0.08);
   --safe-area-top: env(safe-area-inset-top, 0px);
   --safe-area-right: env(safe-area-inset-right, 0px);
   --safe-area-bottom: env(safe-area-inset-bottom, 0px);
   --safe-area-left: env(safe-area-inset-left, 0px);
   --mobile-nav-offset: calc(var(--safe-area-bottom) + 0.75rem);
   --mobile-nav-space: calc(7rem + var(--mobile-nav-offset));
-  --app-page-top: rgba(0, 138, 103, 0.08);
-  --app-page-bottom: rgba(144, 215, 187, 0.1);
+  --app-page: #f3fbf7;
 }
 
 html[data-display-mode="standalone"] {
@@ -157,21 +150,14 @@ html[data-display-mode="standalone"] {
   --app-surface: rgba(0, 60, 37, 0.62);
   --app-surface-strong: rgba(0, 60, 37, 0.8);
   --app-grid: rgba(255, 255, 255, 0.05);
-  --app-hero-start: #003c25;
-  --app-hero-mid: #00704f;
-  --app-hero-end: #008a67;
+  --app-hero-bg: #003c25;
   --app-hero-border: rgba(144, 215, 187, 0.28);
   --app-hero-muted: rgba(144, 215, 187, 0.78);
   --app-hero-panel: rgba(0, 60, 37, 0.28);
   --app-hero-panel-strong: rgba(0, 60, 37, 0.34);
   --app-hero-chip: rgba(144, 215, 187, 0.12);
   --app-hero-button: rgba(144, 215, 187, 0.18);
-  --app-page-overlay-start: rgba(0, 138, 103, 0.08);
-  --app-page-overlay-end: rgba(0, 138, 103, 0.02);
-  --app-page-mobile-start: rgba(0, 60, 37, 0.94);
-  --app-page-mobile-end: rgba(0, 60, 37, 0.82);
-  --app-page-top: rgba(0, 138, 103, 0.2);
-  --app-page-bottom: rgba(0, 60, 37, 0.98);
+  --app-page: #0a2f21;
 }
 
 @layer base {
@@ -193,22 +179,13 @@ html[data-display-mode="standalone"] {
   }
   body {
     @apply text-foreground;
-    background:
-      radial-gradient(circle at top, var(--app-page-top), transparent 24rem),
-      linear-gradient(180deg, var(--app-page-overlay-start), var(--app-page-overlay-end)),
-      linear-gradient(180deg, var(--background), var(--app-page-bottom));
-    background-repeat: no-repeat;
-    background-color: var(--background);
+    background-color: var(--app-page);
     min-height: 100dvh;
   }
 
   @media (max-width: 767px) {
     body {
-      background:
-        linear-gradient(180deg, var(--app-page-mobile-start), var(--app-page-mobile-end)),
-        linear-gradient(180deg, var(--background), var(--app-page-bottom));
-      background-repeat: no-repeat;
-      background-color: var(--background);
+      background-color: var(--app-page);
     }
   }
 

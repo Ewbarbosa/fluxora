@@ -315,8 +315,8 @@ export function LoginForm({
               ) : null}
             </FieldGroup>
           </form>
-          <div className="relative hidden bg-muted md:block">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(52,211,153,0.35),_transparent_45%),linear-gradient(135deg,_rgba(31,41,55,0.96),_rgba(17,24,39,0.88))]" />
+          <div className="relative hidden md:block [background-color:var(--brand-4)]">
+            <div className="absolute inset-0 [background-color:rgba(0,60,37,0.94)]" />
             <div className="absolute inset-x-0 bottom-0 p-8 text-white">
               <p className="max-w-sm text-lg font-semibold leading-snug">
                 Controle financeiro com visão clara de caixa, categorias e rotina operacional.

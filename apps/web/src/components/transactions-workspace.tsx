@@ -729,7 +729,7 @@ export function TransactionsWorkspace() {
   return (
     <>
       <div className="space-y-6 p-1 pt-0 md:p-4 md:pt-0">
-        <section className="overflow-hidden rounded-[1.45rem] border bg-[linear-gradient(145deg,var(--app-hero-start),var(--app-hero-mid)_42%,var(--app-hero-end))] text-white shadow-[0_20px_48px_rgba(0,60,37,0.24)] [border-color:var(--app-hero-border)]">
+        <section className="overflow-hidden rounded-[1.45rem] border text-white shadow-[0_20px_48px_rgba(0,60,37,0.24)] [border-color:var(--app-hero-border)] [background-color:var(--app-hero-bg)]">
           <div className="flex flex-col gap-5 px-5 py-5 md:px-6 md:py-6">
             <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
               <div className="space-y-2">
