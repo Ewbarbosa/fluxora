@@ -28,8 +28,8 @@ export function AppShell({ title, section = "Fluxora", children }: AppShellProps
   return (
     <SidebarProvider>
       <AppSidebar />
-      <SidebarInset className="min-h-svh overflow-x-clip bg-background md:overflow-hidden md:border md:border-[color:var(--app-accent-border)] md:bg-[color:var(--app-panel)] md:shadow-[0_20px_56px_rgba(8,16,24,0.18)]">
-        <header className="sticky top-0 z-30 hidden shrink-0 items-center border-b border-[color:var(--app-accent-border)] bg-[color:var(--app-panel-strong)]/96 backdrop-blur-lg md:flex">
+      <SidebarInset className="min-h-svh overflow-x-clip bg-background md:overflow-hidden md:border md:border-border/70 md:bg-[color:var(--app-panel)] md:shadow-[0_20px_56px_rgba(8,16,24,0.18)]">
+        <header className="sticky top-0 z-30 hidden shrink-0 items-center border-b border-border/70 bg-[color:var(--app-panel-strong)]/96 backdrop-blur-lg md:flex">
           <div className="mx-auto flex w-full max-w-[1680px] items-center gap-2 px-5 pb-3 pt-[max(0.85rem,var(--safe-area-top))] md:px-6 md:pt-5">
             <SidebarTrigger className="-ml-1 hidden md:inline-flex" />
             <Separator
