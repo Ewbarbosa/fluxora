@@ -28,9 +28,9 @@ export function AppShell({ title, section = "Fluxora", children }: AppShellProps
   return (
     <SidebarProvider>
       <AppSidebar />
-      <SidebarInset className="min-h-svh bg-transparent">
-        <header className="sticky top-0 z-30 flex h-[4.5rem] shrink-0 items-center gap-2 border-b border-white/60 bg-[color:var(--app-panel)]/80 backdrop-blur-xl">
-          <div className="flex w-full items-center gap-2 px-4 pb-2 pt-[max(0.75rem,var(--safe-area-top))] md:pt-4">
+      <SidebarInset className="min-h-svh overflow-x-clip bg-background">
+        <header className="sticky top-0 z-30 flex shrink-0 items-center border-b border-black/5 bg-[color:var(--app-panel-strong)]/92 backdrop-blur-xl">
+          <div className="mx-auto flex w-full max-w-[1680px] items-center gap-2 px-4 pb-2 pt-[max(0.75rem,var(--safe-area-top))] md:px-5 md:pt-4">
             <SidebarTrigger className="-ml-1" />
             <Separator
               orientation="vertical"
@@ -55,7 +55,7 @@ export function AppShell({ title, section = "Fluxora", children }: AppShellProps
             </div>
           </div>
         </header>
-        <div className="px-3 pb-[var(--mobile-nav-space)] pt-3 md:px-0 md:pb-0">
+        <div className="mx-auto w-full max-w-[1680px] px-3 pb-[var(--mobile-nav-space)] pt-3 md:px-5 md:pb-5">
           <PwaInstallPrompt />
           {children}
         </div>

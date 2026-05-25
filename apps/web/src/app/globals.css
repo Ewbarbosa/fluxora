@@ -93,6 +93,8 @@
   --safe-area-left: env(safe-area-inset-left, 0px);
   --mobile-nav-offset: calc(var(--safe-area-bottom) + 0.75rem);
   --mobile-nav-space: calc(7rem + var(--mobile-nav-offset));
+  --app-page-top: rgba(48, 180, 124, 0.1);
+  --app-page-bottom: rgba(240, 242, 237, 0.98);
 }
 
 html[data-display-mode="standalone"] {
@@ -138,14 +140,13 @@ html[data-display-mode="standalone"] {
   --app-surface: rgba(24, 36, 50, 0.78);
   --app-surface-strong: rgba(26, 40, 56, 0.92);
   --app-grid: rgba(255, 255, 255, 0.05);
+  --app-page-top: rgba(52, 211, 153, 0.18);
+  --app-page-bottom: rgba(8, 16, 24, 0.98);
 }
 
 @layer base {
   html {
     @apply font-sans;
-    background:
-      radial-gradient(circle at top, rgba(48, 180, 124, 0.1), transparent 24rem),
-      linear-gradient(180deg, rgba(248, 246, 241, 0.98), rgba(240, 242, 237, 0.98));
     background-color: var(--background);
   }
   * {
@@ -154,10 +155,11 @@ html[data-display-mode="standalone"] {
   body {
     @apply text-foreground;
     background:
-      linear-gradient(180deg, rgba(255, 255, 255, 0.36), rgba(255, 255, 255, 0.06)),
-      linear-gradient(90deg, transparent 0, transparent calc(100% - 1px), var(--app-grid) calc(100% - 1px)),
-      linear-gradient(180deg, transparent 0, transparent calc(100% - 1px), var(--app-grid) calc(100% - 1px));
-    background-size: auto, 24px 24px, 24px 24px;
+      radial-gradient(circle at top, var(--app-page-top), transparent 24rem),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.44), rgba(255, 255, 255, 0.12)),
+      linear-gradient(180deg, var(--background), var(--app-page-bottom));
+    background-repeat: no-repeat;
+    background-color: var(--background);
     min-height: 100dvh;
   }
 

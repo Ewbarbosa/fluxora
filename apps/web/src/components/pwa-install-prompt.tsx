@@ -13,20 +13,23 @@ type BeforeInstallPromptEvent = Event & {
 export function PwaInstallPrompt() {
   const [installEvent, setInstallEvent] = useState<BeforeInstallPromptEvent | null>(null)
   const [dismissed, setDismissed] = useState(false)
-  const [isStandalone, setIsStandalone] = useState(true)
+  const [isStandalone, setIsStandalone] = useState(() => {
+    if (typeof window === "undefined") {
+      return true
+    }
+
+    return (
+      window.matchMedia("(display-mode: standalone)").matches ||
+      window.matchMedia("(display-mode: fullscreen)").matches ||
+      ("standalone" in navigator && Boolean((navigator as Navigator & { standalone?: boolean }).standalone))
+    )
+  })
 
   useEffect(() => {
     function handleInstalled() {
       setInstallEvent(null)
       setIsStandalone(true)
     }
-
-    const standalone =
-      window.matchMedia("(display-mode: standalone)").matches ||
-      window.matchMedia("(display-mode: fullscreen)").matches ||
-      ("standalone" in navigator && Boolean((navigator as Navigator & { standalone?: boolean }).standalone))
-
-    setIsStandalone(standalone)
 
     const handlePrompt = (event: Event) => {
       event.preventDefault()
