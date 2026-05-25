@@ -729,22 +729,22 @@ export function TransactionsWorkspace() {
   return (
     <>
       <div className="space-y-6 p-1 pt-0 md:p-4 md:pt-0">
-        <section className="overflow-hidden rounded-[1.45rem] border border-white/50 bg-[linear-gradient(145deg,var(--app-hero-start),rgba(22,58,72,0.92)_42%,var(--app-hero-end))] text-white shadow-[0_20px_48px_rgba(15,23,32,0.13)]">
+        <section className="overflow-hidden rounded-[1.45rem] border bg-[linear-gradient(145deg,var(--app-hero-start),var(--app-hero-mid)_42%,var(--app-hero-end))] text-white shadow-[0_20px_48px_rgba(0,60,37,0.24)] [border-color:var(--app-hero-border)]">
           <div className="flex flex-col gap-5 px-5 py-5 md:px-6 md:py-6">
             <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
               <div className="space-y-2">
-                <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-[0.7rem] font-medium uppercase tracking-[0.22em] text-white/80">
+                <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-[0.7rem] font-medium uppercase tracking-[0.22em] [background-color:var(--app-hero-chip)] [color:var(--app-hero-muted)]">
                   <CalendarDaysIcon className="size-3.5" />
                   Financeiro operacional
                 </div>
                 <div>
                   <h1 className="text-2xl font-semibold tracking-tight">Lançamentos por período</h1>
-                  <p className="max-w-2xl text-sm text-white/72">
+                  <p className="max-w-2xl text-sm [color:var(--app-hero-muted)]">
                     Controle de caixa, atraso e recorrência com leitura rápida no celular e ação direta na mesma tela.
                   </p>
                 </div>
               </div>
-              <Button onClick={openCreateModal} className="rounded-xl border-0 bg-[color:var(--app-surface-strong)] text-[color:var(--app-ink)] hover:bg-white/90">
+              <Button onClick={openCreateModal} className="rounded-xl border-0 bg-[color:var(--brand-1)] text-[color:var(--brand-4)] hover:[background-color:rgba(144,215,187,0.9)]">
                 <PlusIcon className="size-4" />
                 Novo lançamento
               </Button>
@@ -753,27 +753,27 @@ export function TransactionsWorkspace() {
             <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
               {loading ? (
                 Array.from({ length: 4 }).map((_, index) => (
-                  <div key={index} className="rounded-[1rem] bg-white/10 p-4">
-                    <Skeleton className="h-4 w-20 bg-white/20" />
-                    <Skeleton className="mt-3 h-8 w-28 bg-white/20" />
+                  <div key={index} className="rounded-[1rem] p-4 [background-color:var(--app-hero-panel)]">
+                    <Skeleton className="h-4 w-20 [background-color:var(--app-hero-chip)]" />
+                    <Skeleton className="mt-3 h-8 w-28 [background-color:var(--app-hero-chip)]" />
                   </div>
                 ))
               ) : (
                 <>
-                  <div className="rounded-[1rem] border border-white/10 bg-white/7 p-4 backdrop-blur">
-                    <p className="text-sm text-white/70">Receitas</p>
+                  <div className="rounded-[1rem] border p-4 backdrop-blur [border-color:var(--app-hero-border)] [background-color:var(--app-hero-panel)]">
+                    <p className="text-sm [color:var(--app-hero-muted)]">Receitas</p>
                     <p className="mt-2 text-2xl font-semibold text-emerald-100">{formatMoney(summary?.totalIncome ?? 0)}</p>
                   </div>
-                  <div className="rounded-[1rem] border border-white/10 bg-white/7 p-4 backdrop-blur">
-                    <p className="text-sm text-white/70">Despesas</p>
+                  <div className="rounded-[1rem] border p-4 backdrop-blur [border-color:var(--app-hero-border)] [background-color:var(--app-hero-panel)]">
+                    <p className="text-sm [color:var(--app-hero-muted)]">Despesas</p>
                     <p className="mt-2 text-2xl font-semibold text-rose-100">{formatMoney(summary?.totalExpense ?? 0)}</p>
                   </div>
-                  <div className="rounded-[1rem] border border-white/10 bg-white/7 p-4 backdrop-blur">
-                    <p className="text-sm text-white/70">Saldo</p>
+                  <div className="rounded-[1rem] border p-4 backdrop-blur [border-color:var(--app-hero-border)] [background-color:var(--app-hero-panel)]">
+                    <p className="text-sm [color:var(--app-hero-muted)]">Saldo</p>
                     <p className="mt-2 text-2xl font-semibold">{formatMoney(summary?.balance ?? 0)}</p>
                   </div>
-                  <div className="rounded-[1rem] border border-white/10 bg-white/7 p-4 backdrop-blur">
-                    <p className="text-sm text-white/70">Vencidos</p>
+                  <div className="rounded-[1rem] border p-4 backdrop-blur [border-color:var(--app-hero-border)] [background-color:var(--app-hero-panel)]">
+                    <p className="text-sm [color:var(--app-hero-muted)]">Vencidos</p>
                     <p className="mt-2 text-2xl font-semibold">{summary?.overdueCount ?? 0}</p>
                   </div>
                 </>

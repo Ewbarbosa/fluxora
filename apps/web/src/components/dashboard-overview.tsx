@@ -141,24 +141,24 @@ export function DashboardOverview() {
 
   return (
     <div className="flex flex-1 flex-col gap-4 p-1 pt-0 md:p-4 md:pt-0">
-      <section className="overflow-hidden rounded-[1.5rem] border border-white/50 bg-[linear-gradient(145deg,var(--app-hero-start),var(--app-hero-mid)_52%,var(--app-hero-end))] text-white shadow-[0_22px_56px_rgba(15,23,32,0.14)]">
+      <section className="overflow-hidden rounded-[1.5rem] border bg-[linear-gradient(145deg,var(--app-hero-start),var(--app-hero-mid)_52%,var(--app-hero-end))] text-white shadow-[0_22px_56px_rgba(0,60,37,0.24)] [border-color:var(--app-hero-border)]">
         <div className="flex flex-col gap-5 px-5 py-5 md:px-6 md:py-6">
           <div className="flex items-start justify-between gap-3">
             <div className="space-y-2">
-              <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-[0.68rem] font-medium uppercase tracking-[0.24em] text-white/80">
+              <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-[0.68rem] font-medium uppercase tracking-[0.24em] [background-color:var(--app-hero-chip)] [color:var(--app-hero-muted)]">
                 <BriefcaseBusinessIcon className="size-3.5" />
                 Cockpit financeiro
               </div>
               <div>
                 <h1 className="text-2xl font-semibold tracking-tight">Visão financeira</h1>
-                <p className="max-w-xl text-sm text-white/74">
+                <p className="max-w-xl text-sm [color:var(--app-hero-muted)]">
                   Resumo real do workspace carregado pela API do Fluxora, já pensado para consulta rápida no celular.
                 </p>
               </div>
             </div>
             <Button
               variant="secondary"
-              className="rounded-2xl border-0 bg-white/14 text-white hover:bg-white/20"
+              className="rounded-2xl border-0 text-white [background-color:var(--app-hero-button)] hover:[background-color:var(--app-hero-chip)]"
               onClick={() => void loadData()}
               disabled={state.loading}
             >
@@ -168,14 +168,14 @@ export function DashboardOverview() {
           </div>
 
           <div className="grid items-start gap-3 lg:grid-cols-[minmax(0,1.3fr)_minmax(18rem,0.85fr)]">
-            <div className="self-start rounded-[1.2rem] border border-white/10 bg-white/7 p-4 backdrop-blur">
-              <p className="text-sm text-white/70">Saldo do período</p>
+            <div className="self-start rounded-[1.2rem] border p-4 backdrop-blur [border-color:var(--app-hero-border)] [background-color:var(--app-hero-panel)]">
+              <p className="text-sm [color:var(--app-hero-muted)]">Saldo do período</p>
               <p className="mt-2 text-3xl font-semibold tracking-tight">
                 {state.summary ? formatMoney(state.summary.balance) : "—"}
               </p>
               <div className="mt-4 grid gap-3 text-sm md:grid-cols-2">
-                <div className="rounded-[1rem] bg-black/10 p-3">
-                  <div className="flex items-center gap-2 text-white/70">
+                <div className="rounded-[1rem] p-3 [background-color:var(--app-hero-panel-strong)]">
+                  <div className="flex items-center gap-2 [color:var(--app-hero-muted)]">
                     <ArrowUpRightIcon className="size-4" />
                     Receitas
                   </div>
@@ -183,8 +183,8 @@ export function DashboardOverview() {
                     {state.summary ? formatMoney(state.summary.totalIncome) : "—"}
                   </p>
                 </div>
-                <div className="rounded-[1rem] bg-black/10 p-3">
-                  <div className="flex items-center gap-2 text-white/70">
+                <div className="rounded-[1rem] p-3 [background-color:var(--app-hero-panel-strong)]">
+                  <div className="flex items-center gap-2 [color:var(--app-hero-muted)]">
                     <ArrowDownRightIcon className="size-4" />
                     Despesas
                   </div>
@@ -196,8 +196,8 @@ export function DashboardOverview() {
             </div>
 
             <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
-              <div className="rounded-[1.1rem] border border-white/10 bg-white/7 p-4 backdrop-blur">
-                <div className="flex items-center gap-2 text-sm text-white/70">
+              <div className="rounded-[1.1rem] border p-4 backdrop-blur [border-color:var(--app-hero-border)] [background-color:var(--app-hero-panel)]">
+                <div className="flex items-center gap-2 text-sm [color:var(--app-hero-muted)]">
                   <WalletCardsIcon className="size-4" />
                   Vencem hoje
                 </div>
@@ -205,8 +205,8 @@ export function DashboardOverview() {
                   {state.notifications?.dueTodayCount ?? "—"}
                 </p>
               </div>
-              <div className="rounded-[1.1rem] border border-white/10 bg-white/7 p-4 backdrop-blur">
-                <div className="flex items-center gap-2 text-sm text-white/70">
+              <div className="rounded-[1.1rem] border p-4 backdrop-blur [border-color:var(--app-hero-border)] [background-color:var(--app-hero-panel)]">
+                <div className="flex items-center gap-2 text-sm [color:var(--app-hero-muted)]">
                   <SirenIcon className="size-4" />
                   Em atraso
                 </div>
@@ -214,8 +214,8 @@ export function DashboardOverview() {
                   {state.summary?.overdueCount ?? "—"}
                 </p>
               </div>
-              <div className="rounded-[1.1rem] border border-white/10 bg-white/7 p-4 backdrop-blur">
-                <div className="flex items-center gap-2 text-sm text-white/70">
+              <div className="rounded-[1.1rem] border p-4 backdrop-blur [border-color:var(--app-hero-border)] [background-color:var(--app-hero-panel)]">
+                <div className="flex items-center gap-2 text-sm [color:var(--app-hero-muted)]">
                   <AlertTriangleIcon className="size-4" />
                   Alertas ativos
                 </div>
