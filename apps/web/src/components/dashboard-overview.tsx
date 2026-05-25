@@ -238,7 +238,7 @@ export function DashboardOverview() {
       ) : null}
 
       <div className="grid gap-4 lg:grid-cols-[1.3fr_0.7fr]">
-        <Card className="rounded-[1.2rem] border-black/6 bg-[color:var(--app-surface-strong)] shadow-[0_16px_34px_rgba(15,23,32,0.06)]">
+        <Card className="rounded-[1.2rem] border-black/6 bg-[color:var(--app-surface)] shadow-[0_16px_34px_rgba(15,23,32,0.05)]">
           <CardHeader>
             <CardTitle>Alertas operacionais</CardTitle>
             <CardDescription>
@@ -250,7 +250,7 @@ export function DashboardOverview() {
           <CardContent className="space-y-3">
             {state.notifications?.items.length ? (
               state.notifications.items.map((item) => (
-                <div key={item.id} className="rounded-[1rem] border border-black/6 bg-[color:var(--app-surface)] p-3 shadow-sm">
+                <div key={item.id} className="rounded-[1rem] border border-black/6 bg-[color:var(--app-surface-strong)] p-3 shadow-sm">
                   <div className="flex items-start justify-between gap-3">
                     <div>
                       <p className="font-medium">{item.description}</p>
@@ -278,7 +278,7 @@ export function DashboardOverview() {
           </CardContent>
         </Card>
 
-        <Card className="rounded-[1.2rem] border-black/6 bg-[color:var(--app-surface-strong)] shadow-[0_16px_34px_rgba(15,23,32,0.06)]">
+        <Card className="rounded-[1.2rem] border-black/6 bg-[color:var(--app-surface)] shadow-[0_16px_34px_rgba(15,23,32,0.05)]">
           <CardHeader>
             <CardTitle>Radar rápido</CardTitle>
             <CardDescription>Indicadores imediatos do financeiro.</CardDescription>

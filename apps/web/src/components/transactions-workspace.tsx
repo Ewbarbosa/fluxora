@@ -785,26 +785,26 @@ export function TransactionsWorkspace() {
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {loading ? (
             Array.from({ length: 4 }).map((_, index) => (
-              <Card key={index} className="rounded-[1.1rem] border-black/6 bg-[color:var(--app-surface-strong)] shadow-[0_16px_34px_rgba(15,23,32,0.06)]">
+              <Card key={index} className="rounded-[1.1rem] border-black/6 bg-[color:var(--app-surface)] shadow-[0_16px_34px_rgba(15,23,32,0.05)]">
                 <CardHeader className="pb-2"><Skeleton className="h-4 w-20" /></CardHeader>
                 <CardContent><Skeleton className="h-8 w-28" /></CardContent>
               </Card>
             ))
           ) : (
             <>
-              <Card className="rounded-[1.1rem] border-black/6 bg-[color:var(--app-surface-strong)] shadow-[0_16px_34px_rgba(15,23,32,0.06)]">
+              <Card className="rounded-[1.1rem] border-black/6 bg-[color:var(--app-surface)] shadow-[0_16px_34px_rgba(15,23,32,0.05)]">
                 <CardHeader className="pb-2"><CardTitle className="text-sm">Receitas</CardTitle></CardHeader>
                 <CardContent className="text-2xl font-semibold">{formatMoney(summary?.totalIncome ?? 0)}</CardContent>
               </Card>
-              <Card className="rounded-[1.1rem] border-black/6 bg-[color:var(--app-surface-strong)] shadow-[0_16px_34px_rgba(15,23,32,0.06)]">
+              <Card className="rounded-[1.1rem] border-black/6 bg-[color:var(--app-surface)] shadow-[0_16px_34px_rgba(15,23,32,0.05)]">
                 <CardHeader className="pb-2"><CardTitle className="text-sm">Despesas</CardTitle></CardHeader>
                 <CardContent className="text-2xl font-semibold">{formatMoney(summary?.totalExpense ?? 0)}</CardContent>
               </Card>
-              <Card className="rounded-[1.1rem] border-black/6 bg-[color:var(--app-surface-strong)] shadow-[0_16px_34px_rgba(15,23,32,0.06)]">
+              <Card className="rounded-[1.1rem] border-black/6 bg-[color:var(--app-surface)] shadow-[0_16px_34px_rgba(15,23,32,0.05)]">
                 <CardHeader className="pb-2"><CardTitle className="text-sm">Saldo</CardTitle></CardHeader>
                 <CardContent className="text-2xl font-semibold">{formatMoney(summary?.balance ?? 0)}</CardContent>
               </Card>
-              <Card className="rounded-[1.1rem] border-black/6 bg-[color:var(--app-surface-strong)] shadow-[0_16px_34px_rgba(15,23,32,0.06)]">
+              <Card className="rounded-[1.1rem] border-black/6 bg-[color:var(--app-surface)] shadow-[0_16px_34px_rgba(15,23,32,0.05)]">
                 <CardHeader className="pb-2"><CardTitle className="text-sm">Vencidos</CardTitle></CardHeader>
                 <CardContent className="text-2xl font-semibold">{summary?.overdueCount ?? 0}</CardContent>
               </Card>
@@ -812,7 +812,7 @@ export function TransactionsWorkspace() {
           )}
         </div>
 
-        <Card className="rounded-[1.2rem] border-black/6 bg-[color:var(--app-surface-strong)] shadow-[0_16px_34px_rgba(15,23,32,0.06)]">
+        <Card className="rounded-[1.2rem] border-black/6 bg-[color:var(--app-surface)] shadow-[0_16px_34px_rgba(15,23,32,0.05)]">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <BellRingIcon className="h-4 w-4" /> Alertas de atraso
