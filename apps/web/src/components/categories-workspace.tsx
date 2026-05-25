@@ -55,6 +55,7 @@ type FormState = {
   name: string
   type: CategoryType
   color: string
+  colorInput: string
 }
 
 const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3333"
@@ -72,6 +73,7 @@ const initialFormState: FormState = {
   name: "",
   type: "EXPENSE",
   color: defaultCategoryColors.EXPENSE,
+  colorInput: defaultCategoryColors.EXPENSE,
 }
 
 function typeLabel(type: CategoryType) {
@@ -86,6 +88,16 @@ function typeClassName(type: CategoryType) {
 
 function normalizeColor(value: string) {
   return value.trim().toUpperCase()
+}
+
+function sanitizeColorInput(value: string) {
+  const raw = value.toUpperCase().replace(/[^#0-9A-F]/g, "")
+  const digits = raw.replace(/#/g, "").slice(0, 6)
+  return `#${digits}`
+}
+
+function isFullHexColor(value: string) {
+  return /^#[0-9A-F]{6}$/.test(normalizeColor(value))
 }
 
 function SelectField(props: React.ComponentProps<"select">) {
@@ -182,6 +194,7 @@ export function CategoriesWorkspace() {
       name: category.name,
       type: category.type,
       color: category.color || defaultCategoryColors[category.type],
+      colorInput: category.color || defaultCategoryColors[category.type],
     })
     setModalOpen(true)
   }
@@ -191,12 +204,20 @@ export function CategoriesWorkspace() {
       const currentDefault = defaultCategoryColors[current.type]
       const nextDefault = defaultCategoryColors[nextType]
       const shouldSwapColor =
-        !current.color || normalizeColor(current.color) === normalizeColor(currentDefault)
+        !current.colorInput || normalizeColor(current.colorInput) === normalizeColor(currentDefault)
+
+      const normalizedInput = sanitizeColorInput(current.colorInput)
+      const nextColor = shouldSwapColor
+        ? nextDefault
+        : isFullHexColor(normalizedInput)
+          ? normalizeColor(normalizedInput)
+          : current.color
 
       return {
         ...current,
         type: nextType,
-        color: shouldSwapColor ? nextDefault : normalizeColor(current.color),
+        color: nextColor,
+        colorInput: shouldSwapColor ? nextDefault : normalizedInput,
       }
     })
   }
@@ -214,7 +235,7 @@ export function CategoriesWorkspace() {
       return
     }
 
-    if (!/^#[0-9A-F]{6}$/.test(normalizeColor(formState.color))) {
+    if (!isFullHexColor(formState.colorInput)) {
       toast.warning("Defina uma cor válida no formato hexadecimal.")
       return
     }
@@ -234,7 +255,7 @@ export function CategoriesWorkspace() {
           body: JSON.stringify({
             name: formState.name.trim(),
             type: formState.type,
-            color: normalizeColor(formState.color),
+            color: normalizeColor(formState.colorInput),
           }),
         }
       )
@@ -489,12 +510,29 @@ export function CategoriesWorkspace() {
                     id="category-color"
                     type="color"
                     value={formState.color}
-                    onChange={(event) => setFormState((current) => ({ ...current, color: normalizeColor(event.target.value) }))}
+                    onChange={(event) => {
+                      const nextColor = normalizeColor(event.target.value)
+                      setFormState((current) => ({ ...current, color: nextColor, colorInput: nextColor }))
+                    }}
                     className="h-10 w-14 cursor-pointer p-1"
                   />
-                  <div className="flex h-10 min-w-24 items-center rounded-lg border border-input bg-background px-3 text-sm">
-                    {formState.color}
-                  </div>
+                  <Input
+                    id="category-color-hex"
+                    value={formState.colorInput}
+                    onChange={(event) => {
+                      const nextInput = sanitizeColorInput(event.target.value)
+                      setFormState((current) => ({
+                        ...current,
+                        colorInput: nextInput,
+                        color: isFullHexColor(nextInput) ? normalizeColor(nextInput) : current.color,
+                      }))
+                    }}
+                    placeholder="#E11D48"
+                    autoComplete="off"
+                    spellCheck={false}
+                    maxLength={7}
+                    className="h-10 font-mono uppercase"
+                  />
                 </div>
                 <FieldDescription>
                   Essa cor será usada para identificar visualmente a categoria nos gráficos e listas.
