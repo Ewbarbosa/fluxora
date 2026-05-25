@@ -84,6 +84,8 @@
   --app-ink: #0f1720;
   --app-panel: rgba(255, 251, 245, 0.76);
   --app-panel-strong: rgba(255, 255, 255, 0.92);
+  --app-surface: rgba(255, 255, 255, 0.82);
+  --app-surface-strong: rgba(255, 255, 255, 0.94);
   --app-grid: rgba(15, 23, 32, 0.06);
   --safe-area-top: env(safe-area-inset-top, 0px);
   --safe-area-right: env(safe-area-inset-right, 0px);
@@ -133,6 +135,8 @@ html[data-display-mode="standalone"] {
   --app-ink: #081018;
   --app-panel: rgba(18, 28, 39, 0.8);
   --app-panel-strong: rgba(22, 34, 48, 0.92);
+  --app-surface: rgba(24, 36, 50, 0.78);
+  --app-surface-strong: rgba(26, 40, 56, 0.92);
   --app-grid: rgba(255, 255, 255, 0.05);
 }
 
@@ -140,8 +144,8 @@ html[data-display-mode="standalone"] {
   html {
     @apply font-sans;
     background:
-      radial-gradient(circle at top, rgba(48, 180, 124, 0.16), transparent 28rem),
-      linear-gradient(180deg, rgba(247, 245, 239, 0.96), rgba(237, 243, 239, 0.96));
+      radial-gradient(circle at top, rgba(48, 180, 124, 0.1), transparent 24rem),
+      linear-gradient(180deg, rgba(248, 246, 241, 0.98), rgba(240, 242, 237, 0.98));
     background-color: var(--background);
   }
   * {
@@ -150,11 +154,10 @@ html[data-display-mode="standalone"] {
   body {
     @apply text-foreground;
     background:
-      linear-gradient(180deg, rgba(255, 255, 255, 0.52), rgba(255, 255, 255, 0.08)),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.36), rgba(255, 255, 255, 0.06)),
       linear-gradient(90deg, transparent 0, transparent calc(100% - 1px), var(--app-grid) calc(100% - 1px)),
       linear-gradient(180deg, transparent 0, transparent calc(100% - 1px), var(--app-grid) calc(100% - 1px));
     background-size: auto, 24px 24px, 24px 24px;
-    background-attachment: fixed;
     min-height: 100dvh;
   }
 

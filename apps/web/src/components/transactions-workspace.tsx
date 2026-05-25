@@ -729,7 +729,7 @@ export function TransactionsWorkspace() {
   return (
     <>
       <div className="space-y-6 p-1 pt-0 md:p-4 md:pt-0">
-        <section className="overflow-hidden rounded-[1.75rem] border border-white/70 bg-[linear-gradient(135deg,rgba(15,23,32,0.96),rgba(18,28,39,0.92)_35%,rgba(48,180,124,0.86))] text-white shadow-[0_24px_60px_rgba(15,23,32,0.18)]">
+        <section className="overflow-hidden rounded-[1.75rem] border border-white/70 bg-[linear-gradient(145deg,rgba(15,23,32,0.97),rgba(22,58,72,0.94)_42%,rgba(71,148,129,0.9))] text-white shadow-[0_24px_60px_rgba(15,23,32,0.14)]">
           <div className="flex flex-col gap-5 px-5 py-5 md:px-6 md:py-6">
             <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
               <div className="space-y-2">
@@ -760,19 +760,19 @@ export function TransactionsWorkspace() {
                 ))
               ) : (
                 <>
-                  <div className="rounded-[1.35rem] border border-white/12 bg-white/10 p-4 backdrop-blur">
+                  <div className="rounded-[1.35rem] border border-white/12 bg-white/8 p-4 backdrop-blur">
                     <p className="text-sm text-white/70">Receitas</p>
                     <p className="mt-2 text-2xl font-semibold text-emerald-100">{formatMoney(summary?.totalIncome ?? 0)}</p>
                   </div>
-                  <div className="rounded-[1.35rem] border border-white/12 bg-white/10 p-4 backdrop-blur">
+                  <div className="rounded-[1.35rem] border border-white/12 bg-white/8 p-4 backdrop-blur">
                     <p className="text-sm text-white/70">Despesas</p>
                     <p className="mt-2 text-2xl font-semibold text-rose-100">{formatMoney(summary?.totalExpense ?? 0)}</p>
                   </div>
-                  <div className="rounded-[1.35rem] border border-white/12 bg-white/10 p-4 backdrop-blur">
+                  <div className="rounded-[1.35rem] border border-white/12 bg-white/8 p-4 backdrop-blur">
                     <p className="text-sm text-white/70">Saldo</p>
                     <p className="mt-2 text-2xl font-semibold">{formatMoney(summary?.balance ?? 0)}</p>
                   </div>
-                  <div className="rounded-[1.35rem] border border-white/12 bg-white/10 p-4 backdrop-blur">
+                  <div className="rounded-[1.35rem] border border-white/12 bg-white/8 p-4 backdrop-blur">
                     <p className="text-sm text-white/70">Vencidos</p>
                     <p className="mt-2 text-2xl font-semibold">{summary?.overdueCount ?? 0}</p>
                   </div>
@@ -785,26 +785,26 @@ export function TransactionsWorkspace() {
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {loading ? (
             Array.from({ length: 4 }).map((_, index) => (
-              <Card key={index} className="rounded-[1.35rem] border-white/70 bg-[color:var(--app-panel-strong)]/90 shadow-[0_18px_42px_rgba(15,23,32,0.08)]">
+              <Card key={index} className="rounded-[1.35rem] border-white/70 bg-[color:var(--app-surface-strong)] shadow-[0_18px_42px_rgba(15,23,32,0.07)]">
                 <CardHeader className="pb-2"><Skeleton className="h-4 w-20" /></CardHeader>
                 <CardContent><Skeleton className="h-8 w-28" /></CardContent>
               </Card>
             ))
           ) : (
             <>
-              <Card className="rounded-[1.35rem] border-white/70 bg-[color:var(--app-panel-strong)]/90 shadow-[0_18px_42px_rgba(15,23,32,0.08)]">
+              <Card className="rounded-[1.35rem] border-white/70 bg-[color:var(--app-surface-strong)] shadow-[0_18px_42px_rgba(15,23,32,0.07)]">
                 <CardHeader className="pb-2"><CardTitle className="text-sm">Receitas</CardTitle></CardHeader>
                 <CardContent className="text-2xl font-semibold">{formatMoney(summary?.totalIncome ?? 0)}</CardContent>
               </Card>
-              <Card className="rounded-[1.35rem] border-white/70 bg-[color:var(--app-panel-strong)]/90 shadow-[0_18px_42px_rgba(15,23,32,0.08)]">
+              <Card className="rounded-[1.35rem] border-white/70 bg-[color:var(--app-surface-strong)] shadow-[0_18px_42px_rgba(15,23,32,0.07)]">
                 <CardHeader className="pb-2"><CardTitle className="text-sm">Despesas</CardTitle></CardHeader>
                 <CardContent className="text-2xl font-semibold">{formatMoney(summary?.totalExpense ?? 0)}</CardContent>
               </Card>
-              <Card className="rounded-[1.35rem] border-white/70 bg-[color:var(--app-panel-strong)]/90 shadow-[0_18px_42px_rgba(15,23,32,0.08)]">
+              <Card className="rounded-[1.35rem] border-white/70 bg-[color:var(--app-surface-strong)] shadow-[0_18px_42px_rgba(15,23,32,0.07)]">
                 <CardHeader className="pb-2"><CardTitle className="text-sm">Saldo</CardTitle></CardHeader>
                 <CardContent className="text-2xl font-semibold">{formatMoney(summary?.balance ?? 0)}</CardContent>
               </Card>
-              <Card className="rounded-[1.35rem] border-white/70 bg-[color:var(--app-panel-strong)]/90 shadow-[0_18px_42px_rgba(15,23,32,0.08)]">
+              <Card className="rounded-[1.35rem] border-white/70 bg-[color:var(--app-surface-strong)] shadow-[0_18px_42px_rgba(15,23,32,0.07)]">
                 <CardHeader className="pb-2"><CardTitle className="text-sm">Vencidos</CardTitle></CardHeader>
                 <CardContent className="text-2xl font-semibold">{summary?.overdueCount ?? 0}</CardContent>
               </Card>
@@ -812,7 +812,7 @@ export function TransactionsWorkspace() {
           )}
         </div>
 
-        <Card className="rounded-[1.5rem] border-white/70 bg-[color:var(--app-panel-strong)]/90 shadow-[0_18px_42px_rgba(15,23,32,0.08)]">
+        <Card className="rounded-[1.5rem] border-white/70 bg-[color:var(--app-surface-strong)] shadow-[0_18px_42px_rgba(15,23,32,0.07)]">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <BellRingIcon className="h-4 w-4" /> Alertas de atraso
@@ -820,19 +820,19 @@ export function TransactionsWorkspace() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid gap-3 md:grid-cols-4">
-              <div className="rounded-[1.15rem] border border-black/6 bg-white/80 p-3">
+              <div className="rounded-[1.15rem] border border-black/6 bg-[color:var(--app-surface)] p-3">
                 <p className="text-sm text-muted-foreground">Vencem hoje</p>
                 <p className="text-2xl font-semibold">{notifications?.dueTodayCount ?? 0}</p>
               </div>
-              <div className="rounded-[1.15rem] border border-black/6 bg-white/80 p-3">
+              <div className="rounded-[1.15rem] border border-black/6 bg-[color:var(--app-surface)] p-3">
                 <p className="text-sm text-muted-foreground">Atrasados 1+ dia</p>
                 <p className="text-2xl font-semibold">{notifications?.overdueCounts.oneDay ?? 0}</p>
               </div>
-              <div className="rounded-[1.15rem] border border-black/6 bg-white/80 p-3">
+              <div className="rounded-[1.15rem] border border-black/6 bg-[color:var(--app-surface)] p-3">
                 <p className="text-sm text-muted-foreground">Atrasados 3+ dias</p>
                 <p className="text-2xl font-semibold">{notifications?.overdueCounts.threeDays ?? 0}</p>
               </div>
-              <div className="rounded-[1.15rem] border border-black/6 bg-white/80 p-3">
+              <div className="rounded-[1.15rem] border border-black/6 bg-[color:var(--app-surface)] p-3">
                 <p className="text-sm text-muted-foreground">Atrasados 7+ dias</p>
                 <p className="text-2xl font-semibold">{notifications?.overdueCounts.sevenDays ?? 0}</p>
               </div>
@@ -840,7 +840,7 @@ export function TransactionsWorkspace() {
 
             <div className="space-y-2">
               {(notifications?.items ?? []).slice(0, 5).map((item) => (
-                <div key={item.id} className="flex items-center justify-between rounded-[1.15rem] border border-black/6 bg-white/80 p-3 text-sm">
+                <div key={item.id} className="flex items-center justify-between rounded-[1.15rem] border border-black/6 bg-[color:var(--app-surface)] p-3 text-sm">
                   <div>
                     <div className="font-medium">{item.description}</div>
                     <div className="text-muted-foreground">
@@ -861,7 +861,7 @@ export function TransactionsWorkspace() {
           </CardContent>
         </Card>
 
-        <Card className="rounded-[1.5rem] border-white/70 bg-[color:var(--app-panel-strong)]/90 shadow-[0_18px_42px_rgba(15,23,32,0.08)]">
+        <Card className="rounded-[1.5rem] border-white/70 bg-[color:var(--app-surface-strong)] shadow-[0_18px_42px_rgba(15,23,32,0.07)]">
           <CardHeader className="flex flex-row items-center justify-between gap-3">
             <div>
               <CardTitle>Fluxo e filtros</CardTitle>
@@ -871,7 +871,7 @@ export function TransactionsWorkspace() {
             </div>
           </CardHeader>
           <CardContent className="space-y-6">
-            <div className="space-y-4 rounded-[1.35rem] border border-black/6 bg-white/75 p-4">
+            <div className="space-y-4 rounded-[1.35rem] border border-black/6 bg-[color:var(--app-surface)] p-4">
               <div className="flex gap-2 overflow-x-auto pb-1">
                 {(Object.keys(periodPresetLabels) as PeriodPreset[]).map((preset) => (
                   <Button
@@ -925,7 +925,7 @@ export function TransactionsWorkspace() {
                   ))}
                 </SelectField>
 
-                <div className="flex items-center gap-2 rounded-xl border border-dashed bg-white/70 px-3 text-sm text-muted-foreground">
+                <div className="flex items-center gap-2 rounded-xl border border-dashed bg-[color:var(--app-surface)] px-3 text-sm text-muted-foreground">
                   <SlidersHorizontalIcon className="h-4 w-4" /> Agrupado por mês
                 </div>
               </div>
@@ -960,14 +960,14 @@ export function TransactionsWorkspace() {
             <div className="space-y-5">
               {loading ? (
                 Array.from({ length: 3 }).map((_, index) => (
-                  <div key={index} className="overflow-hidden rounded-[1.35rem] border border-white/70 bg-[color:var(--app-panel-strong)]/90 shadow-[0_18px_42px_rgba(15,23,32,0.08)]">
+                  <div key={index} className="overflow-hidden rounded-[1.35rem] border border-white/70 bg-[color:var(--app-surface-strong)] shadow-[0_18px_42px_rgba(15,23,32,0.07)]">
                     <div className="border-b px-4 py-4"><Skeleton className="h-10 w-full" /></div>
                     <div className="p-4"><Skeleton className="h-32 w-full" /></div>
                   </div>
                 ))
               ) : groupedTransactions.length ? (
                 groupedTransactions.map((group) => (
-                  <div key={group.label} className="overflow-hidden rounded-[1.35rem] border border-white/70 bg-[color:var(--app-panel-strong)]/90 shadow-[0_18px_42px_rgba(15,23,32,0.08)]">
+                  <div key={group.label} className="overflow-hidden rounded-[1.35rem] border border-white/70 bg-[color:var(--app-surface-strong)] shadow-[0_18px_42px_rgba(15,23,32,0.07)]">
                     <div className="border-b bg-muted/30 px-4 py-4">
                       <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
                         <div>
