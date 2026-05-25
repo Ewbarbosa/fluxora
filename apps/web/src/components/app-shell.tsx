@@ -55,7 +55,7 @@ export function AppShell({ title, section = "Fluxora", children }: AppShellProps
             </div>
           </div>
         </header>
-        <div className="px-3 pb-[calc(6.75rem+var(--safe-area-bottom))] pt-3 md:px-0 md:pb-0">
+        <div className="px-3 pb-[var(--mobile-nav-space)] pt-3 md:px-0 md:pb-0">
           <PwaInstallPrompt />
           {children}
         </div>

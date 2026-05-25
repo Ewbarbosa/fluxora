@@ -39,8 +39,8 @@ export function MobileBottomNav() {
   const { setOpenMobile } = useSidebar()
 
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-white/60 bg-[color:var(--app-panel-strong)]/95 px-3 pb-[calc(var(--safe-area-bottom)+0.75rem)] pt-3 backdrop-blur-xl md:hidden">
-      <div className="mx-auto flex max-w-md items-center gap-2 rounded-[1.75rem] border border-white/70 bg-[color:var(--app-panel)]/90 p-2 shadow-[0_20px_40px_rgba(15,23,32,0.14)]">
+    <nav className="pointer-events-none fixed inset-x-0 bottom-[var(--mobile-nav-offset)] z-40 px-3 md:hidden">
+      <div className="pointer-events-auto mx-auto flex max-w-md items-center gap-2 rounded-[1.75rem] border border-white/70 bg-[color:var(--app-panel-strong)]/88 p-2 shadow-[0_20px_40px_rgba(15,23,32,0.14)] backdrop-blur-xl">
         {items.map((item) => {
           const active = item.match(pathname)
           const Icon = item.icon
