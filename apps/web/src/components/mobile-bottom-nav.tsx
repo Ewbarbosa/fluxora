@@ -52,7 +52,7 @@ export function MobileBottomNav() {
               className={cn(
                 "flex min-w-0 flex-1 items-center justify-center gap-2 rounded-xl px-3 py-3 text-xs font-medium transition",
                 active
-                  ? "bg-[color:var(--app-ink)] text-white shadow-[0_14px_28px_rgba(15,23,32,0.2)]"
+                  ? "bg-[color:var(--app-ink)] text-[color:var(--primary-foreground)] shadow-[0_14px_28px_rgba(15,23,32,0.2)]"
                   : "text-muted-foreground"
               )}
             >
