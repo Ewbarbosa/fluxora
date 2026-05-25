@@ -968,7 +968,7 @@ export function TransactionsWorkspace() {
               ) : groupedTransactions.length ? (
                 groupedTransactions.map((group) => (
                   <div key={group.label} className="overflow-hidden rounded-[1.1rem] border border-black/6 bg-[color:var(--app-surface-strong)] shadow-[0_16px_34px_rgba(15,23,32,0.06)]">
-                    <div className="border-b bg-muted/30 px-4 py-4">
+                    <div className="border-b px-4 py-4 [background-color:var(--app-panel-strong)]">
                       <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
                         <div>
                           <h3 className="text-lg font-semibold capitalize tracking-tight">{group.label}</h3>
@@ -1047,17 +1047,17 @@ export function TransactionsWorkspace() {
                             </div>
 
                             <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
-                              <div className="rounded-xl bg-muted/50 p-3">
+                              <div className="rounded-xl border border-black/6 bg-[color:var(--app-panel-strong)] p-3">
                                 <p className="text-muted-foreground">Categoria</p>
                                 <p className="mt-1 font-medium">{item.category?.name ?? "Sem categoria"}</p>
                               </div>
-                              <div className="rounded-xl bg-muted/50 p-3">
+                              <div className="rounded-xl border border-black/6 bg-[color:var(--app-panel-strong)] p-3">
                                 <p className="text-muted-foreground">Vencimento</p>
                                 <p className="mt-1 font-medium">{formatDate(item.dueDate)}</p>
                               </div>
                             </div>
 
-                            <div className="mt-4 flex items-center justify-between rounded-xl bg-[color:var(--app-panel)] px-3 py-3">
+                            <div className="mt-4 flex items-center justify-between rounded-xl border border-black/6 bg-[color:var(--app-panel-strong)] px-3 py-3">
                               <div>
                                 <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Valor</p>
                                 <p className={cn("mt-1 text-lg font-semibold", item.type === "INCOME" ? "text-emerald-600 dark:text-emerald-300" : "text-foreground")}>
@@ -1077,13 +1077,13 @@ export function TransactionsWorkspace() {
                     <div className="hidden overflow-x-auto md:block">
                       <table className="min-w-[760px] w-full border-separate border-spacing-0">
                         <thead>
-                          <tr className="bg-muted/20">
+                          <tr className="[background-color:var(--app-panel-strong)]">
                             <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-muted-foreground">Lançamento</th>
                             <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-muted-foreground">Categoria</th>
                             <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-muted-foreground">Vencimento</th>
                             <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-muted-foreground">Status</th>
                             <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide text-muted-foreground">Valor</th>
-                            <th className="sticky -right-px z-10 w-24 min-w-24 max-w-24 border-l bg-muted px-4 py-3 text-center text-xs font-semibold uppercase tracking-wide text-muted-foreground whitespace-nowrap">Ações</th>
+                            <th className="sticky -right-px z-10 w-24 min-w-24 max-w-24 border-l px-4 py-3 text-center text-xs font-semibold uppercase tracking-wide text-muted-foreground whitespace-nowrap [background-color:var(--app-panel)]">Ações</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -1123,7 +1123,7 @@ export function TransactionsWorkspace() {
                                 <td className={cn("border-t px-4 py-3 text-right align-top text-sm font-semibold", item.type === "INCOME" ? "text-emerald-600 dark:text-emerald-300" : "text-foreground")}>
                                   {formatMoney(item.amount)}
                                 </td>
-                                <td className="sticky -right-px z-10 w-24 min-w-24 max-w-24 border-t border-l bg-background px-4 py-3 align-top whitespace-nowrap">
+                                <td className="sticky -right-px z-10 w-24 min-w-24 max-w-24 border-t border-l px-4 py-3 align-top whitespace-nowrap [background-color:var(--app-surface-strong)]">
                                   <div className="flex items-center justify-center gap-1">
                                     <Button
                                       size="icon-sm"

@@ -53,7 +53,7 @@
   --brand-2: #008a67;
   --brand-3: #00704f;
   --brand-4: #003c25;
-  --background: #f5f6f2;
+  --background: #f2f5f0;
   --foreground: #122019;
   --card: #ffffff;
   --card-foreground: #122019;
@@ -63,13 +63,13 @@
   --primary-foreground: #f7fbf9;
   --secondary: rgba(0, 138, 103, 0.06);
   --secondary-foreground: #122019;
-  --muted: rgba(17, 24, 39, 0.045);
+  --muted: #e7ede7;
   --muted-foreground: #68766f;
   --accent: rgba(0, 138, 103, 0.08);
   --accent-foreground: #003c25;
   --destructive: oklch(0.62 0.2 27);
-  --border: rgba(18, 32, 25, 0.08);
-  --input: rgba(18, 32, 25, 0.1);
+  --border: rgba(18, 32, 25, 0.1);
+  --input: rgba(18, 32, 25, 0.12);
   --ring: #008a67;
   --chart-1: #008a67;
   --chart-2: oklch(0.63 0.08 210);
@@ -86,17 +86,17 @@
   --sidebar-border: rgba(255, 255, 255, 0.08);
   --sidebar-ring: #008a67;
   --app-ink: #003c25;
-  --app-panel: rgba(255, 255, 255, 0.72);
-  --app-panel-strong: rgba(255, 255, 255, 0.9);
-  --app-surface: rgba(255, 255, 255, 0.88);
-  --app-surface-strong: rgba(255, 255, 255, 0.98);
+  --app-panel: #dbe3dc;
+  --app-panel-strong: #e7ede7;
+  --app-surface: #f8faf7;
+  --app-surface-strong: #ffffff;
   --app-grid: rgba(18, 32, 25, 0.05);
-  --app-hero-bg: rgba(255, 255, 255, 0.98);
+  --app-hero-bg: #fbfdf9;
   --app-hero-foreground: #122019;
-  --app-hero-border: rgba(18, 32, 25, 0.08);
+  --app-hero-border: rgba(18, 32, 25, 0.1);
   --app-hero-muted: #68766f;
-  --app-hero-panel: rgba(247, 250, 248, 0.94);
-  --app-hero-panel-strong: rgba(242, 247, 244, 0.98);
+  --app-hero-panel: #f0f5f1;
+  --app-hero-panel-strong: #f6faf7;
   --app-hero-chip: rgba(144, 215, 187, 0.18);
   --app-hero-button: #008a67;
   --safe-area-top: env(safe-area-inset-top, 0px);
@@ -105,7 +105,7 @@
   --safe-area-left: env(safe-area-inset-left, 0px);
   --mobile-nav-offset: calc(var(--safe-area-bottom) + 0.75rem);
   --mobile-nav-space: calc(7rem + var(--mobile-nav-offset));
-  --app-page: #f3f4f0;
+  --app-page: #edf2ec;
 }
 
 html[data-display-mode="standalone"] {
