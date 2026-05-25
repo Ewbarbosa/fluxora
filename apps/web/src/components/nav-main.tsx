@@ -41,7 +41,10 @@ export function NavMain({
       <SidebarGroupLabel>Navegação</SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) => {
-          const isActive = pathname === item.url || item.items?.some((subItem) => subItem.url === pathname)
+          const childItems = item.items ?? []
+          const hasChildren = childItems.length > 0
+          const isActive =
+            pathname === item.url || childItems.some((subItem) => subItem.url === pathname)
 
           return (
             <Collapsible
@@ -49,16 +52,19 @@ export function NavMain({
               defaultOpen={isActive}
               render={<SidebarMenuItem />}
             >
-              <SidebarMenuButton
-                tooltip={item.title}
-                isActive={pathname === item.url}
-                render={<Link href={item.url} />}
-              >
-                {item.icon}
-                <span>{item.title}</span>
-              </SidebarMenuButton>
-              {item.items?.length ? (
+              {hasChildren ? (
                 <>
+                  <CollapsibleTrigger
+                    render={
+                      <SidebarMenuButton
+                        tooltip={item.title}
+                        isActive={isActive}
+                      />
+                    }
+                  >
+                    {item.icon}
+                    <span>{item.title}</span>
+                  </CollapsibleTrigger>
                   <CollapsibleTrigger
                     render={
                       <SidebarMenuAction className="aria-expanded:rotate-90" />
@@ -69,7 +75,7 @@ export function NavMain({
                   </CollapsibleTrigger>
                   <CollapsibleContent>
                     <SidebarMenuSub>
-                      {item.items.map((subItem) => (
+                      {childItems.map((subItem) => (
                         <SidebarMenuSubItem key={subItem.title}>
                           <SidebarMenuSubButton
                             isActive={pathname === subItem.url}
@@ -82,7 +88,16 @@ export function NavMain({
                     </SidebarMenuSub>
                   </CollapsibleContent>
                 </>
-              ) : null}
+              ) : (
+                <SidebarMenuButton
+                  tooltip={item.title}
+                  isActive={pathname === item.url}
+                  render={<Link href={item.url} />}
+                >
+                  {item.icon}
+                  <span>{item.title}</span>
+                </SidebarMenuButton>
+              )}
             </Collapsible>
           )
         })}
