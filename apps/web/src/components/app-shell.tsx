@@ -28,7 +28,7 @@ export function AppShell({ title, section = "Fluxora", children }: AppShellProps
   return (
     <SidebarProvider>
       <AppSidebar />
-      <SidebarInset className="min-h-svh overflow-x-clip bg-background">
+      <SidebarInset className="min-h-svh overflow-x-clip bg-background md:overflow-hidden md:border md:border-black/6 md:bg-[color:var(--app-panel-strong)] md:shadow-[0_18px_48px_rgba(15,23,32,0.08)]">
         <header className="sticky top-0 z-30 flex shrink-0 items-center border-b border-black/5 bg-[color:var(--app-panel-strong)]/92 backdrop-blur-xl">
           <div className="mx-auto flex w-full max-w-[1680px] items-center gap-2 px-4 pb-2 pt-[max(0.75rem,var(--safe-area-top))] md:px-5 md:pt-4">
             <SidebarTrigger className="-ml-1" />
