@@ -21,6 +21,19 @@ Trazer a base técnica existente para dentro do monorepo do Fluxora sem reescrev
 - backend já suporta trial de 14 dias, free tier pós-trial e base de SSO com Google via `openid-client`
 - backend está pronto para a próxima rodada de testes técnicos antes de entrar no `apps/web`
 
+## Rodando localmente
+
+Este pacote faz parte de um monorepo com `pnpm`. Não use `npm install` dentro de `apps/api`.
+
+```bash
+cd /home/ewerton/Projects/dynamic/fluxora
+corepack enable
+corepack pnpm install
+corepack pnpm --filter @fluxora/api start:dev
+```
+
+Se `pnpm` não existir no PATH, use `corepack pnpm ...` mesmo. Ele resolve isso sem drama.
+
 ## Núcleo priorizado
 
 O foco imediato desta extração é preservar e evoluir:

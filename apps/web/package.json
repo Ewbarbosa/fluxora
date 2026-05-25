@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "preinstall": "node ../../scripts/require-pnpm.cjs",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
