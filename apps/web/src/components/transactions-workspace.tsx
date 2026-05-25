@@ -760,19 +760,19 @@ export function TransactionsWorkspace() {
                 ))
               ) : (
                 <>
-                  <div className="rounded-[1rem] border p-4 backdrop-blur [border-color:var(--app-hero-border)] [background-color:var(--app-hero-panel)]">
+                  <div className="rounded-[1rem] border p-4 backdrop-blur [border-color:var(--app-accent-border)] [background-color:var(--app-hero-panel)]">
                     <p className="text-sm [color:var(--app-hero-muted)]">Receitas</p>
                     <p className="mt-2 text-2xl font-semibold text-emerald-600 dark:text-emerald-300">{formatMoney(summary?.totalIncome ?? 0)}</p>
                   </div>
-                  <div className="rounded-[1rem] border p-4 backdrop-blur [border-color:var(--app-hero-border)] [background-color:var(--app-hero-panel)]">
+                  <div className="rounded-[1rem] border p-4 backdrop-blur [border-color:var(--app-accent-border)] [background-color:var(--app-hero-panel)]">
                     <p className="text-sm [color:var(--app-hero-muted)]">Despesas</p>
                     <p className="mt-2 text-2xl font-semibold text-rose-600 dark:text-rose-300">{formatMoney(summary?.totalExpense ?? 0)}</p>
                   </div>
-                  <div className="rounded-[1rem] border p-4 backdrop-blur [border-color:var(--app-hero-border)] [background-color:var(--app-hero-panel)]">
+                  <div className="rounded-[1rem] border p-4 backdrop-blur [border-color:var(--app-accent-border)] [background-color:var(--app-hero-panel)]">
                     <p className="text-sm [color:var(--app-hero-muted)]">Saldo</p>
                     <p className="mt-2 text-2xl font-semibold">{formatMoney(summary?.balance ?? 0)}</p>
                   </div>
-                  <div className="rounded-[1rem] border p-4 backdrop-blur [border-color:var(--app-hero-border)] [background-color:var(--app-hero-panel)]">
+                  <div className="rounded-[1rem] border p-4 backdrop-blur [border-color:var(--app-accent-border)] [background-color:var(--app-hero-panel)]">
                     <p className="text-sm [color:var(--app-hero-muted)]">Vencidos</p>
                     <p className="mt-2 text-2xl font-semibold">{summary?.overdueCount ?? 0}</p>
                   </div>
@@ -792,19 +792,19 @@ export function TransactionsWorkspace() {
             ))
           ) : (
             <>
-              <Card className="rounded-[1.1rem] border-black/6 bg-[color:var(--app-surface)] shadow-[0_16px_34px_rgba(15,23,32,0.05)]">
+              <Card className="rounded-[1.1rem] border-[color:var(--app-accent-border)] bg-[color:var(--app-surface)] shadow-[0_16px_34px_rgba(15,23,32,0.05)]">
                 <CardHeader className="pb-2"><CardTitle className="text-sm">Receitas</CardTitle></CardHeader>
                 <CardContent className="text-2xl font-semibold">{formatMoney(summary?.totalIncome ?? 0)}</CardContent>
               </Card>
-              <Card className="rounded-[1.1rem] border-black/6 bg-[color:var(--app-surface)] shadow-[0_16px_34px_rgba(15,23,32,0.05)]">
+              <Card className="rounded-[1.1rem] border-[color:var(--app-accent-border)] bg-[color:var(--app-surface)] shadow-[0_16px_34px_rgba(15,23,32,0.05)]">
                 <CardHeader className="pb-2"><CardTitle className="text-sm">Despesas</CardTitle></CardHeader>
                 <CardContent className="text-2xl font-semibold">{formatMoney(summary?.totalExpense ?? 0)}</CardContent>
               </Card>
-              <Card className="rounded-[1.1rem] border-black/6 bg-[color:var(--app-surface)] shadow-[0_16px_34px_rgba(15,23,32,0.05)]">
+              <Card className="rounded-[1.1rem] border-[color:var(--app-accent-border)] bg-[color:var(--app-surface)] shadow-[0_16px_34px_rgba(15,23,32,0.05)]">
                 <CardHeader className="pb-2"><CardTitle className="text-sm">Saldo</CardTitle></CardHeader>
                 <CardContent className="text-2xl font-semibold">{formatMoney(summary?.balance ?? 0)}</CardContent>
               </Card>
-              <Card className="rounded-[1.1rem] border-black/6 bg-[color:var(--app-surface)] shadow-[0_16px_34px_rgba(15,23,32,0.05)]">
+              <Card className="rounded-[1.1rem] border-[color:var(--app-accent-border)] bg-[color:var(--app-surface)] shadow-[0_16px_34px_rgba(15,23,32,0.05)]">
                 <CardHeader className="pb-2"><CardTitle className="text-sm">Vencidos</CardTitle></CardHeader>
                 <CardContent className="text-2xl font-semibold">{summary?.overdueCount ?? 0}</CardContent>
               </Card>
@@ -812,7 +812,7 @@ export function TransactionsWorkspace() {
           )}
         </div>
 
-        <Card className="rounded-[1.2rem] border-black/6 bg-[color:var(--app-surface)] shadow-[0_16px_34px_rgba(15,23,32,0.05)]">
+        <Card className="rounded-[1.2rem] border-[color:var(--app-accent-border)] bg-[color:var(--app-surface)] shadow-[0_16px_34px_rgba(15,23,32,0.05)]">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <BellRingIcon className="h-4 w-4" /> Alertas de atraso
@@ -820,19 +820,19 @@ export function TransactionsWorkspace() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid gap-3 md:grid-cols-4">
-              <div className="rounded-[1rem] border border-black/6 bg-[color:var(--app-surface)] p-3">
+              <div className="rounded-[1rem] border border-[color:var(--app-accent-border)] bg-[color:var(--app-surface)] p-3">
                 <p className="text-sm text-muted-foreground">Vencem hoje</p>
                 <p className="text-2xl font-semibold">{notifications?.dueTodayCount ?? 0}</p>
               </div>
-              <div className="rounded-[1rem] border border-black/6 bg-[color:var(--app-surface)] p-3">
+              <div className="rounded-[1rem] border border-[color:var(--app-accent-border)] bg-[color:var(--app-surface)] p-3">
                 <p className="text-sm text-muted-foreground">Atrasados 1+ dia</p>
                 <p className="text-2xl font-semibold">{notifications?.overdueCounts.oneDay ?? 0}</p>
               </div>
-              <div className="rounded-[1rem] border border-black/6 bg-[color:var(--app-surface)] p-3">
+              <div className="rounded-[1rem] border border-[color:var(--app-accent-border)] bg-[color:var(--app-surface)] p-3">
                 <p className="text-sm text-muted-foreground">Atrasados 3+ dias</p>
                 <p className="text-2xl font-semibold">{notifications?.overdueCounts.threeDays ?? 0}</p>
               </div>
-              <div className="rounded-[1rem] border border-black/6 bg-[color:var(--app-surface)] p-3">
+              <div className="rounded-[1rem] border border-[color:var(--app-accent-border)] bg-[color:var(--app-surface)] p-3">
                 <p className="text-sm text-muted-foreground">Atrasados 7+ dias</p>
                 <p className="text-2xl font-semibold">{notifications?.overdueCounts.sevenDays ?? 0}</p>
               </div>
@@ -861,7 +861,7 @@ export function TransactionsWorkspace() {
           </CardContent>
         </Card>
 
-        <Card className="rounded-[1.2rem] border-black/6 bg-[color:var(--app-surface-strong)] shadow-[0_16px_34px_rgba(15,23,32,0.06)]">
+        <Card className="rounded-[1.2rem] border-[color:var(--app-accent-border)] bg-[color:var(--app-surface-strong)] shadow-[0_16px_34px_rgba(15,23,32,0.06)]">
           <CardHeader className="flex flex-row items-center justify-between gap-3">
             <div>
               <CardTitle>Fluxo e filtros</CardTitle>
@@ -871,7 +871,7 @@ export function TransactionsWorkspace() {
             </div>
           </CardHeader>
           <CardContent className="space-y-6">
-            <div className="space-y-4 rounded-[1.1rem] border border-black/6 bg-[color:var(--app-surface)] p-4">
+            <div className="space-y-4 rounded-[1.1rem] border border-[color:var(--app-accent-border)] bg-[color:var(--app-surface)] p-4">
               <div className="flex gap-2 overflow-x-auto pb-1">
                 {(Object.keys(periodPresetLabels) as PeriodPreset[]).map((preset) => (
                   <Button
@@ -925,7 +925,7 @@ export function TransactionsWorkspace() {
                   ))}
                 </SelectField>
 
-                <div className="flex items-center gap-2 rounded-xl border border-dashed bg-[color:var(--app-surface)] px-3 text-sm text-muted-foreground">
+                <div className="flex items-center gap-2 rounded-xl border border-dashed border-[color:var(--app-accent-border)] bg-[color:var(--app-accent-soft)] px-3 text-sm text-muted-foreground">
                   <SlidersHorizontalIcon className="h-4 w-4" /> Agrupado por mês
                 </div>
               </div>
@@ -967,23 +967,23 @@ export function TransactionsWorkspace() {
                 ))
               ) : groupedTransactions.length ? (
                 groupedTransactions.map((group) => (
-                  <div key={group.label} className="overflow-hidden rounded-[1.1rem] border border-black/6 bg-[color:var(--app-surface-strong)] shadow-[0_16px_34px_rgba(15,23,32,0.06)]">
-                    <div className="border-b bg-muted/30 px-4 py-4">
+                  <div key={group.label} className="overflow-hidden rounded-[1.1rem] border border-[color:var(--app-accent-border)] bg-[color:var(--app-surface-strong)] shadow-[0_16px_34px_rgba(15,23,32,0.06)]">
+                    <div className="border-b border-[color:var(--app-accent-border)] bg-[color:var(--app-accent-soft)] px-4 py-4">
                       <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
                         <div>
                           <h3 className="text-lg font-semibold capitalize tracking-tight">{group.label}</h3>
                           <p className="text-sm text-muted-foreground">{group.items.length} lançamento(s) neste período</p>
                         </div>
                         <div className="grid gap-2 sm:grid-cols-3">
-                          <div className="rounded-xl border border-black/6 bg-[color:var(--app-surface)] px-3 py-2 text-sm">
+                          <div className="rounded-xl border border-[color:var(--app-accent-border)] bg-[color:var(--app-surface)] px-3 py-2 text-sm">
                             <div className="text-muted-foreground">Receitas</div>
                             <div className="font-semibold text-emerald-600 dark:text-emerald-300">{formatMoney(group.income)}</div>
                           </div>
-                          <div className="rounded-xl border border-black/6 bg-[color:var(--app-surface)] px-3 py-2 text-sm">
+                          <div className="rounded-xl border border-[color:var(--app-accent-border)] bg-[color:var(--app-surface)] px-3 py-2 text-sm">
                             <div className="text-muted-foreground">Despesas</div>
                             <div className="font-semibold text-rose-600 dark:text-rose-300">{formatMoney(group.expense)}</div>
                           </div>
-                          <div className="rounded-xl border border-black/6 bg-[color:var(--app-surface)] px-3 py-2 text-sm">
+                          <div className="rounded-xl border border-[color:var(--app-accent-border)] bg-[color:var(--app-surface)] px-3 py-2 text-sm">
                             <div className="text-muted-foreground">Saldo</div>
                             <div className={cn("font-semibold", group.income - group.expense >= 0 ? "text-emerald-600 dark:text-emerald-300" : "text-rose-600 dark:text-rose-300")}>
                               {formatMoney(group.income - group.expense)}

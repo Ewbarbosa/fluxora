@@ -66,8 +66,8 @@ export function PwaInstallPrompt() {
   }
 
   return (
-    <div className="mb-3 flex items-center gap-3 rounded-[1.15rem] border border-black/6 bg-[color:var(--app-panel-strong)]/92 p-3 shadow-[0_16px_32px_rgba(15,23,32,0.1)] md:hidden">
-      <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-[color:var(--app-ink)] text-white">
+    <div className="mb-3 flex items-center gap-3 rounded-[1.15rem] border border-[color:var(--app-accent-border)] bg-[color:var(--app-panel-strong)]/92 p-3 shadow-[0_16px_32px_rgba(15,23,32,0.1)] md:hidden">
+      <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-[color:var(--app-accent-strong)] text-white">
         <DownloadIcon className="size-4" />
       </div>
       <div className="min-w-0 flex-1">
@@ -79,7 +79,7 @@ export function PwaInstallPrompt() {
       <Button
         type="button"
         size="sm"
-        className="rounded-xl"
+        className="rounded-xl bg-[color:var(--app-accent-strong)] text-white hover:opacity-90"
         onClick={handleInstall}
       >
         Instalar

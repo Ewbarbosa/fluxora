@@ -145,7 +145,7 @@ export function DashboardOverview() {
         <div className="flex flex-col gap-5 px-5 py-5 md:px-6 md:py-6">
           <div className="flex items-start justify-between gap-3">
             <div className="space-y-2">
-              <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-[0.68rem] font-medium uppercase tracking-[0.24em] [background-color:var(--app-hero-chip)] [color:var(--app-hero-muted)]">
+              <div className="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-[0.68rem] font-medium uppercase tracking-[0.24em] [background-color:var(--app-hero-chip)] [border-color:var(--app-accent-border)] [color:var(--brand-2)] dark:[color:var(--brand-1)]">
                 <BriefcaseBusinessIcon className="size-3.5" />
                 Cockpit financeiro
               </div>
@@ -168,13 +168,13 @@ export function DashboardOverview() {
           </div>
 
           <div className="grid items-start gap-3 lg:grid-cols-[minmax(0,1.3fr)_minmax(18rem,0.85fr)]">
-            <div className="self-start rounded-[1.2rem] border p-4 backdrop-blur [border-color:var(--app-hero-border)] [background-color:var(--app-hero-panel)]">
+            <div className="self-start rounded-[1.2rem] border p-4 backdrop-blur [border-color:var(--app-accent-border)] [background-color:var(--app-hero-panel)]">
               <p className="text-sm [color:var(--app-hero-muted)]">Saldo do período</p>
               <p className="mt-2 text-3xl font-semibold tracking-tight">
                 {state.summary ? formatMoney(state.summary.balance) : "—"}
               </p>
               <div className="mt-4 grid gap-3 text-sm md:grid-cols-2">
-                <div className="rounded-[1rem] p-3 [background-color:var(--app-hero-panel-strong)]">
+                <div className="rounded-[1rem] border p-3 [background-color:var(--app-hero-panel-strong)] [border-color:var(--app-accent-border)]">
                   <div className="flex items-center gap-2 [color:var(--app-hero-muted)]">
                     <ArrowUpRightIcon className="size-4" />
                     Receitas
@@ -183,7 +183,7 @@ export function DashboardOverview() {
                     {state.summary ? formatMoney(state.summary.totalIncome) : "—"}
                   </p>
                 </div>
-                <div className="rounded-[1rem] p-3 [background-color:var(--app-hero-panel-strong)]">
+                <div className="rounded-[1rem] border p-3 [background-color:var(--app-hero-panel-strong)] [border-color:var(--app-accent-border)]">
                   <div className="flex items-center gap-2 [color:var(--app-hero-muted)]">
                     <ArrowDownRightIcon className="size-4" />
                     Despesas
@@ -196,7 +196,7 @@ export function DashboardOverview() {
             </div>
 
             <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
-              <div className="rounded-[1.1rem] border p-4 backdrop-blur [border-color:var(--app-hero-border)] [background-color:var(--app-hero-panel)]">
+              <div className="rounded-[1.1rem] border p-4 backdrop-blur [border-color:var(--app-accent-border)] [background-color:var(--app-hero-panel)]">
                 <div className="flex items-center gap-2 text-sm [color:var(--app-hero-muted)]">
                   <WalletCardsIcon className="size-4" />
                   Vencem hoje
@@ -205,7 +205,7 @@ export function DashboardOverview() {
                   {state.notifications?.dueTodayCount ?? "—"}
                 </p>
               </div>
-              <div className="rounded-[1.1rem] border p-4 backdrop-blur [border-color:var(--app-hero-border)] [background-color:var(--app-hero-panel)]">
+              <div className="rounded-[1.1rem] border p-4 backdrop-blur [border-color:var(--app-accent-border)] [background-color:var(--app-hero-panel)]">
                 <div className="flex items-center gap-2 text-sm [color:var(--app-hero-muted)]">
                   <SirenIcon className="size-4" />
                   Em atraso
@@ -214,7 +214,7 @@ export function DashboardOverview() {
                   {state.summary?.overdueCount ?? "—"}
                 </p>
               </div>
-              <div className="rounded-[1.1rem] border p-4 backdrop-blur [border-color:var(--app-hero-border)] [background-color:var(--app-hero-panel)]">
+              <div className="rounded-[1.1rem] border p-4 backdrop-blur [border-color:var(--app-accent-border)] [background-color:var(--app-hero-panel)]">
                 <div className="flex items-center gap-2 text-sm [color:var(--app-hero-muted)]">
                   <AlertTriangleIcon className="size-4" />
                   Alertas ativos
@@ -238,7 +238,7 @@ export function DashboardOverview() {
       ) : null}
 
       <div className="grid gap-4 lg:grid-cols-[1.3fr_0.7fr]">
-        <Card className="rounded-[1.2rem] border-black/6 bg-[color:var(--app-surface)] shadow-[0_16px_34px_rgba(15,23,32,0.05)]">
+        <Card className="rounded-[1.2rem] border-[color:var(--app-accent-border)] bg-[color:var(--app-surface)] shadow-[0_16px_34px_rgba(15,23,32,0.05)]">
           <CardHeader>
             <CardTitle>Alertas operacionais</CardTitle>
             <CardDescription>
@@ -250,7 +250,7 @@ export function DashboardOverview() {
           <CardContent className="space-y-3">
             {state.notifications?.items.length ? (
               state.notifications.items.map((item) => (
-                <div key={item.id} className="rounded-[1rem] border border-black/6 bg-[color:var(--app-surface-strong)] p-3 shadow-sm">
+                <div key={item.id} className="rounded-[1rem] border border-[color:var(--app-accent-border)] bg-[color:var(--app-surface-strong)] p-3 shadow-sm">
                   <div className="flex items-start justify-between gap-3">
                     <div>
                       <p className="font-medium">{item.description}</p>
@@ -278,25 +278,25 @@ export function DashboardOverview() {
           </CardContent>
         </Card>
 
-        <Card className="rounded-[1.2rem] border-black/6 bg-[color:var(--app-surface)] shadow-[0_16px_34px_rgba(15,23,32,0.05)]">
+        <Card className="rounded-[1.2rem] border-[color:var(--app-accent-border)] bg-[color:var(--app-surface)] shadow-[0_16px_34px_rgba(15,23,32,0.05)]">
           <CardHeader>
             <CardTitle>Radar rápido</CardTitle>
             <CardDescription>Indicadores imediatos do financeiro.</CardDescription>
           </CardHeader>
           <CardContent className="grid gap-3 text-sm sm:grid-cols-2 lg:grid-cols-1">
-            <div className="rounded-[1rem] border border-black/6 bg-[color:var(--app-surface)] p-3">
+            <div className="rounded-[1rem] border border-[color:var(--app-accent-border)] bg-[color:var(--app-surface)] p-3">
               <span className="text-muted-foreground">Vencem hoje</span>
               <p className="mt-2 text-2xl font-semibold">{state.notifications?.dueTodayCount ?? "—"}</p>
             </div>
-            <div className="rounded-[1rem] border border-black/6 bg-[color:var(--app-surface)] p-3">
+            <div className="rounded-[1rem] border border-[color:var(--app-accent-border)] bg-[color:var(--app-surface)] p-3">
               <span className="text-muted-foreground">Atrasos +1 dia</span>
               <p className="mt-2 text-2xl font-semibold">{state.notifications?.overdueCounts.oneDay ?? "—"}</p>
             </div>
-            <div className="rounded-[1rem] border border-black/6 bg-[color:var(--app-surface)] p-3">
+            <div className="rounded-[1rem] border border-[color:var(--app-accent-border)] bg-[color:var(--app-surface)] p-3">
               <span className="text-muted-foreground">Atrasos +3 dias</span>
               <p className="mt-2 text-2xl font-semibold">{state.notifications?.overdueCounts.threeDays ?? "—"}</p>
             </div>
-            <div className="rounded-[1rem] border border-black/6 bg-[color:var(--app-surface)] p-3">
+            <div className="rounded-[1rem] border border-[color:var(--app-accent-border)] bg-[color:var(--app-surface)] p-3">
               <span className="text-muted-foreground">Atrasos +7 dias</span>
               <p className="mt-2 text-2xl font-semibold">{state.notifications?.overdueCounts.sevenDays ?? "—"}</p>
             </div>
