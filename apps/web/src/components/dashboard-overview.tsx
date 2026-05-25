@@ -393,18 +393,18 @@ function CategoryBreakdownChart({ data }: { data: CategoryItem[] }) {
         </svg>
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-2 2xl:grid-cols-1">
+      <div className="grid gap-3">
         {slices.map((item) => (
           <div key={item.name} className="rounded-[1rem] border p-3 [border-color:var(--border)] [background-color:var(--app-surface-strong)]">
             <div className="flex items-start justify-between gap-3">
-              <div className="flex items-start gap-3">
+              <div className="flex min-w-0 items-start gap-3">
                 <span className="mt-1 size-3 rounded-full" style={{ backgroundColor: item.color }} />
-                <div>
+                <div className="min-w-0">
                   <p className="font-medium">{item.name}</p>
                   <p className="text-xs text-muted-foreground">{item.count} lançamento(s)</p>
                 </div>
               </div>
-              <div className="text-right">
+              <div className="shrink-0 text-right">
                 <p className="font-medium">{formatMoney(item.amount)}</p>
                 <p className="text-xs text-muted-foreground">{item.percentage.toFixed(1)}%</p>
               </div>
