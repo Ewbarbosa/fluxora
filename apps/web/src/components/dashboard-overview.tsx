@@ -377,8 +377,8 @@ function CategoryBreakdownChart({ data }: { data: CategoryItem[] }) {
   const total = data.reduce((acc, item) => acc + item.amount, 0)
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[minmax(14rem,18rem)_minmax(0,1fr)] lg:items-center">
-      <div className="mx-auto aspect-square w-full max-w-[18rem]">
+    <div className="grid gap-6 2xl:grid-cols-[minmax(13rem,16rem)_minmax(0,1fr)] 2xl:items-center">
+      <div className="mx-auto aspect-square w-full max-w-[16rem]">
         <svg viewBox="0 0 100 100" className="h-full w-full">
           {slices.map((slice) => (
             <path key={slice.name} d={describeArc(slice.start, slice.end)} fill={slice.color} />
@@ -393,7 +393,7 @@ function CategoryBreakdownChart({ data }: { data: CategoryItem[] }) {
         </svg>
       </div>
 
-      <div className="space-y-3">
+      <div className="grid gap-3 sm:grid-cols-2 2xl:grid-cols-1">
         {slices.map((item) => (
           <div key={item.name} className="rounded-[1rem] border p-3 [border-color:var(--border)] [background-color:var(--app-surface-strong)]">
             <div className="flex items-start justify-between gap-3">
@@ -488,8 +488,8 @@ export function DashboardOverview() {
 
   return (
     <div className="flex flex-1 flex-col gap-4 p-1 pt-0 md:p-4 md:pt-0">
-      <section className="overflow-hidden rounded-[1.5rem] border shadow-[0_18px_40px_rgba(15,23,32,0.08)] [border-color:var(--app-hero-border)] [background-color:var(--app-hero-bg)] [color:var(--app-hero-foreground)]">
-        <div className="flex flex-col gap-5 px-5 py-5 md:px-6 md:py-6">
+      <section className="[color:var(--app-hero-foreground)]">
+        <div className="flex flex-col gap-5">
           <div className="flex items-start justify-end gap-3">
             <Button
               variant="secondary"
@@ -505,7 +505,7 @@ export function DashboardOverview() {
           <div className="grid items-start gap-3 2xl:grid-cols-[minmax(0,1.3fr)_minmax(24rem,0.9fr)]">
             <div className="grid gap-3">
               <div className="grid gap-3 xl:grid-cols-[minmax(0,1.15fr)_minmax(20rem,0.85fr)]">
-                <div className="rounded-[1.2rem] border p-4 backdrop-blur md:p-5 [border-color:var(--app-hero-border)] [background-color:var(--app-hero-panel)]">
+                <div className="p-1 md:p-2">
                   <p className="text-sm [color:var(--app-hero-muted)]">Saldo do mês</p>
                   <p className="mt-2 text-3xl font-semibold tracking-tight">
                     {summary ? formatMoney(summary.balance) : "—"}
