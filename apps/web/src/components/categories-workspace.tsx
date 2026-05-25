@@ -42,6 +42,7 @@ type Category = {
   id: number
   name: string
   type: CategoryType
+  color?: string | null
 }
 
 type Filters = {
@@ -53,9 +54,14 @@ type FormState = {
   id?: number
   name: string
   type: CategoryType
+  color: string
 }
 
 const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3333"
+const defaultCategoryColors: Record<CategoryType, string> = {
+  INCOME: "#059669",
+  EXPENSE: "#E11D48",
+}
 
 const initialFilters: Filters = {
   search: "",
@@ -65,6 +71,7 @@ const initialFilters: Filters = {
 const initialFormState: FormState = {
   name: "",
   type: "EXPENSE",
+  color: defaultCategoryColors.EXPENSE,
 }
 
 function typeLabel(type: CategoryType) {
@@ -75,6 +82,10 @@ function typeClassName(type: CategoryType) {
   return type === "INCOME"
     ? "bg-emerald-500/12 text-emerald-700 ring-emerald-500/20 dark:text-emerald-300"
     : "bg-rose-500/12 text-rose-700 ring-rose-500/20 dark:text-rose-300"
+}
+
+function normalizeColor(value: string) {
+  return value.trim().toUpperCase()
 }
 
 function SelectField(props: React.ComponentProps<"select">) {
@@ -166,8 +177,28 @@ export function CategoriesWorkspace() {
 
   function openEditModal(category: Category) {
     setModalMode("edit")
-    setFormState({ id: category.id, name: category.name, type: category.type })
+    setFormState({
+      id: category.id,
+      name: category.name,
+      type: category.type,
+      color: category.color || defaultCategoryColors[category.type],
+    })
     setModalOpen(true)
+  }
+
+  function handleTypeChange(nextType: CategoryType) {
+    setFormState((current) => {
+      const currentDefault = defaultCategoryColors[current.type]
+      const nextDefault = defaultCategoryColors[nextType]
+      const shouldSwapColor =
+        !current.color || normalizeColor(current.color) === normalizeColor(currentDefault)
+
+      return {
+        ...current,
+        type: nextType,
+        color: shouldSwapColor ? nextDefault : normalizeColor(current.color),
+      }
+    })
   }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -180,6 +211,11 @@ export function CategoriesWorkspace() {
 
     if (!formState.name.trim()) {
       toast.warning("Nome da categoria é obrigatório.")
+      return
+    }
+
+    if (!/^#[0-9A-F]{6}$/.test(normalizeColor(formState.color))) {
+      toast.warning("Defina uma cor válida no formato hexadecimal.")
       return
     }
 
@@ -198,6 +234,7 @@ export function CategoriesWorkspace() {
           body: JSON.stringify({
             name: formState.name.trim(),
             type: formState.type,
+            color: normalizeColor(formState.color),
           }),
         }
       )
@@ -347,7 +384,10 @@ export function CategoriesWorkspace() {
                 <div key={category.id} className="rounded-xl border bg-card/40 p-4 shadow-xs">
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <div className="flex items-start gap-3">
-                      <div className="rounded-xl bg-muted p-2 text-muted-foreground">
+                      <div
+                        className="rounded-xl p-2 text-white shadow-sm"
+                        style={{ backgroundColor: category.color || defaultCategoryColors[category.type] }}
+                      >
                         <TagsIcon className="size-4" />
                       </div>
                       <div>
@@ -358,6 +398,13 @@ export function CategoriesWorkspace() {
                           </span>
                           <span className="inline-flex items-center rounded-full bg-muted px-2.5 py-1 text-xs text-muted-foreground ring-1 ring-inset ring-border">
                             ID #{category.id}
+                          </span>
+                          <span className="inline-flex items-center gap-2 rounded-full bg-muted px-2.5 py-1 text-xs text-muted-foreground ring-1 ring-inset ring-border">
+                            <span
+                              className="size-2.5 rounded-full"
+                              style={{ backgroundColor: category.color || defaultCategoryColors[category.type] }}
+                            />
+                            {category.color || defaultCategoryColors[category.type]}
                           </span>
                         </div>
                       </div>
@@ -425,13 +472,32 @@ export function CategoriesWorkspace() {
                 <SelectField
                   id="category-type"
                   value={formState.type}
-                  onChange={(event) => setFormState((current) => ({ ...current, type: event.target.value as CategoryType }))}
+                  onChange={(event) => handleTypeChange(event.target.value as CategoryType)}
                 >
                   <option value="EXPENSE">Despesa</option>
                   <option value="INCOME">Receita</option>
                 </SelectField>
                 <FieldDescription>
                   O tipo precisa corresponder ao uso real da categoria nos lançamentos.
+                </FieldDescription>
+              </Field>
+
+              <Field>
+                <FieldLabel htmlFor="category-color">Cor</FieldLabel>
+                <div className="flex items-center gap-3">
+                  <Input
+                    id="category-color"
+                    type="color"
+                    value={formState.color}
+                    onChange={(event) => setFormState((current) => ({ ...current, color: normalizeColor(event.target.value) }))}
+                    className="h-10 w-14 cursor-pointer p-1"
+                  />
+                  <div className="flex h-10 min-w-24 items-center rounded-lg border border-input bg-background px-3 text-sm">
+                    {formState.color}
+                  </div>
+                </div>
+                <FieldDescription>
+                  Essa cor será usada para identificar visualmente a categoria nos gráficos e listas.
                 </FieldDescription>
               </Field>
             </FieldGroup>

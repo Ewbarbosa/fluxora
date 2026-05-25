@@ -47,6 +47,7 @@ type CategoryItem = {
   amount: number
   count: number
   percentage: number
+  color?: string | null
 }
 
 type Alerts = {
@@ -343,7 +344,7 @@ function CategoryBreakdownChart({ data }: { data: CategoryItem[] }) {
 
     acc.push({
       ...item,
-      color: palette[index % palette.length],
+      color: item.color || palette[index % palette.length],
       start,
       end,
     })

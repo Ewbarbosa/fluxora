@@ -30,6 +30,11 @@ type FinancialTransactionWithRelations = Prisma.FinancialTransactionGetPayload<{
   include: typeof transactionIncludes;
 }>;
 
+const defaultCategoryColors: Record<FinancialTransactionType, string> = {
+  INCOME: '#059669',
+  EXPENSE: '#E11D48',
+};
+
 @Injectable()
 export class FinanceService {
   constructor(
@@ -38,10 +43,13 @@ export class FinanceService {
   ) {}
 
   async createCategory(data: CreateFinancialCategoryDto, req: CustomRequest) {
+    const normalizedName = data.name.trim();
+    const normalizedColor = this.normalizeCategoryColor(data.color);
+
     const existingCategory = await this.prisma.financialCategory.findFirst({
       where: {
         tenantId: req.tenantId,
-        name: data.name,
+        name: normalizedName,
         type: data.type,
       },
     });
@@ -57,8 +65,9 @@ export class FinanceService {
         where: { id: existingCategory.id },
         data: {
           deletedAt: null,
-          name: data.name,
+          name: normalizedName,
           type: data.type,
+          color: normalizedColor ?? this.getDefaultCategoryColor(data.type),
         },
       });
     }
@@ -71,8 +80,9 @@ export class FinanceService {
 
     return this.prisma.financialCategory.create({
       data: {
-        name: data.name,
+        name: normalizedName,
         type: data.type,
+        color: normalizedColor ?? this.getDefaultCategoryColor(data.type),
         tenantId: req.tenantId,
       },
     });
@@ -97,6 +107,11 @@ export class FinanceService {
     const category = await this.findCategoryOrThrow(id, req.tenantId);
     const nextName = data.name?.trim() ?? category.name;
     const nextType = data.type ?? category.type;
+    const nextColor =
+      data.color !== undefined
+        ? (this.normalizeCategoryColor(data.color) ??
+          this.getDefaultCategoryColor(nextType))
+        : (category.color ?? this.getDefaultCategoryColor(nextType));
 
     const existingCategory = await this.prisma.financialCategory.findFirst({
       where: {
@@ -119,6 +134,9 @@ export class FinanceService {
       data: {
         ...(data.name !== undefined && { name: nextName }),
         ...(data.type !== undefined && { type: nextType }),
+        ...((data.color !== undefined || data.type !== undefined) && {
+          color: nextColor,
+        }),
       },
     });
   }
@@ -464,6 +482,15 @@ export class FinanceService {
     }
 
     return category;
+  }
+
+  private normalizeCategoryColor(color?: string | null) {
+    if (!color) return null;
+    return color.trim().toUpperCase();
+  }
+
+  private getDefaultCategoryColor(type: FinancialTransactionType) {
+    return defaultCategoryColors[type];
   }
 
   private async updateTransactionGroup(
@@ -823,16 +850,21 @@ export class FinanceService {
 
     const expenseCategoriesMap = new Map<
       string,
-      { name: string; amount: number; count: number }
+      { name: string; amount: number; count: number; color: string }
     >();
 
     for (const item of currentMonthItems) {
       if (item.type !== FinancialTransactionType.EXPENSE) continue;
-      const key = item.category?.name ?? 'Sem categoria';
+      const key = item.category?.id
+        ? String(item.category.id)
+        : (item.category?.name ?? 'uncategorized');
       const bucket = expenseCategoriesMap.get(key) ?? {
-        name: key,
+        name: item.category?.name ?? 'Sem categoria',
         amount: 0,
         count: 0,
+        color:
+          item.category?.color ??
+          this.getDefaultCategoryColor(FinancialTransactionType.EXPENSE),
       };
       bucket.amount += Number(item.amount);
       bucket.count += 1;
