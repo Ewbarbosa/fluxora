@@ -77,13 +77,13 @@
   --chart-4: oklch(0.48 0.03 255);
   --chart-5: oklch(0.36 0.02 255);
   --radius: 0.75rem;
-  --sidebar: #111715;
-  --sidebar-foreground: #e8efeb;
+  --sidebar: #f7faf6;
+  --sidebar-foreground: #122019;
   --sidebar-primary: #008a67;
   --sidebar-primary-foreground: #f7fbf9;
-  --sidebar-accent: rgba(255, 255, 255, 0.08);
-  --sidebar-accent-foreground: #f3f7f4;
-  --sidebar-border: rgba(255, 255, 255, 0.08);
+  --sidebar-accent: #e7ede7;
+  --sidebar-accent-foreground: #122019;
+  --sidebar-border: rgba(18, 32, 25, 0.08);
   --sidebar-ring: #008a67;
   --app-ink: #003c25;
   --app-panel: #dbe3dc;
