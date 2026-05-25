@@ -53,7 +53,7 @@
   --brand-2: #008a67;
   --brand-3: #00704f;
   --brand-4: #003c25;
-  --background: #f7f8f5;
+  --background: #f7faf6;
   --foreground: #122019;
   --card: #ffffff;
   --card-foreground: #122019;
@@ -105,7 +105,7 @@
   --safe-area-left: env(safe-area-inset-left, 0px);
   --mobile-nav-offset: calc(var(--safe-area-bottom) + 0.75rem);
   --mobile-nav-space: calc(7rem + var(--mobile-nav-offset));
-  --app-page: #f6f8f4;
+  --app-page: #f7faf6;
 }
 
 html[data-display-mode="standalone"] {
