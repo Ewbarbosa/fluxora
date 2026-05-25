@@ -1,15 +1,12 @@
 "use client"
 
-import type { CSSProperties, ReactNode } from "react"
+import type { ReactNode } from "react"
 import { useCallback, useEffect, useMemo, useState } from "react"
 import {
   AlertTriangleIcon,
   ArrowDownRightIcon,
   ArrowUpRightIcon,
-  BriefcaseBusinessIcon,
-  CalendarClockIcon,
   CircleDollarSignIcon,
-  ListOrderedIcon,
   RefreshCcwIcon,
   SirenIcon,
   TrendingUpIcon,
@@ -52,12 +49,6 @@ type CategoryItem = {
   percentage: number
 }
 
-type StatusItem = {
-  status: "PAID" | "PENDING" | "OVERDUE"
-  label: string
-  count: number
-}
-
 type Alerts = {
   dueTodayCount: number
   overdueCounts: {
@@ -93,7 +84,6 @@ type DashboardOverviewResponse = {
   charts: {
     monthlyFlow: MonthlyFlowItem[]
     expenseByCategory: CategoryItem[]
-    statusBreakdown: StatusItem[]
   }
   alerts: Alerts
   upcoming: Array<{
@@ -190,43 +180,56 @@ function SummaryCard({
   )
 }
 
-function BalanceSparkline({ data }: { data: MonthlyFlowItem[] }) {
+function IncomeExpenseTrendChart({ data }: { data: MonthlyFlowItem[] }) {
   if (!data.length) {
     return (
       <div className="rounded-[1rem] border p-3 [border-color:var(--app-hero-border)] [background-color:var(--app-hero-panel-strong)]">
-        <p className="text-sm [color:var(--app-hero-muted)]">Trajetória do saldo</p>
+        <p className="text-sm [color:var(--app-hero-muted)]">Receitas x despesas</p>
         <p className="mt-6 text-sm text-muted-foreground">Carregando série mensal...</p>
       </div>
     )
   }
 
-  const balances = data.map((item) => item.balance)
-  const max = Math.max(...balances, 0)
-  const min = Math.min(...balances, 0)
+  const values = data.flatMap((item) => [item.income, item.expense])
+  const max = Math.max(...values, 0)
+  const min = Math.min(...values, 0)
   const range = max - min || 1
 
-  const points = data
-    .map((item, index) => {
-      const x = (index / Math.max(data.length - 1, 1)) * 100
-      const y = 100 - ((item.balance - min) / range) * 100
-      return `${x},${y}`
-    })
-    .join(" ")
+  const buildPoints = (key: "income" | "expense") =>
+    data
+      .map((item, index) => {
+        const x = (index / Math.max(data.length - 1, 1)) * 100
+        const y = 100 - ((item[key] - min) / range) * 100
+        return `${x},${y}`
+      })
+      .join(" ")
 
-  const areaPoints = `0,100 ${points} 100,100`
+  const incomePoints = buildPoints("income")
+  const expensePoints = buildPoints("expense")
+  const incomeAreaPoints = `0,100 ${incomePoints} 100,100`
 
   return (
     <div className="rounded-[1rem] border p-3 [border-color:var(--app-hero-border)] [background-color:var(--app-hero-panel-strong)]">
       <div className="mb-3 flex items-center justify-between gap-3">
         <div>
-          <p className="text-sm [color:var(--app-hero-muted)]">Trajetória do saldo</p>
+          <p className="text-sm [color:var(--app-hero-muted)]">Receitas x despesas</p>
           <p className="text-xs [color:var(--app-hero-muted)]">Últimos 6 meses</p>
         </div>
         <TrendingUpIcon className="size-4 [color:var(--app-ink)]" />
       </div>
+      <div className="mb-3 flex flex-wrap items-center gap-4 text-xs [color:var(--app-hero-muted)]">
+        <span className="inline-flex items-center gap-2">
+          <span className="size-2.5 rounded-full bg-[var(--chart-1)]" />
+          Receitas
+        </span>
+        <span className="inline-flex items-center gap-2">
+          <span className="size-2.5 rounded-full bg-[var(--chart-4)]" />
+          Despesas
+        </span>
+      </div>
       <svg viewBox="0 0 100 100" className="h-24 w-full overflow-visible">
         <defs>
-          <linearGradient id="balance-area" x1="0%" y1="0%" x2="0%" y2="100%">
+          <linearGradient id="income-area" x1="0%" y1="0%" x2="0%" y2="100%">
             <stop offset="0%" stopColor="var(--chart-1)" stopOpacity="0.35" />
             <stop offset="100%" stopColor="var(--chart-1)" stopOpacity="0.02" />
           </linearGradient>
@@ -238,11 +241,19 @@ function BalanceSparkline({ data }: { data: MonthlyFlowItem[] }) {
           strokeDasharray="3 4"
           strokeWidth="1"
         />
-        <polygon points={areaPoints} fill="url(#balance-area)" />
+        <polygon points={incomeAreaPoints} fill="url(#income-area)" />
         <polyline
-          points={points}
+          points={incomePoints}
           fill="none"
           stroke="var(--chart-1)"
+          strokeWidth="3"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        <polyline
+          points={expensePoints}
+          fill="none"
+          stroke="var(--chart-4)"
           strokeWidth="3"
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -313,72 +324,91 @@ function CategoryBreakdownChart({ data }: { data: CategoryItem[] }) {
     return <p className="text-sm text-muted-foreground">Sem despesas categorizadas neste período.</p>
   }
 
-  return (
-    <div className="space-y-4">
-      {data.map((item, index) => {
-        const barStyle = {
-          width: `${Math.max(item.percentage, 6)}%`,
-          background:
-            index % 2 === 0
-              ? "linear-gradient(90deg, var(--chart-1), color-mix(in srgb, var(--chart-1) 72%, white))"
-              : "linear-gradient(90deg, var(--chart-4), color-mix(in srgb, var(--chart-4) 72%, white))",
-        } satisfies CSSProperties
+  const palette = [
+    "var(--chart-1)",
+    "var(--chart-2)",
+    "var(--chart-3)",
+    "var(--chart-4)",
+    "color-mix(in srgb, var(--chart-1) 72%, white)",
+    "color-mix(in srgb, var(--chart-4) 68%, white)",
+  ]
 
-        return (
-          <div key={item.name} className="space-y-2">
+  const slices = data.reduce<
+    Array<CategoryItem & { color: string; start: number; end: number }>
+  >((acc, item, index) => {
+    const start = acc.at(-1)?.end ?? 0
+    const end = start + item.percentage
+
+    acc.push({
+      ...item,
+      color: palette[index % palette.length],
+      start,
+      end,
+    })
+
+    return acc
+  }, [])
+
+  const getCoordinates = (percentage: number) => {
+    const angle = (percentage / 100) * Math.PI * 2 - Math.PI / 2
+    return {
+      x: 50 + Math.cos(angle) * 42,
+      y: 50 + Math.sin(angle) * 42,
+    }
+  }
+
+  const describeArc = (start: number, end: number) => {
+    if (end - start >= 99.999) {
+      return "M 50 8 A 42 42 0 1 1 49.99 8"
+    }
+
+    const startCoord = getCoordinates(start)
+    const endCoord = getCoordinates(end)
+    const largeArcFlag = end - start > 50 ? 1 : 0
+
+    return [
+      "M 50 50",
+      `L ${startCoord.x} ${startCoord.y}`,
+      `A 42 42 0 ${largeArcFlag} 1 ${endCoord.x} ${endCoord.y}`,
+      "Z",
+    ].join(" ")
+  }
+
+  const total = data.reduce((acc, item) => acc + item.amount, 0)
+
+  return (
+    <div className="grid gap-6 lg:grid-cols-[minmax(14rem,18rem)_minmax(0,1fr)] lg:items-center">
+      <div className="mx-auto aspect-square w-full max-w-[18rem]">
+        <svg viewBox="0 0 100 100" className="h-full w-full">
+          {slices.map((slice) => (
+            <path key={slice.name} d={describeArc(slice.start, slice.end)} fill={slice.color} />
+          ))}
+          <circle cx="50" cy="50" r="22" fill="var(--app-surface)" />
+          <text x="50" y="47" textAnchor="middle" className="fill-current text-[6px] font-medium [color:var(--muted-foreground)]">
+            Total
+          </text>
+          <text x="50" y="56" textAnchor="middle" className="fill-current text-[7px] font-semibold">
+            {formatCompactMoney(total)}
+          </text>
+        </svg>
+      </div>
+
+      <div className="space-y-3">
+        {slices.map((item) => (
+          <div key={item.name} className="rounded-[1rem] border p-3 [border-color:var(--border)] [background-color:var(--app-surface-strong)]">
             <div className="flex items-start justify-between gap-3">
-              <div>
-                <p className="font-medium">{item.name}</p>
-                <p className="text-xs text-muted-foreground">{item.count} lançamento(s)</p>
+              <div className="flex items-start gap-3">
+                <span className="mt-1 size-3 rounded-full" style={{ backgroundColor: item.color }} />
+                <div>
+                  <p className="font-medium">{item.name}</p>
+                  <p className="text-xs text-muted-foreground">{item.count} lançamento(s)</p>
+                </div>
               </div>
               <div className="text-right">
                 <p className="font-medium">{formatMoney(item.amount)}</p>
                 <p className="text-xs text-muted-foreground">{item.percentage.toFixed(1)}%</p>
               </div>
             </div>
-            <div className="h-2.5 overflow-hidden rounded-full bg-black/6 dark:bg-white/8">
-              <div className="h-full rounded-full" style={barStyle} />
-            </div>
-          </div>
-        )
-      })}
-    </div>
-  )
-}
-
-function StatusBreakdown({ data }: { data: StatusItem[] }) {
-  if (!data.length) {
-    return <p className="text-sm text-muted-foreground">Carregando status dos lançamentos...</p>
-  }
-
-  const total = data.reduce((acc, item) => acc + item.count, 0)
-  const palette: Record<StatusItem["status"], string> = {
-    PAID: "var(--chart-1)",
-    PENDING: "var(--chart-2)",
-    OVERDUE: "var(--chart-4)",
-  }
-
-  return (
-    <div className="space-y-4">
-      <div className="flex h-3 overflow-hidden rounded-full bg-black/6 dark:bg-white/8">
-        {data.map((item) => (
-          <div
-            key={item.status}
-            style={{
-              width: `${total ? (item.count / total) * 100 : 0}%`,
-              backgroundColor: palette[item.status],
-            }}
-          />
-        ))}
-      </div>
-      <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
-        {data.map((item) => (
-          <div key={item.status} className="rounded-[1rem] border p-3 [border-color:var(--border)] [background-color:var(--app-surface-strong)]">
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <span className="size-2.5 rounded-full" style={{ backgroundColor: palette[item.status] }} />
-              {item.label}
-            </div>
-            <p className="mt-2 text-2xl font-semibold">{item.count}</p>
           </div>
         ))}
       </div>
@@ -452,10 +482,7 @@ export function DashboardOverview() {
 
   const monthlyFlow = state.overview?.charts.monthlyFlow ?? []
   const expenseByCategory = state.overview?.charts.expenseByCategory ?? []
-  const statusBreakdown = state.overview?.charts.statusBreakdown ?? []
-  const alerts = state.overview?.alerts
   const recentTransactions = state.overview?.recentTransactions ?? []
-  const upcoming = state.overview?.upcoming ?? []
   const summary = state.overview?.summary.current
   const changes = state.overview?.summary.changes
 
@@ -463,19 +490,7 @@ export function DashboardOverview() {
     <div className="flex flex-1 flex-col gap-4 p-1 pt-0 md:p-4 md:pt-0">
       <section className="overflow-hidden rounded-[1.5rem] border shadow-[0_18px_40px_rgba(15,23,32,0.08)] [border-color:var(--app-hero-border)] [background-color:var(--app-hero-bg)] [color:var(--app-hero-foreground)]">
         <div className="flex flex-col gap-5 px-5 py-5 md:px-6 md:py-6">
-          <div className="flex items-start justify-between gap-3">
-            <div className="space-y-2">
-              <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-[0.68rem] font-medium uppercase tracking-[0.24em] [background-color:var(--app-hero-chip)] [color:var(--app-hero-muted)]">
-                <BriefcaseBusinessIcon className="size-3.5" />
-                Cockpit financeiro
-              </div>
-              <div>
-                <h1 className="text-2xl font-semibold tracking-tight">Visão financeira</h1>
-                <p className="max-w-2xl text-sm [color:var(--app-hero-muted)]">
-                  Dashboard consolidado com leitura mensal, alertas operacionais e gráficos leves para acompanhar caixa, categorias e status.
-                </p>
-              </div>
-            </div>
+          <div className="flex items-start justify-end gap-3">
             <Button
               variant="secondary"
               className="rounded-2xl border-0 [background-color:var(--app-hero-button)] [color:var(--primary-foreground)] hover:opacity-90 dark:[color:var(--primary-foreground)]"
@@ -487,10 +502,10 @@ export function DashboardOverview() {
             </Button>
           </div>
 
-          <div className="grid items-start gap-3 xl:grid-cols-[minmax(0,1.25fr)_minmax(22rem,0.95fr)]">
+          <div className="grid items-start gap-3 2xl:grid-cols-[minmax(0,1.3fr)_minmax(24rem,0.9fr)]">
             <div className="grid gap-3">
-              <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_18rem]">
-                <div className="rounded-[1.2rem] border p-4 backdrop-blur [border-color:var(--app-hero-border)] [background-color:var(--app-hero-panel)]">
+              <div className="grid gap-3 xl:grid-cols-[minmax(0,1.15fr)_minmax(20rem,0.85fr)]">
+                <div className="rounded-[1.2rem] border p-4 backdrop-blur md:p-5 [border-color:var(--app-hero-border)] [background-color:var(--app-hero-panel)]">
                   <p className="text-sm [color:var(--app-hero-muted)]">Saldo do mês</p>
                   <p className="mt-2 text-3xl font-semibold tracking-tight">
                     {summary ? formatMoney(summary.balance) : "—"}
@@ -527,37 +542,31 @@ export function DashboardOverview() {
                   </div>
                 </div>
 
-                <BalanceSparkline data={monthlyFlow} />
+                <IncomeExpenseTrendChart data={monthlyFlow} />
               </div>
+            </div>
 
-              <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
-                <SummaryCard
-                  title="Receitas"
-                  value={summary ? formatMoney(summary.totalIncome) : "—"}
-                  change={changes?.income ?? { delta: 0, percent: 0 }}
-                  icon={<CircleDollarSignIcon className="size-4 [color:var(--app-ink)]" />}
-                />
-                <SummaryCard
-                  title="Despesas"
-                  value={summary ? formatMoney(summary.totalExpense) : "—"}
-                  change={changes?.expense ?? { delta: 0, percent: 0 }}
-                  inverse
-                  icon={<WalletCardsIcon className="size-4 [color:var(--app-ink)]" />}
-                />
-                <SummaryCard
-                  title="Vencem hoje"
-                  value={String(alerts?.dueTodayCount ?? "—")}
-                  change={{ delta: 0, percent: 0 }}
-                  icon={<CalendarClockIcon className="size-4 [color:var(--app-ink)]" />}
-                />
-                <SummaryCard
-                  title="Atrasos"
-                  value={String(summary?.overdueCount ?? "—")}
-                  change={changes?.overdueCount ?? { delta: 0, percent: 0 }}
-                  inverse
-                  icon={<AlertTriangleIcon className="size-4 [color:var(--app-ink)]" />}
-                />
-              </div>
+            <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+              <SummaryCard
+                title="Receitas"
+                value={summary ? formatMoney(summary.totalIncome) : "—"}
+                change={changes?.income ?? { delta: 0, percent: 0 }}
+                icon={<CircleDollarSignIcon className="size-4 [color:var(--app-ink)]" />}
+              />
+              <SummaryCard
+                title="Despesas"
+                value={summary ? formatMoney(summary.totalExpense) : "—"}
+                change={changes?.expense ?? { delta: 0, percent: 0 }}
+                inverse
+                icon={<WalletCardsIcon className="size-4 [color:var(--app-ink)]" />}
+              />
+              <SummaryCard
+                title="Atrasos"
+                value={String(summary?.overdueCount ?? "—")}
+                change={changes?.overdueCount ?? { delta: 0, percent: 0 }}
+                inverse
+                icon={<AlertTriangleIcon className="size-4 [color:var(--app-ink)]" />}
+              />
             </div>
           </div>
         </div>
@@ -590,95 +599,6 @@ export function DashboardOverview() {
           </CardHeader>
           <CardContent>
             <CategoryBreakdownChart data={expenseByCategory} />
-          </CardContent>
-        </Card>
-      </div>
-
-      <div className="grid gap-4 xl:grid-cols-[0.9fr_1.1fr]">
-        <Card className="rounded-[1.2rem] border-black/6 bg-[color:var(--app-surface)] shadow-[0_16px_34px_rgba(15,23,32,0.05)]">
-          <CardHeader>
-            <CardTitle>Radar rápido</CardTitle>
-            <CardDescription>Status dos lançamentos e próximos vencimentos.</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-5">
-            <StatusBreakdown data={statusBreakdown} />
-
-            <div className="space-y-3">
-              <div className="flex items-center gap-2 text-sm font-medium">
-                <ListOrderedIcon className="size-4 [color:var(--app-ink)]" />
-                Próximos vencimentos
-              </div>
-              {upcoming.length ? (
-                upcoming.map((item) => (
-                  <div key={item.id} className="rounded-[1rem] border border-black/6 bg-[color:var(--app-surface-strong)] p-3">
-                    <div className="flex items-start justify-between gap-3">
-                      <div>
-                        <p className="font-medium">{item.description}</p>
-                        <p className="text-sm text-muted-foreground">
-                          {item.category} • {formatDate(item.dueDate)}
-                        </p>
-                      </div>
-                      <p className="font-medium">{formatMoney(item.amount)}</p>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <p className="text-sm text-muted-foreground">
-                  {state.loading ? "Carregando..." : "Nenhum vencimento futuro encontrado."}
-                </p>
-              )}
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="rounded-[1.2rem] border-black/6 bg-[color:var(--app-surface)] shadow-[0_16px_34px_rgba(15,23,32,0.05)]">
-          <CardHeader>
-            <CardTitle>Alertas operacionais</CardTitle>
-            <CardDescription>
-              {alerts
-                ? `${alerts.items.length} item(ns) atrasado(s) listado(s)`
-                : "Carregando alertas reais da API."}
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid gap-3 sm:grid-cols-3">
-              <div className="rounded-[1rem] border border-black/6 bg-[color:var(--app-surface-strong)] p-3">
-                <span className="text-sm text-muted-foreground">Atrasos +1 dia</span>
-                <p className="mt-2 text-2xl font-semibold">{alerts?.overdueCounts.oneDay ?? "—"}</p>
-              </div>
-              <div className="rounded-[1rem] border border-black/6 bg-[color:var(--app-surface-strong)] p-3">
-                <span className="text-sm text-muted-foreground">Atrasos +3 dias</span>
-                <p className="mt-2 text-2xl font-semibold">{alerts?.overdueCounts.threeDays ?? "—"}</p>
-              </div>
-              <div className="rounded-[1rem] border border-black/6 bg-[color:var(--app-surface-strong)] p-3">
-                <span className="text-sm text-muted-foreground">Atrasos +7 dias</span>
-                <p className="mt-2 text-2xl font-semibold">{alerts?.overdueCounts.sevenDays ?? "—"}</p>
-              </div>
-            </div>
-
-            {alerts?.items.length ? (
-              alerts.items.map((item) => (
-                <div key={item.id} className="rounded-[1rem] border border-black/6 bg-[color:var(--app-surface-strong)] p-3 shadow-sm">
-                  <div className="flex items-start justify-between gap-3">
-                    <div>
-                      <p className="font-medium">{item.description}</p>
-                      <p className="text-sm text-muted-foreground">
-                        Vencimento {formatDate(item.dueDate)}
-                        {item.installmentLabel ? ` • Parcela ${item.installmentLabel}` : ""}
-                      </p>
-                    </div>
-                    <div className="text-right">
-                      <p className="font-medium">{formatMoney(item.amount)}</p>
-                      <p className="text-xs text-amber-600">{item.daysOverdue} dia(s) em atraso</p>
-                    </div>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <p className="text-sm text-muted-foreground">
-                {state.loading ? "Carregando..." : "Nenhum item em atraso retornado pela API."}
-              </p>
-            )}
           </CardContent>
         </Card>
       </div>
