@@ -53,7 +53,7 @@
   --brand-2: #008a67;
   --brand-3: #00704f;
   --brand-4: #003c25;
-  --background: #f2f5f0;
+  --background: #f7f8f5;
   --foreground: #122019;
   --card: #ffffff;
   --card-foreground: #122019;
@@ -63,7 +63,7 @@
   --primary-foreground: #f7fbf9;
   --secondary: rgba(0, 138, 103, 0.06);
   --secondary-foreground: #122019;
-  --muted: #e7ede7;
+  --muted: #edf1ec;
   --muted-foreground: #68766f;
   --accent: rgba(0, 138, 103, 0.08);
   --accent-foreground: #003c25;
@@ -86,17 +86,17 @@
   --sidebar-border: rgba(18, 32, 25, 0.08);
   --sidebar-ring: #008a67;
   --app-ink: #003c25;
-  --app-panel: #dbe3dc;
-  --app-panel-strong: #e7ede7;
-  --app-surface: #f8faf7;
+  --app-panel: #f0f4ef;
+  --app-panel-strong: #f6f8f4;
+  --app-surface: #fbfcfa;
   --app-surface-strong: #ffffff;
   --app-grid: rgba(18, 32, 25, 0.05);
-  --app-hero-bg: #fbfdf9;
+  --app-hero-bg: #fdfefc;
   --app-hero-foreground: #122019;
   --app-hero-border: rgba(18, 32, 25, 0.1);
   --app-hero-muted: #68766f;
-  --app-hero-panel: #f0f5f1;
-  --app-hero-panel-strong: #f6faf7;
+  --app-hero-panel: #f7faf6;
+  --app-hero-panel-strong: #fbfcfa;
   --app-hero-chip: rgba(144, 215, 187, 0.18);
   --app-hero-button: #008a67;
   --safe-area-top: env(safe-area-inset-top, 0px);
@@ -105,7 +105,7 @@
   --safe-area-left: env(safe-area-inset-left, 0px);
   --mobile-nav-offset: calc(var(--safe-area-bottom) + 0.75rem);
   --mobile-nav-space: calc(7rem + var(--mobile-nav-offset));
-  --app-page: #edf2ec;
+  --app-page: #f6f8f4;
 }
 
 html[data-display-mode="standalone"] {
