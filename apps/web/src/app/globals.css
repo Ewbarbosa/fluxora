@@ -91,7 +91,7 @@
   --app-surface: #fbfcfa;
   --app-surface-strong: #ffffff;
   --app-grid: rgba(18, 32, 25, 0.05);
-  --app-hero-bg: #fdfefc;
+  --app-hero-bg: #f7faf6;
   --app-hero-foreground: #122019;
   --app-hero-border: rgba(18, 32, 25, 0.1);
   --app-hero-muted: #68766f;
@@ -151,7 +151,7 @@ html[data-display-mode="standalone"] {
   --app-surface: rgba(24, 27, 26, 0.96);
   --app-surface-strong: rgba(29, 33, 31, 0.98);
   --app-grid: rgba(255, 255, 255, 0.035);
-  --app-hero-bg: #060807;
+  --app-hero-bg: #090c0b;
   --app-hero-foreground: #edf4f0;
   --app-hero-border: rgba(255, 255, 255, 0.1);
   --app-hero-muted: #96a39d;
