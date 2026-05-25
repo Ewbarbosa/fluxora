@@ -10,6 +10,10 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import {
@@ -18,8 +22,15 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
-import { ChevronsUpDownIcon, LogOutIcon } from "lucide-react"
+import {
+  ChevronsUpDownIcon,
+  LogOutIcon,
+  MonitorCogIcon,
+  MoonStarIcon,
+  SunMediumIcon,
+} from "lucide-react"
 
+import { useTheme, type ThemeMode } from "@/components/theme-provider"
 import { clearSession } from "@/lib/auth"
 
 function getInitials(name: string) {
@@ -42,12 +53,17 @@ export function NavUser({
 }) {
   const router = useRouter()
   const { isMobile } = useSidebar()
+  const { theme, setTheme } = useTheme()
   const initials = getInitials(user.name)
 
   function handleLogout() {
     clearSession()
     router.replace("/login")
     router.refresh()
+  }
+
+  function handleThemeChange(value: string) {
+    setTheme(value as ThemeMode)
   }
 
   return (
@@ -78,6 +94,22 @@ export function NavUser({
             align="end"
             sideOffset={4}
           >
+            <DropdownMenuLabel>Tema</DropdownMenuLabel>
+            <DropdownMenuRadioGroup value={theme} onValueChange={handleThemeChange}>
+              <DropdownMenuRadioItem value="light">
+                <SunMediumIcon className="size-4" />
+                Claro
+              </DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="dark">
+                <MoonStarIcon className="size-4" />
+                Escuro
+              </DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="system">
+                <MonitorCogIcon className="size-4" />
+                Sistema
+              </DropdownMenuRadioItem>
+            </DropdownMenuRadioGroup>
+            <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleLogout}>
               <LogOutIcon className="size-4" />
               Sair

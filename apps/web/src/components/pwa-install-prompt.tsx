@@ -66,8 +66,8 @@ export function PwaInstallPrompt() {
   }
 
   return (
-    <div className="mb-3 flex items-center gap-3 rounded-[1.5rem] border border-white/70 bg-[color:var(--app-panel-strong)]/90 p-3 shadow-[0_20px_40px_rgba(15,23,32,0.12)] md:hidden">
-      <div className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-[color:var(--app-ink)] text-white">
+    <div className="mb-3 flex items-center gap-3 rounded-[1.5rem] border border-[color:var(--app-shell-border)] bg-[color:var(--app-panel-strong)]/90 p-3 shadow-[var(--app-card-shadow-soft)] md:hidden">
+      <div className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-primary text-primary-foreground">
         <DownloadIcon className="size-4" />
       </div>
       <div className="min-w-0 flex-1">

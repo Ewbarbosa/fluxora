@@ -40,7 +40,7 @@ export function MobileBottomNav() {
 
   return (
     <nav className="pointer-events-none fixed inset-x-0 bottom-[var(--mobile-nav-offset)] z-40 px-3 md:hidden">
-      <div className="pointer-events-auto mx-auto flex max-w-md items-center gap-2 rounded-[1.75rem] border border-white/70 bg-[color:var(--app-panel-strong)]/88 p-2 shadow-[0_20px_40px_rgba(15,23,32,0.14)] backdrop-blur-xl">
+      <div className="pointer-events-auto mx-auto flex max-w-md items-center gap-2 rounded-[1.75rem] border border-[color:var(--app-shell-border)] bg-[color:var(--app-panel-strong)]/88 p-2 shadow-[var(--app-card-shadow-soft)] backdrop-blur-xl">
         {items.map((item) => {
           const active = item.match(pathname)
           const Icon = item.icon
@@ -52,7 +52,7 @@ export function MobileBottomNav() {
               className={cn(
                 "flex min-w-0 flex-1 items-center justify-center gap-2 rounded-2xl px-3 py-3 text-xs font-medium transition",
                 active
-                  ? "bg-[color:var(--app-ink)] text-white shadow-[0_12px_30px_rgba(15,23,32,0.22)]"
+                  ? "bg-primary text-primary-foreground shadow-[var(--app-card-shadow-soft)]"
                   : "text-muted-foreground"
               )}
             >
@@ -65,7 +65,7 @@ export function MobileBottomNav() {
           type="button"
           variant="ghost"
           size="icon"
-          className="size-11 rounded-2xl border border-black/5 bg-white/70 text-foreground shadow-none"
+          className="size-11 rounded-2xl border border-[color:var(--app-shell-border)] bg-[color:var(--app-surface)] text-foreground shadow-none"
           onClick={() => setOpenMobile(true)}
         >
           <PanelLeftOpenIcon className="size-4" />
