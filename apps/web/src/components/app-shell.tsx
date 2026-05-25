@@ -28,9 +28,9 @@ export function AppShell({ title, section = "Fluxora", children }: AppShellProps
   return (
     <SidebarProvider>
       <AppSidebar />
-      <SidebarInset className="min-h-svh overflow-x-clip bg-background md:overflow-hidden md:border md:border-black/6 md:bg-[color:var(--app-panel-strong)] md:shadow-[0_18px_48px_rgba(15,23,32,0.08)]">
-        <header className="sticky top-0 z-30 hidden shrink-0 items-center border-b border-black/5 bg-[color:var(--app-panel-strong)]/92 backdrop-blur-xl md:flex">
-          <div className="mx-auto flex w-full max-w-[1680px] items-center gap-2 px-4 pb-2 pt-[max(0.75rem,var(--safe-area-top))] md:px-5 md:pt-4">
+      <SidebarInset className="min-h-svh overflow-x-clip bg-background md:overflow-hidden md:border md:border-white/70 md:bg-[color:var(--app-panel)] md:shadow-[0_24px_72px_rgba(15,23,32,0.12)]">
+        <header className="sticky top-0 z-30 hidden shrink-0 items-center border-b border-black/5 bg-[color:var(--app-panel-strong)]/94 backdrop-blur-xl md:flex">
+          <div className="mx-auto flex w-full max-w-[1680px] items-center gap-2 px-5 pb-3 pt-[max(0.85rem,var(--safe-area-top))] md:px-6 md:pt-5">
             <SidebarTrigger className="-ml-1 hidden md:inline-flex" />
             <Separator
               orientation="vertical"
@@ -55,7 +55,7 @@ export function AppShell({ title, section = "Fluxora", children }: AppShellProps
             </div>
           </div>
         </header>
-        <div className="mx-auto w-full max-w-[1680px] px-3 pb-[var(--mobile-nav-space)] pt-3 md:px-5 md:pb-5">
+        <div className="mx-auto w-full max-w-[1680px] px-3 pb-[var(--mobile-nav-space)] pt-3 md:px-6 md:pb-6 md:pt-5">
           <PwaInstallPrompt />
           {children}
         </div>

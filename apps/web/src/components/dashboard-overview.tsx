@@ -141,11 +141,11 @@ export function DashboardOverview() {
 
   return (
     <div className="flex flex-1 flex-col gap-4 p-1 pt-0 md:p-4 md:pt-0">
-      <section className="overflow-hidden rounded-[1.75rem] border border-white/70 bg-[linear-gradient(145deg,rgba(15,23,32,0.97),rgba(24,76,92,0.93)_52%,rgba(75,159,136,0.9))] text-white shadow-[0_24px_60px_rgba(15,23,32,0.14)]">
-        <div className="flex flex-col gap-6 px-5 py-5 md:px-6 md:py-6">
+      <section className="overflow-hidden rounded-[2rem] border border-white/70 bg-[linear-gradient(145deg,rgba(15,23,32,0.98),rgba(24,76,92,0.94)_52%,rgba(75,159,136,0.9))] text-white shadow-[0_28px_70px_rgba(15,23,32,0.16)]">
+        <div className="flex flex-col gap-5 px-5 py-5 md:px-6 md:py-6">
           <div className="flex items-start justify-between gap-3">
             <div className="space-y-2">
-              <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-[0.7rem] font-medium uppercase tracking-[0.22em] text-white/80">
+              <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-[0.68rem] font-medium uppercase tracking-[0.24em] text-white/80">
                 <BriefcaseBusinessIcon className="size-3.5" />
                 Cockpit financeiro
               </div>
@@ -167,14 +167,14 @@ export function DashboardOverview() {
             </Button>
           </div>
 
-          <div className="grid gap-3 md:grid-cols-[1.2fr_0.8fr]">
-            <div className="rounded-[1.5rem] border border-white/12 bg-white/8 p-4 backdrop-blur">
+          <div className="grid items-start gap-3 lg:grid-cols-[minmax(0,1.3fr)_minmax(18rem,0.85fr)]">
+            <div className="self-start rounded-[1.6rem] border border-white/12 bg-white/8 p-4 backdrop-blur">
               <p className="text-sm text-white/70">Saldo do período</p>
               <p className="mt-2 text-3xl font-semibold tracking-tight">
                 {state.summary ? formatMoney(state.summary.balance) : "—"}
               </p>
-              <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
-                <div className="rounded-2xl bg-black/10 p-3">
+              <div className="mt-4 grid gap-3 text-sm md:grid-cols-2">
+                <div className="rounded-[1.35rem] bg-black/10 p-3">
                   <div className="flex items-center gap-2 text-white/70">
                     <ArrowUpRightIcon className="size-4" />
                     Receitas
@@ -183,7 +183,7 @@ export function DashboardOverview() {
                     {state.summary ? formatMoney(state.summary.totalIncome) : "—"}
                   </p>
                 </div>
-                <div className="rounded-2xl bg-black/10 p-3">
+                <div className="rounded-[1.35rem] bg-black/10 p-3">
                   <div className="flex items-center gap-2 text-white/70">
                     <ArrowDownRightIcon className="size-4" />
                     Despesas
@@ -195,8 +195,8 @@ export function DashboardOverview() {
               </div>
             </div>
 
-            <div className="grid gap-3 sm:grid-cols-3 md:grid-cols-1">
-              <div className="rounded-[1.5rem] border border-white/12 bg-white/8 p-4 backdrop-blur">
+            <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
+              <div className="rounded-[1.45rem] border border-white/12 bg-white/8 p-4 backdrop-blur">
                 <div className="flex items-center gap-2 text-sm text-white/70">
                   <WalletCardsIcon className="size-4" />
                   Vencem hoje
@@ -205,7 +205,7 @@ export function DashboardOverview() {
                   {state.notifications?.dueTodayCount ?? "—"}
                 </p>
               </div>
-              <div className="rounded-[1.5rem] border border-white/12 bg-white/8 p-4 backdrop-blur">
+              <div className="rounded-[1.45rem] border border-white/12 bg-white/8 p-4 backdrop-blur">
                 <div className="flex items-center gap-2 text-sm text-white/70">
                   <SirenIcon className="size-4" />
                   Em atraso
@@ -214,7 +214,7 @@ export function DashboardOverview() {
                   {state.summary?.overdueCount ?? "—"}
                 </p>
               </div>
-              <div className="rounded-[1.5rem] border border-white/12 bg-white/8 p-4 backdrop-blur">
+              <div className="rounded-[1.45rem] border border-white/12 bg-white/8 p-4 backdrop-blur">
                 <div className="flex items-center gap-2 text-sm text-white/70">
                   <AlertTriangleIcon className="size-4" />
                   Alertas ativos
