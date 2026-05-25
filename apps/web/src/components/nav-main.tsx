@@ -39,7 +39,7 @@ export function NavMain({
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Navegação</SidebarGroupLabel>
-      <SidebarMenu>
+      <SidebarMenu className="gap-1.5">
         {items.map((item) => {
           const childItems = item.items ?? []
           const hasChildren = childItems.length > 0
