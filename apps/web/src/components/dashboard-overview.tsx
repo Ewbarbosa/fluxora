@@ -112,6 +112,8 @@ type DashboardState = {
 }
 
 const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3333"
+const incomeChartColor = "var(--chart-1)"
+const expenseChartColor = "var(--destructive)"
 
 function formatMoney(value: number) {
   return new Intl.NumberFormat("pt-BR", {
@@ -219,19 +221,19 @@ function IncomeExpenseTrendChart({ data }: { data: MonthlyFlowItem[] }) {
       </div>
       <div className="mb-3 flex flex-wrap items-center gap-4 text-xs [color:var(--app-hero-muted)]">
         <span className="inline-flex items-center gap-2">
-          <span className="size-2.5 rounded-full bg-[var(--chart-1)]" />
+          <span className="size-2.5 rounded-full" style={{ backgroundColor: incomeChartColor }} />
           Receitas
         </span>
         <span className="inline-flex items-center gap-2">
-          <span className="size-2.5 rounded-full bg-[var(--chart-4)]" />
+          <span className="size-2.5 rounded-full" style={{ backgroundColor: expenseChartColor }} />
           Despesas
         </span>
       </div>
       <svg viewBox="0 0 100 100" className="h-24 w-full overflow-visible">
         <defs>
           <linearGradient id="income-area" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="var(--chart-1)" stopOpacity="0.35" />
-            <stop offset="100%" stopColor="var(--chart-1)" stopOpacity="0.02" />
+            <stop offset="0%" stopColor={incomeChartColor} stopOpacity="0.35" />
+            <stop offset="100%" stopColor={incomeChartColor} stopOpacity="0.02" />
           </linearGradient>
         </defs>
         <polyline
@@ -245,7 +247,7 @@ function IncomeExpenseTrendChart({ data }: { data: MonthlyFlowItem[] }) {
         <polyline
           points={incomePoints}
           fill="none"
-          stroke="var(--chart-1)"
+          stroke={incomeChartColor}
           strokeWidth="3"
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -253,7 +255,7 @@ function IncomeExpenseTrendChart({ data }: { data: MonthlyFlowItem[] }) {
         <polyline
           points={expensePoints}
           fill="none"
-          stroke="var(--chart-4)"
+          stroke={expenseChartColor}
           strokeWidth="3"
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -275,11 +277,11 @@ function MonthlyFlowChart({ data }: { data: MonthlyFlowItem[] }) {
     <div className="space-y-5">
       <div className="flex flex-wrap items-center gap-4 text-xs [color:var(--app-hero-muted)]">
         <span className="inline-flex items-center gap-2">
-          <span className="size-2.5 rounded-full bg-[var(--chart-1)]" />
+          <span className="size-2.5 rounded-full" style={{ backgroundColor: incomeChartColor }} />
           Receitas
         </span>
         <span className="inline-flex items-center gap-2">
-          <span className="size-2.5 rounded-full bg-[var(--chart-4)]" />
+          <span className="size-2.5 rounded-full" style={{ backgroundColor: expenseChartColor }} />
           Despesas
         </span>
       </div>
@@ -294,13 +296,13 @@ function MonthlyFlowChart({ data }: { data: MonthlyFlowItem[] }) {
               <div className="flex h-48 items-end justify-center gap-2 rounded-[1rem] border px-2 py-3 [border-color:var(--border)] [background-color:var(--app-surface-strong)]">
                 <div className="flex h-full w-full items-end justify-center gap-1.5">
                   <div
-                    className="w-1/2 rounded-full bg-[var(--chart-1)]"
-                    style={{ height: `${incomeHeight}%` }}
+                    className="w-1/2 rounded-full"
+                    style={{ height: `${incomeHeight}%`, backgroundColor: incomeChartColor }}
                     title={`Receitas: ${formatMoney(item.income)}`}
                   />
                   <div
-                    className="w-1/2 rounded-full bg-[var(--chart-4)]"
-                    style={{ height: `${expenseHeight}%` }}
+                    className="w-1/2 rounded-full"
+                    style={{ height: `${expenseHeight}%`, backgroundColor: expenseChartColor }}
                     title={`Despesas: ${formatMoney(item.expense)}`}
                   />
                 </div>
