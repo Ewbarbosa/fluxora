@@ -774,7 +774,7 @@ export function TransactionsWorkspace() {
           </div>
         </section>
 
-        <Card className="rounded-[1.2rem] border-black/6 bg-[color:var(--app-surface)] shadow-[0_16px_34px_rgba(15,23,32,0.05)]">
+        <Card className="rounded-[1.2rem] border border-black/6 bg-[color:var(--app-surface)] shadow-[0_16px_34px_rgba(15,23,32,0.05)]">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <BellRingIcon className="h-4 w-4" /> Alertas de atraso
