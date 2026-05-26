@@ -473,8 +473,8 @@ export function DashboardOverview() {
             </Button>
           </div>
 
-          <div className="grid items-start gap-3 xl:grid-cols-[minmax(0,1.15fr)_minmax(20rem,0.85fr)]">
-            <div className="rounded-[1.25rem] border p-4 shadow-[0_18px_32px_rgba(15,23,32,0.04)] md:p-5 [border-color:var(--app-hero-border)] [background-color:var(--app-hero-panel)]">
+          <div className="grid items-start gap-3 xl:grid-cols-[minmax(0,0.94fr)_minmax(0,1.06fr)]">
+            <div className="rounded-[1.25rem] border p-4 shadow-[0_18px_32px_rgba(15,23,32,0.04)] md:p-4 [border-color:var(--app-hero-border)] [background-color:var(--app-hero-panel)]">
               <div className="flex flex-wrap items-start justify-between gap-4">
                 <div>
                   <p className="text-sm [color:var(--app-hero-muted)]">Saldo do mês</p>
@@ -490,8 +490,8 @@ export function DashboardOverview() {
                 </div>
               </div>
 
-              <div className="mt-5 grid gap-3 sm:grid-cols-3">
-                <div className="rounded-[1rem] border p-3 [border-color:var(--app-hero-border)] [background-color:var(--app-hero-panel-strong)]">
+              <div className="mt-4 grid gap-3 sm:grid-cols-3">
+                <div className="rounded-[1rem] border p-3 shadow-[0_10px_20px_rgba(15,23,32,0.03)] [border-color:var(--app-hero-border)] [background-color:var(--app-hero-panel-strong)]">
                   <div className="flex items-center gap-2 [color:var(--app-hero-muted)]">
                     <ArrowUpRightIcon className="size-4" />
                     Receitas
@@ -503,7 +503,7 @@ export function DashboardOverview() {
                     {changes ? `${formatPercent(changes.income.percent)} vs mês anterior` : "Carregando variação"}
                   </p>
                 </div>
-                <div className="rounded-[1rem] border p-3 [border-color:var(--app-hero-border)] [background-color:var(--app-hero-panel-strong)]">
+                <div className="rounded-[1rem] border p-3 shadow-[0_10px_20px_rgba(15,23,32,0.03)] [border-color:var(--app-hero-border)] [background-color:var(--app-hero-panel-strong)]">
                   <div className="flex items-center gap-2 [color:var(--app-hero-muted)]">
                     <ArrowDownRightIcon className="size-4" />
                     Despesas
@@ -515,7 +515,7 @@ export function DashboardOverview() {
                     {changes ? `${formatPercent(changes.expense.percent)} vs mês anterior` : "Carregando variação"}
                   </p>
                 </div>
-                <div className="rounded-[1rem] border p-3 [border-color:var(--app-hero-border)] [background-color:var(--app-hero-panel-strong)]">
+                <div className="rounded-[1rem] border p-3 shadow-[0_10px_20px_rgba(15,23,32,0.03)] [border-color:var(--app-hero-border)] [background-color:var(--app-hero-panel-strong)]">
                   <div className="flex items-center gap-2 [color:var(--app-hero-muted)]">
                     <SirenIcon className="size-4" />
                     Atrasos
