@@ -53,17 +53,17 @@
   --brand-2: #4cd64f;
   --brand-3: #064c1e;
   --brand-4: #2d4020;
-  --background: #f7fbf4;
+  --background: #eff4ea;
   --foreground: #242424;
-  --card: #ffffff;
+  --card: #f8fbf5;
   --card-foreground: #242424;
-  --popover: #ffffff;
+  --popover: #f8fbf5;
   --popover-foreground: #242424;
   --primary: #064c1e;
   --primary-foreground: #f7fbf4;
   --secondary: rgba(76, 214, 79, 0.14);
   --secondary-foreground: #242424;
-  --muted: #ecf4e7;
+  --muted: #e6eee0;
   --muted-foreground: #6b7280;
   --accent: rgba(136, 240, 106, 0.2);
   --accent-foreground: #064c1e;
@@ -77,7 +77,7 @@
   --chart-4: #2d4020;
   --chart-5: #6ebf5d;
   --radius: 0.75rem;
-  --sidebar: #f7fbf4;
+  --sidebar: #eef4e8;
   --sidebar-foreground: #242424;
   --sidebar-primary: #064c1e;
   --sidebar-primary-foreground: #f7fbf4;
@@ -86,17 +86,17 @@
   --sidebar-border: rgba(45, 64, 32, 0.1);
   --sidebar-ring: #4cd64f;
   --app-ink: #064c1e;
-  --app-panel: #eef5e9;
-  --app-panel-strong: #f5f9f1;
-  --app-surface: #fafcf8;
-  --app-surface-strong: #ffffff;
+  --app-panel: #e7efe1;
+  --app-panel-strong: #f1f6ec;
+  --app-surface: #f3f7ee;
+  --app-surface-strong: #f8fbf5;
   --app-grid: rgba(45, 64, 32, 0.05);
-  --app-hero-bg: #f7fbf4;
+  --app-hero-bg: #eef4e9;
   --app-hero-foreground: #242424;
-  --app-hero-border: rgba(45, 64, 32, 0.12);
+  --app-hero-border: rgba(45, 64, 32, 0.14);
   --app-hero-muted: #6b7280;
-  --app-hero-panel: #f3f8ef;
-  --app-hero-panel-strong: #fbfdf9;
+  --app-hero-panel: #edf3e7;
+  --app-hero-panel-strong: #f6faf2;
   --app-hero-chip: rgba(136, 240, 106, 0.18);
   --app-hero-button: #064c1e;
   --safe-area-top: env(safe-area-inset-top, 0px);
@@ -105,7 +105,7 @@
   --safe-area-left: env(safe-area-inset-left, 0px);
   --mobile-nav-offset: calc(var(--safe-area-bottom) + 0.75rem);
   --mobile-nav-space: calc(7rem + var(--mobile-nav-offset));
-  --app-page: #f7fbf4;
+  --app-page: #eaf1e4;
 }
 
 html[data-display-mode="standalone"] {

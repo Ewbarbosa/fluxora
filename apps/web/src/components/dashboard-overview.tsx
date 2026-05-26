@@ -168,7 +168,7 @@ function SummaryCard({
   icon: ReactNode
 }) {
   return (
-    <div className="rounded-[1.1rem] border p-4 backdrop-blur [border-color:var(--app-hero-border)] [background-color:var(--app-hero-panel)]">
+    <div className="rounded-[1.1rem] border p-4 shadow-[0_14px_28px_rgba(15,23,32,0.04)] backdrop-blur [border-color:var(--app-hero-border)] [background-color:var(--app-hero-panel)]">
       <div className="flex items-center justify-between gap-3">
         <div className="space-y-1">
           <p className="text-sm [color:var(--app-hero-muted)]">{title}</p>
@@ -186,7 +186,7 @@ function SummaryCard({
 function IncomeExpenseTrendChart({ data }: { data: MonthlyFlowItem[] }) {
   if (!data.length) {
     return (
-      <div className="rounded-[1rem] border p-3 [border-color:var(--app-hero-border)] [background-color:var(--app-hero-panel-strong)]">
+      <div className="rounded-[1rem] border p-3 shadow-[0_14px_28px_rgba(15,23,32,0.04)] [border-color:var(--app-hero-border)] [background-color:var(--app-hero-panel-strong)]">
         <p className="text-sm [color:var(--app-hero-muted)]">Receitas x despesas</p>
         <p className="mt-6 text-sm text-muted-foreground">Carregando série mensal...</p>
       </div>
@@ -212,7 +212,7 @@ function IncomeExpenseTrendChart({ data }: { data: MonthlyFlowItem[] }) {
   const incomeAreaPoints = `0,100 ${incomePoints} 100,100`
 
   return (
-    <div className="rounded-[1rem] border p-3 [border-color:var(--app-hero-border)] [background-color:var(--app-hero-panel-strong)]">
+    <div className="rounded-[1rem] border p-3 shadow-[0_14px_28px_rgba(15,23,32,0.04)] [border-color:var(--app-hero-border)] [background-color:var(--app-hero-panel-strong)]">
       <div className="mb-3 flex items-center justify-between gap-3">
         <div>
           <p className="text-sm [color:var(--app-hero-muted)]">Receitas x despesas</p>
@@ -508,7 +508,7 @@ export function DashboardOverview() {
           <div className="grid items-start gap-3 2xl:grid-cols-[minmax(0,1.3fr)_minmax(24rem,0.9fr)]">
             <div className="grid gap-3">
               <div className="grid gap-3 xl:grid-cols-[minmax(0,1.15fr)_minmax(20rem,0.85fr)]">
-                <div className="p-1 md:p-2">
+                <div className="rounded-[1.25rem] border p-4 shadow-[0_18px_32px_rgba(15,23,32,0.04)] md:p-5 [border-color:var(--app-hero-border)] [background-color:var(--app-hero-panel)]">
                   <p className="text-sm [color:var(--app-hero-muted)]">Saldo do mês</p>
                   <p className="mt-2 text-3xl font-semibold tracking-tight">
                     {summary ? formatMoney(summary.balance) : "—"}
@@ -517,7 +517,7 @@ export function DashboardOverview() {
                     {changes ? `${formatPercent(changes.balance.percent)} vs mês anterior` : "Carregando variação"}
                   </p>
                   <div className="mt-4 grid gap-3 sm:grid-cols-3">
-                    <div className="rounded-[1rem] p-3 [background-color:var(--app-hero-panel-strong)]">
+                    <div className="rounded-[1rem] border p-3 [border-color:var(--app-hero-border)] [background-color:var(--app-hero-panel-strong)]">
                       <div className="flex items-center gap-2 [color:var(--app-hero-muted)]">
                         <ArrowUpRightIcon className="size-4" />
                         Receitas
@@ -526,7 +526,7 @@ export function DashboardOverview() {
                         {summary ? formatMoney(summary.totalIncome) : "—"}
                       </p>
                     </div>
-                    <div className="rounded-[1rem] p-3 [background-color:var(--app-hero-panel-strong)]">
+                    <div className="rounded-[1rem] border p-3 [border-color:var(--app-hero-border)] [background-color:var(--app-hero-panel-strong)]">
                       <div className="flex items-center gap-2 [color:var(--app-hero-muted)]">
                         <ArrowDownRightIcon className="size-4" />
                         Despesas
@@ -535,7 +535,7 @@ export function DashboardOverview() {
                         {summary ? formatMoney(summary.totalExpense) : "—"}
                       </p>
                     </div>
-                    <div className="rounded-[1rem] p-3 [background-color:var(--app-hero-panel-strong)]">
+                    <div className="rounded-[1rem] border p-3 [border-color:var(--app-hero-border)] [background-color:var(--app-hero-panel-strong)]">
                       <div className="flex items-center gap-2 [color:var(--app-hero-muted)]">
                         <SirenIcon className="size-4" />
                         Atrasos
