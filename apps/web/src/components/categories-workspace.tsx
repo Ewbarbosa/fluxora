@@ -440,10 +440,6 @@ export function CategoriesWorkspace() {
                         <Trash2Icon className="size-4" />
                         Excluir
                       </Button>
-                      <Link href="/finance/transactions" className={buttonVariants({ variant: "outline", size: "sm" })}>
-                        Usar em lançamentos
-                        <ArrowRightIcon className="size-4" />
-                      </Link>
                     </div>
                   </div>
                 </div>
