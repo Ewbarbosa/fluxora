@@ -1,16 +1,13 @@
 "use client"
 
-import type { ReactNode } from "react"
 import { useCallback, useEffect, useMemo, useState } from "react"
 import {
   AlertTriangleIcon,
   ArrowDownRightIcon,
   ArrowUpRightIcon,
-  CircleDollarSignIcon,
   RefreshCcwIcon,
   SirenIcon,
   TrendingUpIcon,
-  WalletCardsIcon,
 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -154,39 +151,10 @@ function getChangeTone(delta: number, inverse = false) {
   return delta > 0 ? "text-emerald-600 dark:text-emerald-300" : "text-rose-600 dark:text-rose-300"
 }
 
-function SummaryCard({
-  title,
-  value,
-  change,
-  inverse,
-  icon,
-}: {
-  title: string
-  value: string
-  change: Change
-  inverse?: boolean
-  icon: ReactNode
-}) {
-  return (
-    <div className="rounded-[1.1rem] border p-4 shadow-[0_14px_28px_rgba(15,23,32,0.04)] backdrop-blur [border-color:var(--app-hero-border)] [background-color:var(--app-hero-panel)]">
-      <div className="flex items-center justify-between gap-3">
-        <div className="space-y-1">
-          <p className="text-sm [color:var(--app-hero-muted)]">{title}</p>
-          <p className="text-2xl font-semibold tracking-tight">{value}</p>
-        </div>
-        <div className="rounded-full p-2 [background-color:var(--app-hero-panel-strong)]">{icon}</div>
-      </div>
-      <p className={`mt-3 text-xs font-medium ${getChangeTone(change.delta, inverse)}`}>
-        {formatPercent(change.percent)} vs mês anterior
-      </p>
-    </div>
-  )
-}
-
 function IncomeExpenseTrendChart({ data }: { data: MonthlyFlowItem[] }) {
   if (!data.length) {
     return (
-      <div className="rounded-[1rem] border p-3 shadow-[0_14px_28px_rgba(15,23,32,0.04)] [border-color:var(--app-hero-border)] [background-color:var(--app-hero-panel-strong)]">
+      <div className="rounded-[1.25rem] border p-4 shadow-[0_14px_28px_rgba(15,23,32,0.04)] [border-color:var(--app-hero-border)] [background-color:var(--app-hero-panel)]">
         <p className="text-sm [color:var(--app-hero-muted)]">Receitas x despesas</p>
         <p className="mt-6 text-sm text-muted-foreground">Carregando série mensal...</p>
       </div>
@@ -212,7 +180,7 @@ function IncomeExpenseTrendChart({ data }: { data: MonthlyFlowItem[] }) {
   const incomeAreaPoints = `0,100 ${incomePoints} 100,100`
 
   return (
-    <div className="rounded-[1rem] border p-3 shadow-[0_14px_28px_rgba(15,23,32,0.04)] [border-color:var(--app-hero-border)] [background-color:var(--app-hero-panel-strong)]">
+    <div className="rounded-[1.25rem] border p-4 shadow-[0_14px_28px_rgba(15,23,32,0.04)] [border-color:var(--app-hero-border)] [background-color:var(--app-hero-panel)]">
       <div className="mb-3 flex items-center justify-between gap-3">
         <div>
           <p className="text-sm [color:var(--app-hero-muted)]">Receitas x despesas</p>
@@ -505,10 +473,10 @@ export function DashboardOverview() {
             </Button>
           </div>
 
-          <div className="grid items-start gap-3 2xl:grid-cols-[minmax(0,1.3fr)_minmax(24rem,0.9fr)]">
-            <div className="grid gap-3">
-              <div className="grid gap-3 xl:grid-cols-[minmax(0,1.15fr)_minmax(20rem,0.85fr)]">
-                <div className="rounded-[1.25rem] border p-4 shadow-[0_18px_32px_rgba(15,23,32,0.04)] md:p-5 [border-color:var(--app-hero-border)] [background-color:var(--app-hero-panel)]">
+          <div className="grid items-start gap-3 xl:grid-cols-[minmax(0,1.15fr)_minmax(20rem,0.85fr)]">
+            <div className="rounded-[1.25rem] border p-4 shadow-[0_18px_32px_rgba(15,23,32,0.04)] md:p-5 [border-color:var(--app-hero-border)] [background-color:var(--app-hero-panel)]">
+              <div className="flex flex-wrap items-start justify-between gap-4">
+                <div>
                   <p className="text-sm [color:var(--app-hero-muted)]">Saldo do mês</p>
                   <p className="mt-2 text-3xl font-semibold tracking-tight">
                     {summary ? formatMoney(summary.balance) : "—"}
@@ -516,61 +484,51 @@ export function DashboardOverview() {
                   <p className={`mt-3 text-sm font-medium ${changes ? getChangeTone(changes.balance.delta) : "text-muted-foreground"}`}>
                     {changes ? `${formatPercent(changes.balance.percent)} vs mês anterior` : "Carregando variação"}
                   </p>
-                  <div className="mt-4 grid gap-3 sm:grid-cols-3">
-                    <div className="rounded-[1rem] border p-3 [border-color:var(--app-hero-border)] [background-color:var(--app-hero-panel-strong)]">
-                      <div className="flex items-center gap-2 [color:var(--app-hero-muted)]">
-                        <ArrowUpRightIcon className="size-4" />
-                        Receitas
-                      </div>
-                      <p className="mt-2 font-semibold text-emerald-600 dark:text-emerald-300">
-                        {summary ? formatMoney(summary.totalIncome) : "—"}
-                      </p>
-                    </div>
-                    <div className="rounded-[1rem] border p-3 [border-color:var(--app-hero-border)] [background-color:var(--app-hero-panel-strong)]">
-                      <div className="flex items-center gap-2 [color:var(--app-hero-muted)]">
-                        <ArrowDownRightIcon className="size-4" />
-                        Despesas
-                      </div>
-                      <p className="mt-2 font-semibold text-rose-600 dark:text-rose-300">
-                        {summary ? formatMoney(summary.totalExpense) : "—"}
-                      </p>
-                    </div>
-                    <div className="rounded-[1rem] border p-3 [border-color:var(--app-hero-border)] [background-color:var(--app-hero-panel-strong)]">
-                      <div className="flex items-center gap-2 [color:var(--app-hero-muted)]">
-                        <SirenIcon className="size-4" />
-                        Atrasos
-                      </div>
-                      <p className="mt-2 font-semibold">{summary?.overdueCount ?? "—"}</p>
-                    </div>
-                  </div>
                 </div>
+                <div className="rounded-full border p-2 [border-color:var(--app-hero-border)] [background-color:var(--app-hero-panel-strong)]">
+                  <TrendingUpIcon className="size-4 [color:var(--app-ink)]" />
+                </div>
+              </div>
 
-                <IncomeExpenseTrendChart data={monthlyFlow} />
+              <div className="mt-5 grid gap-3 sm:grid-cols-3">
+                <div className="rounded-[1rem] border p-3 [border-color:var(--app-hero-border)] [background-color:var(--app-hero-panel-strong)]">
+                  <div className="flex items-center gap-2 [color:var(--app-hero-muted)]">
+                    <ArrowUpRightIcon className="size-4" />
+                    Receitas
+                  </div>
+                  <p className="mt-2 font-semibold text-emerald-600 dark:text-emerald-300">
+                    {summary ? formatMoney(summary.totalIncome) : "—"}
+                  </p>
+                  <p className={`mt-2 text-xs font-medium ${changes ? getChangeTone(changes.income.delta) : "text-muted-foreground"}`}>
+                    {changes ? `${formatPercent(changes.income.percent)} vs mês anterior` : "Carregando variação"}
+                  </p>
+                </div>
+                <div className="rounded-[1rem] border p-3 [border-color:var(--app-hero-border)] [background-color:var(--app-hero-panel-strong)]">
+                  <div className="flex items-center gap-2 [color:var(--app-hero-muted)]">
+                    <ArrowDownRightIcon className="size-4" />
+                    Despesas
+                  </div>
+                  <p className="mt-2 font-semibold text-rose-600 dark:text-rose-300">
+                    {summary ? formatMoney(summary.totalExpense) : "—"}
+                  </p>
+                  <p className={`mt-2 text-xs font-medium ${changes ? getChangeTone(changes.expense.delta, true) : "text-muted-foreground"}`}>
+                    {changes ? `${formatPercent(changes.expense.percent)} vs mês anterior` : "Carregando variação"}
+                  </p>
+                </div>
+                <div className="rounded-[1rem] border p-3 [border-color:var(--app-hero-border)] [background-color:var(--app-hero-panel-strong)]">
+                  <div className="flex items-center gap-2 [color:var(--app-hero-muted)]">
+                    <SirenIcon className="size-4" />
+                    Atrasos
+                  </div>
+                  <p className="mt-2 font-semibold">{summary?.overdueCount ?? "—"}</p>
+                  <p className={`mt-2 text-xs font-medium ${changes ? getChangeTone(changes.overdueCount.delta, true) : "text-muted-foreground"}`}>
+                    {changes ? `${formatPercent(changes.overdueCount.percent)} vs mês anterior` : "Carregando variação"}
+                  </p>
+                </div>
               </div>
             </div>
 
-            <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-              <SummaryCard
-                title="Receitas"
-                value={summary ? formatMoney(summary.totalIncome) : "—"}
-                change={changes?.income ?? { delta: 0, percent: 0 }}
-                icon={<CircleDollarSignIcon className="size-4 [color:var(--app-ink)]" />}
-              />
-              <SummaryCard
-                title="Despesas"
-                value={summary ? formatMoney(summary.totalExpense) : "—"}
-                change={changes?.expense ?? { delta: 0, percent: 0 }}
-                inverse
-                icon={<WalletCardsIcon className="size-4 [color:var(--app-ink)]" />}
-              />
-              <SummaryCard
-                title="Atrasos"
-                value={String(summary?.overdueCount ?? "—")}
-                change={changes?.overdueCount ?? { delta: 0, percent: 0 }}
-                inverse
-                icon={<AlertTriangleIcon className="size-4 [color:var(--app-ink)]" />}
-              />
-            </div>
+            <IncomeExpenseTrendChart data={monthlyFlow} />
           </div>
         </div>
       </section>
