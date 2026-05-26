@@ -4,7 +4,6 @@ import { FormEvent, useCallback, useEffect, useMemo, useState } from "react"
 import {
   BellRingIcon,
   ChevronRightIcon,
-  CalendarDaysIcon,
   CheckCircle2Icon,
   EllipsisVerticalIcon,
   EyeIcon,
@@ -729,19 +728,12 @@ export function TransactionsWorkspace() {
   return (
     <>
       <div className="space-y-6 p-1 pt-0 md:p-4 md:pt-0">
-        <section className="overflow-hidden rounded-[1.45rem] border shadow-[0_18px_40px_rgba(15,23,32,0.08)] [border-color:var(--app-hero-border)] [background-color:var(--app-hero-bg)] [color:var(--app-hero-foreground)]">
-          <div className="flex flex-col gap-5 px-5 py-5 md:px-6 md:py-6">
+        <section className="overflow-hidden rounded-[1.45rem] border border-black/6 bg-[color:var(--app-surface)] text-foreground shadow-[0_16px_34px_rgba(15,23,32,0.05)]">
+          <div className="flex flex-col gap-5 px-5 py-5 md:px-6 md:py-6 ">
             <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
               <div className="space-y-2">
-                <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-[0.7rem] font-medium uppercase tracking-[0.22em] [background-color:var(--app-hero-chip)] [color:var(--app-hero-muted)]">
-                  <CalendarDaysIcon className="size-3.5" />
-                  Financeiro operacional
-                </div>
                 <div>
                   <h1 className="text-2xl font-semibold tracking-tight">Lançamentos por período</h1>
-                  <p className="max-w-2xl text-sm [color:var(--app-hero-muted)]">
-                    Controle de caixa, atraso e recorrência com leitura rápida no celular e ação direta na mesma tela.
-                  </p>
                 </div>
               </div>
               <Button onClick={openCreateModal} className="rounded-xl border-0 bg-[color:var(--app-hero-button)] text-[color:var(--primary-foreground)] hover:opacity-90 dark:text-[color:var(--primary-foreground)]">
