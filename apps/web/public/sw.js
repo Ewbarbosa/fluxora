@@ -1,4 +1,4 @@
-const CACHE_NAME = "fluxora-shell-v1"
+const CACHE_NAME = "fluxora-shell-v2"
 const APP_SHELL = ["/dashboard", "/finance/transactions", "/settings/workspace"]
 
 self.addEventListener("install", (event) => {
