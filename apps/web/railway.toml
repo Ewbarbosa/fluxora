@@ -1,0 +1,6 @@
+[build]
+buildCommand = "pnpm --filter @fluxora/web build"
+watchPatterns = ["apps/web/**", "packages/**"]
+
+[deploy]
+startCommand = "pnpm --filter @fluxora/web start"
